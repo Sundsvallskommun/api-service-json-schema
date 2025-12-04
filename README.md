@@ -81,20 +81,6 @@ Configuration is crucial for the application to run successfully. Ensure all nec
       username: your_db_username
       password: your_db_password
   ```
-- **External Service URLs:**
-
-  ```yaml
-  integration:
-    service:
-      url: http://dependency_service_url
-      oauth2:
-        client-id: some-client-id
-        client-secret: some-client-secret
-
-  service:
-    oauth2:
-      token-url: http://dependecy_service_token_url
-  ```
 
 ### Database Initialization
 
