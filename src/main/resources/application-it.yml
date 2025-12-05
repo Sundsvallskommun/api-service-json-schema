@@ -3,7 +3,7 @@
 #========================================
 logging:
   level:
-    root: DEBUG
+    root: INFO
 spring:
   datasource:
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
