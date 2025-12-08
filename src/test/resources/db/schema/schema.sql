@@ -4,8 +4,8 @@
         municipality_id varchar(8),
         version varchar(32),
         name varchar(64),
-        id varchar(255) not null,
         description longtext,
+        id varchar(255) not null,
         value longtext,
         primary key (id)
     ) engine=InnoDB;

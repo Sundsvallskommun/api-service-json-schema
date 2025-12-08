@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
@@ -95,5 +96,90 @@ class JsonSchemaRepositoryTest {
 
 		// Assert
 		assertThat(repository.findById(ID_OF_JSON_SCHEMA)).isEmpty();
+	}
+
+	@Test
+	void findByMunicipalityIdAndId() {
+
+		// Act
+		final var result = repository.findByMunicipalityIdAndId("2281", ID_OF_JSON_SCHEMA);
+
+		// Assert
+		assertThat(result).isPresent();
+		assertThat(result.get().getId()).isEqualTo(ID_OF_JSON_SCHEMA);
+		assertThat(result.get().getMunicipalityId()).isEqualTo("2281");
+	}
+
+	@Test
+	void findByMunicipalityIdAndIdNotFound() {
+
+		// Act
+		final var result = repository.findByMunicipalityIdAndId("9999", "unknown-id");
+
+		// Assert
+		assertThat(result).isNotPresent();
+	}
+
+	@Test
+	void findAllByMunicipalityIdPaged() {
+
+		// Arrange
+		final var pageable = Pageable.ofSize(10);
+
+		// Act
+		final var page = repository.findAllByMunicipalityId("2281", pageable);
+
+		// Assert
+		assertThat(page).isNotNull();
+		assertThat(page.getContent()).isNotEmpty();
+		assertThat(page.getContent())
+			.allMatch(e -> "2281".equals(e.getMunicipalityId()));
+	}
+
+	@Test
+	void findAllByMunicipalityIdEmptyResult() {
+
+		// Arrange
+		final var pageable = Pageable.ofSize(10);
+
+		// Act
+		final var page = repository.findAllByMunicipalityId("9999", pageable);
+
+		// Assert
+		assertThat(page).isNotNull();
+		assertThat(page.getContent()).isEmpty();
+	}
+
+	@Test
+	void findAllByMunicipalityIdAndNamePaged() {
+
+		// Arrange
+		final var pageable = Pageable.ofSize(10);
+
+		// Act
+		final var page = repository.findAllByMunicipalityIdAndName("2281", "schema", pageable);
+
+		// Assert
+		assertThat(page).isNotNull();
+		assertThat(page.getContent()).isNotEmpty();
+		assertThat(page.getContent())
+			.allSatisfy(entity -> {
+				assertThat(entity.getMunicipalityId()).isEqualTo("2281");
+				assertThat(entity.getName()).isEqualTo("schema");
+			});
+	}
+
+	@Test
+	void findAllByMunicipalityIdAndNameEmptyResult() {
+
+		// Arrange
+		final var pageable = Pageable.ofSize(10);
+
+		// Act
+		final var page = repository.findAllByMunicipalityIdAndName("2281", "does-not-exist", pageable);
+
+		// Assert
+		assertThat(page).isNotNull();
+		assertThat(page.getContent()).isEmpty();
 	}
 }

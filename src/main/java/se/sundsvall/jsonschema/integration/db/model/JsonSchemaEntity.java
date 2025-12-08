@@ -3,18 +3,20 @@ package se.sundsvall.jsonschema.integration.db.model;
 import static java.time.OffsetDateTime.now;
 import static java.time.ZoneId.systemDefault;
 import static java.time.temporal.ChronoUnit.MILLIS;
-import static org.hibernate.Length.LONG32;
 import static org.hibernate.annotations.TimeZoneStorageType.NORMALIZE;
+import static org.hibernate.type.SqlTypes.LONG32VARCHAR;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.Lob;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.time.OffsetDateTime;
 import java.util.Objects;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.TimeZoneStorage;
 
 @Entity
@@ -45,10 +47,14 @@ public class JsonSchemaEntity {
 	@Column(name = "version", length = 32)
 	private String version;
 
-	@Column(name = "value", length = LONG32)
+	@Lob
+	@JdbcTypeCode(LONG32VARCHAR)
+	@Column(name = "value")
 	private String value;
 
-	@Column(name = "description", length = LONG32)
+	@Lob
+	@JdbcTypeCode(LONG32VARCHAR)
+	@Column(name = "description")
 	private String description;
 
 	@TimeZoneStorage(NORMALIZE)
