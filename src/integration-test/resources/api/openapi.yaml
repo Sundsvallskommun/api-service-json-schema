@@ -1,0 +1,524 @@
+openapi: 3.1.0
+info:
+  title: json-schema
+  contact: {}
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+  version: "1.0"
+servers:
+- url: http://localhost:61909
+  description: Generated server url
+paths:
+  /{municipalityId}/jsonschemas:
+    get:
+      tags:
+      - JSON-schemas
+      summary: Get JSON schemas
+      operationId: getSchemas
+      parameters:
+      - name: municipalityId
+        in: path
+        description: Municipality id
+        required: true
+        schema:
+          type: string
+        example: 2281
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/JsonSchema"
+        "400":
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+    post:
+      tags:
+      - JSON-schemas
+      summary: Create a JSON schema
+      operationId: createSchema
+      parameters:
+      - name: municipalityId
+        in: path
+        description: Municipality ID
+        required: true
+        schema:
+          type: string
+        example: 2281
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JsonSchemaCreateRequest"
+        required: true
+      responses:
+        "201":
+          description: Created - Successful operation
+          headers:
+            Location:
+              description: Location of the created resource.
+              style: simple
+              schema:
+                type: string
+        "400":
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+  /{municipalityId}/jsonschemas/{name}/latest:
+    get:
+      tags:
+      - JSON-schemas
+      summary: Get latest JSON schema by name
+      operationId: getLatestSchemaByName
+      parameters:
+      - name: municipalityId
+        in: path
+        description: MunicipalityID
+        required: true
+        schema:
+          type: string
+        example: 2281
+      - name: name
+        in: path
+        description: Schema name
+        required: true
+        schema:
+          type: string
+          minLength: 1
+        example: person
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JsonSchema"
+        "400":
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+  /{municipalityId}/jsonschemas/{id}:
+    get:
+      tags:
+      - JSON-schemas
+      summary: Get a JSON schema
+      operationId: getSchemaById
+      parameters:
+      - name: municipalityId
+        in: path
+        description: MunicipalityID
+        required: true
+        schema:
+          type: string
+        example: 2281
+      - name: id
+        in: path
+        description: Schema ID
+        required: true
+        schema:
+          type: string
+          minLength: 1
+        example: person_1.0
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JsonSchema"
+        "400":
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+    delete:
+      tags:
+      - JSON-schemas
+      summary: Delete a JSON schema
+      operationId: deleteSchema
+      parameters:
+      - name: municipalityId
+        in: path
+        description: Municipality ID
+        required: true
+        schema:
+          type: string
+        example: 2281
+      - name: id
+        in: path
+        description: Schema ID
+        required: true
+        schema:
+          type: string
+          minLength: 1
+        example: person_1.0
+      responses:
+        "204":
+          description: No content - Successful operation
+        "404":
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "400":
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+  /api-docs:
+    get:
+      tags:
+      - API
+      summary: OpenAPI
+      operationId: getApiDocs
+      responses:
+        "200":
+          description: OK
+          content:
+            application/yaml:
+              schema:
+                type: string
+      x-auth-type: None
+      x-throttling-tier: Unlimited
+      x-wso2-mutual-ssl: Optional
+components:
+  schemas:
+    JsonSchemaCreateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Schema name
+          examples:
+          - person
+          minLength: 1
+        version:
+          type: string
+          description: "Schema version on the format [major version].[minor version]"
+          examples:
+          - "1.0"
+          minLength: 1
+          pattern: ^(\d+\.)?(\d+)$
+        value:
+          type: string
+          description: "The JSON schema, specified by: https://json-schema.org/draft/2020-12/schema"
+          examples:
+          - |
+            {
+              "$id": "https://example.com/person.schema.json",
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "title": "Person",
+              "type": "object",
+              "properties": {
+                "firstName": {
+                  "type": "string",
+                  "description": "The person's first name."
+                },
+                "lastName": {
+                  "type": "string",
+                  "description": "The person's last name."
+                }
+              }
+            }
+        description:
+          type: string
+          description: Description of the schema purpose
+          examples:
+          - A JSON-schema that defines a person object
+      required:
+      - name
+      - value
+      - version
+    Problem:
+      type: object
+      properties:
+        instance:
+          type: string
+          format: uri
+        type:
+          type: string
+          format: uri
+        parameters:
+          type: object
+          additionalProperties: {}
+        status:
+          $ref: "#/components/schemas/StatusType"
+        detail:
+          type: string
+        title:
+          type: string
+    StatusType:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+        reasonPhrase:
+          type: string
+    ConstraintViolationProblem:
+      type: object
+      properties:
+        cause:
+          $ref: "#/components/schemas/ThrowableProblem"
+        stackTrace:
+          type: array
+          items:
+            type: object
+            properties:
+              classLoaderName:
+                type: string
+              moduleName:
+                type: string
+              moduleVersion:
+                type: string
+              methodName:
+                type: string
+              fileName:
+                type: string
+              lineNumber:
+                type: integer
+                format: int32
+              className:
+                type: string
+              nativeMethod:
+                type: boolean
+        type:
+          type: string
+          format: uri
+        status:
+          $ref: "#/components/schemas/StatusType"
+        violations:
+          type: array
+          items:
+            $ref: "#/components/schemas/Violation"
+        title:
+          type: string
+        message:
+          type: string
+        instance:
+          type: string
+          format: uri
+        parameters:
+          type: object
+          additionalProperties: {}
+        detail:
+          type: string
+        suppressed:
+          type: array
+          items:
+            type: object
+            properties:
+              stackTrace:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    classLoaderName:
+                      type: string
+                    moduleName:
+                      type: string
+                    moduleVersion:
+                      type: string
+                    methodName:
+                      type: string
+                    fileName:
+                      type: string
+                    lineNumber:
+                      type: integer
+                      format: int32
+                    className:
+                      type: string
+                    nativeMethod:
+                      type: boolean
+              message:
+                type: string
+              localizedMessage:
+                type: string
+        localizedMessage:
+          type: string
+    ThrowableProblem:
+      type: object
+      properties:
+        cause: {}
+        stackTrace:
+          type: array
+          items:
+            type: object
+            properties:
+              classLoaderName:
+                type: string
+              moduleName:
+                type: string
+              moduleVersion:
+                type: string
+              methodName:
+                type: string
+              fileName:
+                type: string
+              lineNumber:
+                type: integer
+                format: int32
+              className:
+                type: string
+              nativeMethod:
+                type: boolean
+        message:
+          type: string
+        instance:
+          type: string
+          format: uri
+        type:
+          type: string
+          format: uri
+        parameters:
+          type: object
+          additionalProperties: {}
+        status:
+          $ref: "#/components/schemas/StatusType"
+        detail:
+          type: string
+        title:
+          type: string
+        suppressed:
+          type: array
+          items:
+            type: object
+            properties:
+              stackTrace:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    classLoaderName:
+                      type: string
+                    moduleName:
+                      type: string
+                    moduleVersion:
+                      type: string
+                    methodName:
+                      type: string
+                    fileName:
+                      type: string
+                    lineNumber:
+                      type: integer
+                      format: int32
+                    className:
+                      type: string
+                    nativeMethod:
+                      type: boolean
+              message:
+                type: string
+              localizedMessage:
+                type: string
+        localizedMessage:
+          type: string
+    Violation:
+      type: object
+      properties:
+        field:
+          type: string
+        message:
+          type: string
+    JsonSchema:
+      type: object
+      properties:
+        id:
+          type: string
+          description: "Schema ID. The ID is composed by the municipalityId, schema\
+            \ name and version. I.e.: [municipality_id]_[schema_name]_[schema_version]"
+          example: 2281_person_1.0
+        name:
+          type: string
+          description: Schema name
+          examples:
+          - person
+        version:
+          type: string
+          description: "Schema version on the format [major version].[minor version]"
+          examples:
+          - "1.0"
+        value:
+          type: string
+          description: The JSON schema
+          examples:
+          - |
+            {
+              "$id": "https://example.com/person.schema.json",
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "title": "Person",
+              "type": "object",
+              "properties": {
+                "firstName": {
+                  "type": "string",
+                  "description": "The person's first name."
+                },
+                "lastName": {
+                  "type": "string",
+                  "description": "The person's last name."
+                }
+              }
+            }
+        description:
+          type: string
+          description: Description of the schema purpose
+          examples:
+          - A JSON-schema that defines a person object
+        created:
+          type: string
+          format: date-time
+          description: Created timestamp
+  securitySchemes: {}
