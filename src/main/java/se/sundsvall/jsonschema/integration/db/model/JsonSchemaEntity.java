@@ -10,7 +10,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
-import jakarta.persistence.Lob;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -47,12 +46,10 @@ public class JsonSchemaEntity {
 	@Column(name = "version", length = 32)
 	private String version;
 
-	@Lob
 	@JdbcTypeCode(LONG32VARCHAR)
 	@Column(name = "value")
 	private String value;
 
-	@Lob
 	@JdbcTypeCode(LONG32VARCHAR)
 	@Column(name = "description")
 	private String description;
