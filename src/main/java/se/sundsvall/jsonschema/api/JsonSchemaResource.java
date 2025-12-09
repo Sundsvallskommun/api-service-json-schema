@@ -20,7 +20,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import java.util.List;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,6 +37,7 @@ import org.zalando.problem.violations.ConstraintViolationProblem;
 import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
 import se.sundsvall.jsonschema.api.model.JsonSchema;
 import se.sundsvall.jsonschema.api.model.JsonSchemaCreateRequest;
+import se.sundsvall.jsonschema.service.JsonSchemaService;
 
 @RestController
 @Validated
@@ -46,14 +49,21 @@ import se.sundsvall.jsonschema.api.model.JsonSchemaCreateRequest;
 @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 class JsonSchemaResource {
 
+	private final JsonSchemaService jsonSchemaService;
+
+	public JsonSchemaResource(JsonSchemaService jsonSchemaService) {
+		this.jsonSchemaService = jsonSchemaService;
+	}
+
 	@GetMapping(produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Get JSON schemas", responses = {
 		@ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true)
 	})
-	ResponseEntity<List<JsonSchema>> getSchemas(
-		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId) {
+	ResponseEntity<Page<JsonSchema>> getSchemas(
+		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
+		@ParameterObject final Pageable pageable) {
 
-		return ok(List.of(JsonSchema.create()));
+		return ok(jsonSchemaService.getSchemas(municipalityId, pageable));
 	}
 
 	@GetMapping(path = "{id}", produces = APPLICATION_JSON_VALUE)
@@ -62,7 +72,7 @@ class JsonSchemaResource {
 		@Parameter(name = "municipalityId", description = "MunicipalityID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "id", description = "Schema ID", example = "person_1.0") @NotBlank @PathVariable final String id) {
 
-		return ok(JsonSchema.create());
+		return ok(jsonSchemaService.getSchema(municipalityId, id));
 	}
 
 	@GetMapping(path = "{name}/latest", produces = APPLICATION_JSON_VALUE)
@@ -71,7 +81,7 @@ class JsonSchemaResource {
 		@Parameter(name = "municipalityId", description = "MunicipalityID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "name", description = "Schema name", example = "person") @NotBlank @PathVariable final String name) {
 
-		return ok(JsonSchema.create());
+		return ok(jsonSchemaService.getLatestSchemaByName(municipalityId, name));
 	}
 
 	@PostMapping(consumes = APPLICATION_JSON_VALUE, produces = ALL_VALUE)
@@ -82,7 +92,9 @@ class JsonSchemaResource {
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Valid @NotNull @RequestBody final JsonSchemaCreateRequest body) {
 
-		return created(fromPath("/{municipalityId}/jsonschemas/{id}").buildAndExpand(municipalityId, "some-schema-id").toUri())
+		final var createdJsonSchema = jsonSchemaService.create(municipalityId, body);
+
+		return created(fromPath("/{municipalityId}/jsonschemas/{id}").buildAndExpand(municipalityId, createdJsonSchema.getId()).toUri())
 			.header(CONTENT_TYPE, ALL_VALUE)
 			.build();
 	}
@@ -95,6 +107,8 @@ class JsonSchemaResource {
 	ResponseEntity<Void> deleteSchema(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "id", description = "Schema ID", example = "person_1.0") @PathVariable @NotBlank final String id) {
+
+		jsonSchemaService.delete(municipalityId, id);
 
 		return noContent().build();
 	}

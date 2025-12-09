@@ -7,7 +7,7 @@ info:
     url: https://opensource.org/licenses/MIT
   version: "1.0"
 servers:
-- url: http://localhost:61909
+- url: http://localhost:63537
   description: Generated server url
 paths:
   /{municipalityId}/jsonschemas:
@@ -24,15 +24,38 @@ paths:
         schema:
           type: string
         example: 2281
+      - name: page
+        in: query
+        description: Zero-based page index (0..N)
+        required: false
+        schema:
+          type: integer
+          default: 0
+          minimum: 0
+      - name: size
+        in: query
+        description: The size of the page to be returned
+        required: false
+        schema:
+          type: integer
+          default: 20
+          minimum: 1
+      - name: sort
+        in: query
+        description: "Sorting criteria in the format: property,(asc|desc). Default\
+          \ sort order is ascending. Multiple sort criteria are supported."
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/JsonSchema"
+                $ref: "#/components/schemas/PageJsonSchema"
         "400":
           description: Bad Request
           content:
@@ -239,6 +262,7 @@ components:
   schemas:
     JsonSchemaCreateRequest:
       type: object
+      description: JsonSchemaCreateRequest model
       properties:
         name:
           type: string
@@ -475,6 +499,7 @@ components:
           type: string
     JsonSchema:
       type: object
+      description: JsonSchema model
       properties:
         id:
           type: string
@@ -521,4 +546,63 @@ components:
           type: string
           format: date-time
           description: Created timestamp
+    PageJsonSchema:
+      type: object
+      properties:
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/JsonSchema"
+        number:
+          type: integer
+          format: int32
+        numberOfElements:
+          type: integer
+          format: int32
+        pageable:
+          $ref: "#/components/schemas/PageableObject"
+        sort:
+          $ref: "#/components/schemas/SortObject"
+        first:
+          type: boolean
+        last:
+          type: boolean
+        empty:
+          type: boolean
+    PageableObject:
+      type: object
+      properties:
+        offset:
+          type: integer
+          format: int64
+        pageSize:
+          type: integer
+          format: int32
+        pageNumber:
+          type: integer
+          format: int32
+        sort:
+          $ref: "#/components/schemas/SortObject"
+        unpaged:
+          type: boolean
+        paged:
+          type: boolean
+    SortObject:
+      type: object
+      properties:
+        empty:
+          type: boolean
+        unsorted:
+          type: boolean
+        sorted:
+          type: boolean
   securitySchemes: {}

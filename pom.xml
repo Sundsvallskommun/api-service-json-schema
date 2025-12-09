@@ -11,7 +11,10 @@
 	<artifactId>api-service-json-schema</artifactId>
 	<version>1.0</version>
 	<name>api-service-json-schema</name>
-	<properties />
+	<properties>
+		<json-schema-validator.version>2.0.0</json-schema-validator.version>
+		<maven-artifact.version>3.9.11</maven-artifact.version>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>se.sundsvall.dept44</groupId>
@@ -34,6 +37,18 @@
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-mysql</artifactId>
+		</dependency>
+		<!-- JSON schema functionality -->
+		<dependency>
+			<groupId>com.networknt</groupId>
+			<artifactId>json-schema-validator</artifactId>
+			<version>${json-schema-validator.version}</version>
+		</dependency>
+		<dependency>
+			<!-- Schema version comparison -->
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-artifact</artifactId>
+			<version>${maven-artifact.version}</version>
 		</dependency>
 		<!-- Test -->
 		<dependency>
