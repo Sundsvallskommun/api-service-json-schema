@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
+@Schema(description = "JsonSchema model")
 public class JsonSchema {
 
 	@Schema(description = "Schema ID. The ID is composed by the municipalityId, schema name and version. I.e.: [municipality_id]_[schema_name]_[schema_version]", example = "2281_person_1.0")

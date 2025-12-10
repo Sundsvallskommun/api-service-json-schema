@@ -1,6 +1,8 @@
 package se.sundsvall.jsonschema.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
@@ -8,18 +10,24 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import se.sundsvall.jsonschema.Application;
 import se.sundsvall.jsonschema.api.model.JsonSchema;
 import se.sundsvall.jsonschema.api.model.JsonSchemaCreateRequest;
+import se.sundsvall.jsonschema.service.JsonSchemaService;
 
 @ActiveProfiles("junit")
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
 class JsonSchemaResourceTest {
 
 	private static final String MUNICIPALITY_ID = "2281";
+
+	@MockitoBean
+	private JsonSchemaService jsonSchemaServiceMock;
 
 	@Autowired
 	private WebTestClient webTestClient;
@@ -28,28 +36,36 @@ class JsonSchemaResourceTest {
 	void getSchemas() {
 
 		// Arrange
-		final var jsonSchemas = List.of(JsonSchema.create());
+		final var pageable = PageRequest.of(0, 20);
+		final var matches = new PageImpl<>(List.of(JsonSchema.create().withId("schema_1.0")), pageable, 20);
+
+		when(jsonSchemaServiceMock.getSchemas(MUNICIPALITY_ID, pageable)).thenReturn(matches);
 
 		// Act
-		final var response = webTestClient.get()
+		webTestClient.get()
 			.uri("/{municipalityId}/jsonschemas", MUNICIPALITY_ID)
 			.exchange()
 			.expectStatus()
 			.isOk()
 			.expectHeader().contentType(APPLICATION_JSON)
-			.expectBody(new ParameterizedTypeReference<List<JsonSchema>>() {}).returnResult().getResponseBody();
+			.expectBody()
+			.jsonPath("$.content.length()").isEqualTo(1)
+			.jsonPath("$.totalElements").isEqualTo(20)
+			.jsonPath("$.pageable.pageNumber").isEqualTo(0)
+			.jsonPath("$.size").isEqualTo(20);
 
 		// Assert
-		assertThat(response).isEqualTo(jsonSchemas);
-
-		// TODO: Verifications
+		verify(jsonSchemaServiceMock).getSchemas(MUNICIPALITY_ID, pageable);
 	}
 
+	@Test
 	void getSchema() {
 
 		// Arrange
 		final var id = "some-schema-id";
-		final var jsonSchema = JsonSchema.create();
+		final var jsonSchema = JsonSchema.create().withId("schema_1.0");
+
+		when(jsonSchemaServiceMock.getSchema(MUNICIPALITY_ID, id)).thenReturn(jsonSchema);
 
 		// Act
 		final var response = webTestClient.get()
@@ -62,8 +78,7 @@ class JsonSchemaResourceTest {
 
 		// Assert
 		assertThat(response).isEqualTo(jsonSchema);
-
-		// TODO: Verifications
+		verify(jsonSchemaServiceMock).getSchema(MUNICIPALITY_ID, id);
 	}
 
 	@Test
@@ -71,7 +86,9 @@ class JsonSchemaResourceTest {
 
 		// Arrange
 		final var name = "some-schema-name";
-		final var jsonSchema = JsonSchema.create();
+		final var jsonSchema = JsonSchema.create().withId("schema_1.0");
+
+		when(jsonSchemaServiceMock.getLatestSchemaByName(MUNICIPALITY_ID, name)).thenReturn(jsonSchema);
 
 		// Act
 		final var response = webTestClient.get()
@@ -85,19 +102,23 @@ class JsonSchemaResourceTest {
 		// Assert
 		assertThat(response).isEqualTo(jsonSchema);
 
-		// TODO: Verifications
+		verify(jsonSchemaServiceMock).getLatestSchemaByName(MUNICIPALITY_ID, name);
 	}
 
 	@Test
 	void createSchema() {
 
 		// Arrange
-		final var id = "some-schema-id";
+		final var id = "schema_1.0";
+		final var name = "schema";
+		final var jsonSchema = JsonSchema.create().withId(id);
 		final var body = JsonSchemaCreateRequest.create()
 			.withDescription("description")
-			.withName("name")
+			.withName(name)
 			.withValue("{\"$schema\": \"https://json-schema.org/draft/2020-12/schema\"}")
 			.withVersion("1.0");
+
+		when(jsonSchemaServiceMock.create(MUNICIPALITY_ID, body)).thenReturn(jsonSchema);
 
 		// Act
 		webTestClient.post()
@@ -107,7 +128,8 @@ class JsonSchemaResourceTest {
 			.expectStatus().isCreated()
 			.expectHeader().location("/" + MUNICIPALITY_ID + "/jsonschemas/" + id);
 
-		// TODO: Verifications
+		// Assert
+		verify(jsonSchemaServiceMock).create(MUNICIPALITY_ID, body);
 	}
 
 	@Test
@@ -122,6 +144,7 @@ class JsonSchemaResourceTest {
 			.exchange()
 			.expectStatus().isNoContent();
 
-		// TODO: Verifications
+		// Assert
+		verify(jsonSchemaServiceMock).delete(MUNICIPALITY_ID, id);
 	}
 }
