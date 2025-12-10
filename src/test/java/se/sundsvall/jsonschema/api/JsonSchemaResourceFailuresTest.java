@@ -2,6 +2,7 @@ package se.sundsvall.jsonschema.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.zalando.problem.Status.BAD_REQUEST;
 
@@ -9,17 +10,22 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.zalando.problem.violations.ConstraintViolationProblem;
 import org.zalando.problem.violations.Violation;
 import se.sundsvall.jsonschema.Application;
 import se.sundsvall.jsonschema.api.model.JsonSchemaCreateRequest;
+import se.sundsvall.jsonschema.service.JsonSchemaService;
 
 @ActiveProfiles("junit")
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
 class JsonSchemaResourceFailuresTest {
 
 	private static final String MUNICIPALITY_ID = "2281";
+
+	@MockitoBean
+	private JsonSchemaService jsonSchemaServiceMock;
 
 	@Autowired
 	private WebTestClient webTestClient;
@@ -44,7 +50,7 @@ class JsonSchemaResourceFailuresTest {
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("getSchemas.municipalityId", "not a valid municipality ID"));
 
-		// TODO: verifyNoInteractions
+		verifyNoInteractions(jsonSchemaServiceMock);
 	}
 
 	@Test
@@ -70,7 +76,7 @@ class JsonSchemaResourceFailuresTest {
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("getSchemaById.municipalityId", "not a valid municipality ID"));
 
-		// TODO: verifyNoInteractions
+		verifyNoInteractions(jsonSchemaServiceMock);
 	}
 
 	@Test
@@ -96,7 +102,7 @@ class JsonSchemaResourceFailuresTest {
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("getLatestSchemaByName.municipalityId", "not a valid municipality ID"));
 
-		// TODO: verifyNoInteractions
+		verifyNoInteractions(jsonSchemaServiceMock);
 	}
 
 	@Test
@@ -127,7 +133,7 @@ class JsonSchemaResourceFailuresTest {
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("createSchema.municipalityId", "not a valid municipality ID"));
 
-		// TODO: verifyNoInteractions
+		verifyNoInteractions(jsonSchemaServiceMock);
 	}
 
 	@Test
@@ -154,10 +160,10 @@ class JsonSchemaResourceFailuresTest {
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(
 				tuple("name", "must not be blank"),
-				// tuple("value", "must be valid JSON, but was blank"),
+				tuple("value", "must be valid JSON, but was blank"),
 				tuple("version", "must not be blank"));
 
-		// TODO: verifyNoInteractions
+		verifyNoInteractions(jsonSchemaServiceMock);
 	}
 
 	@Test
@@ -188,11 +194,10 @@ class JsonSchemaResourceFailuresTest {
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("version", "must match \"^(\\d+\\.)?(\\d+)$\""));
 
-		// TODO: verifyNoInteractions
+		verifyNoInteractions(jsonSchemaServiceMock);
 	}
 
-	// TODO: Enable test
-	// @Test
+	@Test
 	void createSchemaInvalidSpecificationVersion() {
 
 		// Arrange
@@ -220,7 +225,7 @@ class JsonSchemaResourceFailuresTest {
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("value", "Wrong value in $schema-node. Expected: 'https://json-schema.org/draft/2020-12/schema' Found: 'https://json-schema.org/draft/2019-09/schema'"));
 
-		// TODO: verifyNoInteractions
+		verifyNoInteractions(jsonSchemaServiceMock);
 	}
 
 	@Test
@@ -246,6 +251,6 @@ class JsonSchemaResourceFailuresTest {
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("deleteSchema.municipalityId", "not a valid municipality ID"));
 
-		// TODO: verifyNoInteractions
+		verifyNoInteractions(jsonSchemaServiceMock);
 	}
 }

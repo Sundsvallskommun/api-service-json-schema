@@ -27,6 +27,7 @@ import se.sundsvall.jsonschema.integration.db.model.JsonSchemaEntity;
 public class JsonSchemaValidationService {
 
 	private static final Locale LOCALE = ENGLISH;
+	private static final SchemaRegistry REGISTRY = SchemaRegistry.withDefaultDialect(DRAFT_2020_12);
 
 	private final JsonSchemaRepository jsonSchemaRepository;
 
@@ -41,7 +42,7 @@ public class JsonSchemaValidationService {
 	 * @return                parsed Schema
 	 */
 	public Schema toJsonSchema(String schemaAsString) {
-		return SchemaRegistry.withDefaultDialect(DRAFT_2020_12).getSchema(schemaAsString);
+		return REGISTRY.getSchema(schemaAsString);
 	}
 
 	/**
