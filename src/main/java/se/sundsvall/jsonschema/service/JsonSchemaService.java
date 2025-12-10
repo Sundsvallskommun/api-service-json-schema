@@ -111,9 +111,9 @@ public class JsonSchemaService {
 
 	// ---- Private helpers ------------------------------------------------------
 
-	private void validateSchemaDoesNotAlreadyExist(String schemaId) {
-		if (jsonSchemaRepository.existsById(schemaId)) {
-			throw Problem.valueOf(CONFLICT, JSON_SCHEMA_ALREADY_EXISTS.formatted(schemaId));
+	private void validateSchemaDoesNotAlreadyExist(String id) {
+		if (jsonSchemaRepository.existsById(id)) {
+			throw Problem.valueOf(CONFLICT, JSON_SCHEMA_ALREADY_EXISTS.formatted(id));
 		}
 	}
 

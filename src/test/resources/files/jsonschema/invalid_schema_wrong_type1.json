@@ -3,7 +3,7 @@
 	"$id": "https://example.com/product.schema.json",
 	"title": "Product",
 	"description": "A product from Acme's catalog",
-	"type": "invalid-value",
+	"type": "invalid-type",
 	"properties": {
 		"productId": {
 			"description": "The unique identifier for a product",

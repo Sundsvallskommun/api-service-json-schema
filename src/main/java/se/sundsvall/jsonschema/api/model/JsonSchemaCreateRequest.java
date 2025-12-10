@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import java.util.Objects;
+import se.sundsvall.jsonschema.api.validation.ValidJsonSchema;
 
 @Schema(description = "JsonSchemaCreateRequest model")
 public class JsonSchemaCreateRequest {
@@ -19,6 +20,7 @@ public class JsonSchemaCreateRequest {
 	@Schema(description = "Schema version on the format [major version].[minor version]", examples = "1.0", requiredMode = REQUIRED)
 	private String version;
 
+	@ValidJsonSchema
 	@Schema(description = "The JSON schema, specified by: https://json-schema.org/draft/2020-12/schema", examples = """
 		{
 		  "$id": "https://example.com/person.schema.json",
