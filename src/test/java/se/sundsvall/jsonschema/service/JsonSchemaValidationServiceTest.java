@@ -22,12 +22,15 @@ import se.sundsvall.dept44.test.extension.ResourceLoaderExtension;
 import se.sundsvall.jsonschema.integration.db.JsonSchemaRepository;
 import se.sundsvall.jsonschema.integration.db.model.JsonSchemaEntity;
 
-@SpringBootTest(classes = JsonSchemaValidationService.class)
+@SpringBootTest(classes = {
+	JsonSchemaCache.class,
+	JsonSchemaValidationService.class
+})
 @ActiveProfiles(value = "junit")
 @ExtendWith(ResourceLoaderExtension.class)
 class JsonSchemaValidationServiceTest {
 
-	private static final String SCHEMA = "files/jsonschema/schema.json";
+	private static final String VALID_SCHEMA = "files/jsonschema/valid_schema.json";
 	private static final String VALID_JSON = "files/jsonschema/valid_json.json";
 	private static final String INVALID_JSON_MISSING_ALL_PROPERTIES = "files/jsonschema/invalid_json_missing_all_properties.json";
 	private static final String INVALID_JSON_BAD_DATATYPE_ON_PROPERTY = "files/jsonschema/invalid_json_bad_datatype_on_property.json";
@@ -41,22 +44,35 @@ class JsonSchemaValidationServiceTest {
 	private JsonSchemaValidationService jsonSchemaValidationService;
 
 	@Test
-	void validateWithValidJson(@Load(SCHEMA) final String schema, @Load(VALID_JSON) final String json) {
+	void validateWithValidJson(@Load(VALID_SCHEMA) final String schema, @Load(VALID_JSON) final String json) {
+
+		// Arrange
+		final var schemaId = "schemaId";
+		final var jsonSchemaEntity = JsonSchemaEntity.create()
+			.withId(schemaId)
+			.withValue(schema);
+
+		when(jsonSchemaRepositoryMock.findById(schemaId)).thenReturn(Optional.of(jsonSchemaEntity));
 
 		// Act
-		final var jsonSchema = jsonSchemaValidationService.toJsonSchema(schema);
-		final var validationMessages = jsonSchemaValidationService.validate(json, jsonSchema);
+		final var validationMessages = jsonSchemaValidationService.validate(json, schemaId);
 
 		// Assert
 		assertThat(validationMessages).isEmpty();
 	}
 
 	@Test
-	void validateWithAllMissingProperties(@Load(SCHEMA) final String schema, @Load(INVALID_JSON_MISSING_ALL_PROPERTIES) final String json) {
+	void validateWithAllMissingProperties(@Load(VALID_SCHEMA) final String schema, @Load(INVALID_JSON_MISSING_ALL_PROPERTIES) final String json) {
 
-		// Act
-		final var jsonSchema = jsonSchemaValidationService.toJsonSchema(schema);
-		final var validationMessages = jsonSchemaValidationService.validate(json, jsonSchema);
+		// Arrange
+		final var schemaId = "schemaId";
+		final var jsonSchemaEntity = JsonSchemaEntity.create()
+			.withId(schemaId)
+			.withValue(schema);
+
+		when(jsonSchemaRepositoryMock.findById(schemaId)).thenReturn(Optional.of(jsonSchemaEntity));
+
+		final var validationMessages = jsonSchemaValidationService.validate(json, schemaId);
 
 		// Assert
 		assertThat(validationMessages)
@@ -72,11 +88,18 @@ class JsonSchemaValidationServiceTest {
 	}
 
 	@Test
-	void validateWithBadDatatypeOnProperty(@Load(SCHEMA) final String schema, @Load(INVALID_JSON_BAD_DATATYPE_ON_PROPERTY) final String json) {
+	void validateWithBadDatatypeOnProperty(@Load(VALID_SCHEMA) final String schema, @Load(INVALID_JSON_BAD_DATATYPE_ON_PROPERTY) final String json) {
+
+		// Arrange
+		final var schemaId = "schemaId";
+		final var jsonSchemaEntity = JsonSchemaEntity.create()
+			.withId(schemaId)
+			.withValue(schema);
+
+		when(jsonSchemaRepositoryMock.findById(schemaId)).thenReturn(Optional.of(jsonSchemaEntity));
 
 		// Act
-		final var jsonSchema = jsonSchemaValidationService.toJsonSchema(schema);
-		final var validationMessages = jsonSchemaValidationService.validate(json, jsonSchema);
+		final var validationMessages = jsonSchemaValidationService.validate(json, schemaId);
 
 		// Assert
 		assertThat(validationMessages)
@@ -90,11 +113,18 @@ class JsonSchemaValidationServiceTest {
 	}
 
 	@Test
-	void validateWithNonUniqueTags(@Load(SCHEMA) final String schema, @Load(INVALID_JSON_NON_UNIQUE_TAGS) final String json) {
+	void validateWithNonUniqueTags(@Load(VALID_SCHEMA) final String schema, @Load(INVALID_JSON_NON_UNIQUE_TAGS) final String json) {
+
+		// Arrange
+		final var schemaId = "schemaId";
+		final var jsonSchemaEntity = JsonSchemaEntity.create()
+			.withId(schemaId)
+			.withValue(schema);
+
+		when(jsonSchemaRepositoryMock.findById(schemaId)).thenReturn(Optional.of(jsonSchemaEntity));
 
 		// Act
-		final var jsonSchema = jsonSchemaValidationService.toJsonSchema(schema);
-		final var validationMessages = jsonSchemaValidationService.validate(json, jsonSchema);
+		final var validationMessages = jsonSchemaValidationService.validate(json, schemaId);
 
 		// Assert
 		assertThat(validationMessages)
@@ -107,11 +137,18 @@ class JsonSchemaValidationServiceTest {
 	}
 
 	@Test
-	void validateWithMiscErrors(@Load(SCHEMA) final String schema, @Load(INVALID_JSON_MISC_ERRORS) final String json) {
+	void validateWithMiscErrors(@Load(VALID_SCHEMA) final String schema, @Load(INVALID_JSON_MISC_ERRORS) final String json) {
+
+		// Arrange
+		final var schemaId = "schemaId";
+		final var jsonSchemaEntity = JsonSchemaEntity.create()
+			.withId(schemaId)
+			.withValue(schema);
+
+		when(jsonSchemaRepositoryMock.findById(schemaId)).thenReturn(Optional.of(jsonSchemaEntity));
 
 		// Act
-		final var jsonSchema = jsonSchemaValidationService.toJsonSchema(schema);
-		final var validationMessages = jsonSchemaValidationService.validate(json, jsonSchema);
+		final var validationMessages = jsonSchemaValidationService.validate(json, schemaId);
 
 		// Assert
 		assertThat(validationMessages)
@@ -128,11 +165,18 @@ class JsonSchemaValidationServiceTest {
 	}
 
 	@Test
-	void validateAndThrowWithMiscErrors(@Load(SCHEMA) final String schema, @Load(INVALID_JSON_MISC_ERRORS) final String json) {
+	void validateAndThrowWithMiscErrors(@Load(VALID_SCHEMA) final String schema, @Load(INVALID_JSON_MISC_ERRORS) final String json) {
+
+		// Arrange
+		final var schemaId = "schemaId";
+		final var jsonSchemaEntity = JsonSchemaEntity.create()
+			.withId(schemaId)
+			.withValue(schema);
+
+		when(jsonSchemaRepositoryMock.findById(schemaId)).thenReturn(Optional.of(jsonSchemaEntity));
 
 		// Act
-		final var jsonSchema = jsonSchemaValidationService.toJsonSchema(schema);
-		final var exception = assertThrows(ConstraintViolationProblem.class, () -> jsonSchemaValidationService.validateAndThrow(json, jsonSchema));
+		final var exception = assertThrows(ConstraintViolationProblem.class, () -> jsonSchemaValidationService.validateAndThrow(json, schemaId));
 
 		// Assert
 		assertThat(exception)
@@ -150,15 +194,22 @@ class JsonSchemaValidationServiceTest {
 	}
 
 	@Test
-	void validateAndThrowWithValidJson(@Load(SCHEMA) final String schema, @Load(VALID_JSON) final String json) {
+	void validateAndThrowWithValidJson(@Load(VALID_SCHEMA) final String schema, @Load(VALID_JSON) final String json) {
+
+		// Arrange
+		final var schemaId = "schemaId";
+		final var jsonSchemaEntity = JsonSchemaEntity.create()
+			.withId(schemaId)
+			.withValue(schema);
+
+		when(jsonSchemaRepositoryMock.findById(schemaId)).thenReturn(Optional.of(jsonSchemaEntity));
 
 		// Act
-		final var jsonSchema = jsonSchemaValidationService.toJsonSchema(schema);
-		assertDoesNotThrow(() -> jsonSchemaValidationService.validateAndThrow(json, jsonSchema));
+		assertDoesNotThrow(() -> jsonSchemaValidationService.validateAndThrow(json, schemaId));
 	}
 
 	@Test
-	void validateBySchemaIdWithValidJson(@Load(SCHEMA) final String schema, @Load(VALID_JSON) final String json) {
+	void validateBySchemaIdWithValidJson(@Load(VALID_SCHEMA) final String schema, @Load(VALID_JSON) final String json) {
 
 		// Arrange
 		final var schemaId = "schemaId";
@@ -175,13 +226,15 @@ class JsonSchemaValidationServiceTest {
 	}
 
 	@Test
-	void validateBySchemaIdWithMiscErrors(@Load(SCHEMA) final String schema, @Load(INVALID_JSON_MISC_ERRORS) final String json) {
+	void validateBySchemaIdWithMiscErrors(@Load(VALID_SCHEMA) final String schema, @Load(INVALID_JSON_MISC_ERRORS) final String json) {
 
 		// Arrange
 		final var schemaId = "schemaId";
-		when(jsonSchemaRepositoryMock.findById(schemaId)).thenReturn(Optional.of(JsonSchemaEntity.create()
+		final var jsonSchemaEntity = JsonSchemaEntity.create()
 			.withId(schemaId)
-			.withValue(schema)));
+			.withValue(schema);
+
+		when(jsonSchemaRepositoryMock.findById(schemaId)).thenReturn(Optional.of(jsonSchemaEntity));
 
 		// Act
 		final var validationMessages = jsonSchemaValidationService.validate(json, schemaId);
@@ -200,47 +253,5 @@ class JsonSchemaValidationServiceTest {
 				tuple("", "required property 'productName' not found"));
 
 		verify(jsonSchemaRepositoryMock).findById(schemaId);
-	}
-
-	@Test
-	void validateAndThrowBySchemaIdWithValidJson(@Load(SCHEMA) final String schema, @Load(VALID_JSON) final String json) {
-
-		// Arrange
-		final var schemaId = "schemaId";
-		when(jsonSchemaRepositoryMock.findById(schemaId)).thenReturn(Optional.of(JsonSchemaEntity.create()
-			.withId(schemaId)
-			.withValue(schema)));
-
-		// Act
-		assertDoesNotThrow(() -> jsonSchemaValidationService.validateAndThrow(json, schemaId));
-
-		// Assert
-		verify(jsonSchemaRepositoryMock).findById(schemaId);
-	}
-
-	@Test
-	void validateAndThrowBySchemaIdWithMiscErrors(@Load(SCHEMA) final String schema, @Load(INVALID_JSON_MISC_ERRORS) final String json) {
-
-		// Arrange
-		final var schemaId = "schemaId";
-		when(jsonSchemaRepositoryMock.findById(schemaId)).thenReturn(Optional.of(JsonSchemaEntity.create()
-			.withId(schemaId)
-			.withValue(schema)));
-
-		// Act
-		final var exception = assertThrows(ConstraintViolationProblem.class, () -> jsonSchemaValidationService.validateAndThrow(json, schemaId));
-
-		// Assert
-		assertThat(exception)
-			.isNotNull()
-			.hasMessage("Constraint Violation");
-
-		assertThat(exception.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
-			.containsExactly(
-				tuple("/price", "must have an exclusive minimum value of 0"),
-				tuple("/tags/5", "integer found, string expected"),
-				tuple("/tags", "must have only unique items in the array"),
-				tuple("", "required property 'productName' not found"));
 	}
 }

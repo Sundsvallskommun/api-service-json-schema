@@ -44,11 +44,16 @@
 			<artifactId>json-schema-validator</artifactId>
 			<version>${json-schema-validator.version}</version>
 		</dependency>
+		<!-- Schema version comparison -->
 		<dependency>
-			<!-- Schema version comparison -->
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-artifact</artifactId>
 			<version>${maven-artifact.version}</version>
+		</dependency>
+		<!-- Schema cache -->
+		<dependency>
+			<groupId>com.github.ben-manes.caffeine</groupId>
+			<artifactId>caffeine</artifactId>
 		</dependency>
 		<!-- Test -->
 		<dependency>

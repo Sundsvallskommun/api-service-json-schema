@@ -11,14 +11,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.schema.Schema;
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -31,7 +30,8 @@ import se.sundsvall.jsonschema.service.JsonSchemaValidationService;
 })
 class ValidJsonSchemaConstraintValidatorTest {
 
-	private static final String VALID_SCHEMA = "files/jsonschema/schema.json";
+	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+	private static final String VALID_SCHEMA = "files/jsonschema/valid_schema.json";
 	private static final String INVALID_SCHEMA_WRONG_TYPE1 = "files/jsonschema/invalid_schema_wrong_type1.json";
 	private static final String INVALID_SCHEMA_WRONG_TYPE2 = "files/jsonschema/invalid_schema_wrong_type2.json";
 	private static final String INVALID_SCHEMA_WRONG_TYPE3 = "files/jsonschema/invalid_schema_wrong_type3.json";
@@ -50,29 +50,34 @@ class ValidJsonSchemaConstraintValidatorTest {
 	private ValidJsonSchemaConstraintValidator validator;
 
 	@Test
-	void validateValidJsonSchema(@Load(VALID_SCHEMA) final String schema) {
+	void validateValidJsonSchema(@Load(VALID_SCHEMA) final String schemaString) throws Exception {
+
+		// Arrange
+		final var schemaJsonNode = OBJECT_MAPPER.readTree(schemaString);
 
 		// Act
-		final var result = validator.isValid(schema, constraintValidatorContextMock);
+		final var result = validator.isValid(schemaJsonNode, constraintValidatorContextMock);
 
 		// Assert
 		assertThat(result).isTrue();
-		verify(jsonSchemaValidationServiceMock).validate(eq(schema), any(Schema.class));
+		verify(jsonSchemaValidationServiceMock).validate(eq(schemaJsonNode.toString()), any(Schema.class));
 		verifyNoInteractions(constraintValidatorContextMock, constraintViolationBuilderMock);
 	}
 
 	@Test
-	void validateInvalidJsonSchemaWhenWrongType1(@Load(INVALID_SCHEMA_WRONG_TYPE1) final String schema) {
+	void validateInvalidJsonSchemaWhenWrongType1(@Load(INVALID_SCHEMA_WRONG_TYPE1) final String schemaString) throws Exception {
 
 		// Arrange
+		final var schemaJsonNode = OBJECT_MAPPER.readTree(schemaString);
+
 		when(constraintValidatorContextMock.buildConstraintViolationWithTemplate(any())).thenReturn(constraintViolationBuilderMock);
 
 		// Act
-		final var result = validator.isValid(schema, constraintValidatorContextMock);
+		final var result = validator.isValid(schemaJsonNode, constraintValidatorContextMock);
 
 		// Assert
 		assertThat(result).isFalse();
-		verify(jsonSchemaValidationServiceMock).validate(eq(schema), any(Schema.class));
+		verify(jsonSchemaValidationServiceMock).validate(eq(schemaJsonNode.toString()), any(Schema.class));
 		verify(constraintValidatorContextMock, times(2)).disableDefaultConstraintViolation();
 		verify(constraintValidatorContextMock).buildConstraintViolationWithTemplate("/type: does not have a value in the enumeration [\"array\", \"boolean\", \"integer\", \"null\", \"number\", \"object\", \"string\"]");
 		verify(constraintValidatorContextMock).buildConstraintViolationWithTemplate("/type: string found, array expected");
@@ -80,47 +85,56 @@ class ValidJsonSchemaConstraintValidatorTest {
 	}
 
 	@Test
-	void validateInvalidJsonSchemaWhenWrongType2(@Load(INVALID_SCHEMA_WRONG_TYPE2) final String schema) {
+	void validateInvalidJsonSchemaWhenWrongType2(@Load(INVALID_SCHEMA_WRONG_TYPE2) final String schemaString) throws Exception {
+
+		// Arrange
+		final var schemaJsonNode = OBJECT_MAPPER.readTree(schemaString);
 
 		// Arrange
 		when(constraintValidatorContextMock.buildConstraintViolationWithTemplate(any())).thenReturn(constraintViolationBuilderMock);
 
 		// Act
-		final var result = validator.isValid(schema, constraintValidatorContextMock);
+		final var result = validator.isValid(schemaJsonNode, constraintValidatorContextMock);
 
 		// Assert
 		assertThat(result).isFalse();
-		verify(jsonSchemaValidationServiceMock).validate(eq(schema), any(Schema.class));
+		verify(jsonSchemaValidationServiceMock).validate(eq(schemaJsonNode.toString()), any(Schema.class));
 		verify(constraintValidatorContextMock, times(8)).disableDefaultConstraintViolation();
 		verify(constraintValidatorContextMock, times(8)).buildConstraintViolationWithTemplate("/additionalProperties: string found, [object, boolean] expected");
 		verify(constraintViolationBuilderMock, times(8)).addConstraintViolation();
 	}
 
 	@Test
-	void validateInvalidJsonSchemaWhenWrongType3(@Load(INVALID_SCHEMA_WRONG_TYPE3) final String schema) {
+	void validateInvalidJsonSchemaWhenWrongType3(@Load(INVALID_SCHEMA_WRONG_TYPE3) final String schemaString) throws Exception {
+
+		// Arrange
+		final var schemaJsonNode = OBJECT_MAPPER.readTree(schemaString);
 
 		// Arrange
 		when(constraintValidatorContextMock.buildConstraintViolationWithTemplate(any())).thenReturn(constraintViolationBuilderMock);
 
 		// Act
-		final var result = validator.isValid(schema, constraintValidatorContextMock);
+		final var result = validator.isValid(schemaJsonNode, constraintValidatorContextMock);
 
 		// Assert
 		assertThat(result).isFalse();
-		verify(jsonSchemaValidationServiceMock).validate(eq(schema), any(Schema.class));
+		verify(jsonSchemaValidationServiceMock).validate(eq(schemaJsonNode.toString()), any(Schema.class));
 		verify(constraintValidatorContextMock, times(2)).disableDefaultConstraintViolation();
 		verify(constraintValidatorContextMock).buildConstraintViolationWithTemplate("/type: does not have a value in the enumeration [\"array\", \"boolean\", \"integer\", \"null\", \"number\", \"object\", \"string\"]");
 		verify(constraintViolationBuilderMock, times(2)).addConstraintViolation();
 	}
 
 	@Test
-	void validateInvalidJsonSchemaWhenWrongSchemaSpecification(@Load(INVALID_SCHEMA_WRONG_SPECIFICATION) final String schema) {
+	void validateInvalidJsonSchemaWhenWrongSchemaSpecification(@Load(INVALID_SCHEMA_WRONG_SPECIFICATION) final String schemaString) throws Exception {
+
+		// Arrange
+		final var schemaJsonNode = OBJECT_MAPPER.readTree(schemaString);
 
 		// Arrange
 		when(constraintValidatorContextMock.buildConstraintViolationWithTemplate(any())).thenReturn(constraintViolationBuilderMock);
 
 		// Act
-		final var result = validator.isValid(schema, constraintValidatorContextMock);
+		final var result = validator.isValid(schemaJsonNode, constraintValidatorContextMock);
 
 		// Assert
 		assertThat(result).isFalse();
@@ -130,18 +144,34 @@ class ValidJsonSchemaConstraintValidatorTest {
 		verify(constraintViolationBuilderMock).addConstraintViolation();
 	}
 
-	@ParameterizedTest
-	@NullAndEmptySource
-	@ValueSource(strings = {
-		" ", "	"
-	})
-	void validateBlankJsonSchemaValues(String input) {
+	@Test
+	void validateBlankJsonSchemaValues() throws Exception {
 
 		// Arrange
+		final var schemaJsonNode = OBJECT_MAPPER.readTree("");
+
 		when(constraintValidatorContextMock.buildConstraintViolationWithTemplate(any())).thenReturn(constraintViolationBuilderMock);
 
 		// Act
-		final var result = validator.isValid(input, constraintValidatorContextMock);
+		final var result = validator.isValid(schemaJsonNode, constraintValidatorContextMock);
+
+		// Assert
+		assertThat(result).isFalse();
+		verify(jsonSchemaValidationServiceMock, never()).validate(any(), anyString());
+		verify(constraintValidatorContextMock).disableDefaultConstraintViolation();
+		verify(constraintValidatorContextMock).buildConstraintViolationWithTemplate("must be valid JSON, but was empty");
+		verify(constraintViolationBuilderMock).addConstraintViolation();
+	}
+
+	void validateNullJsonSchemaValues() {
+
+		// Arrange
+		final var schemaJsonNode = (JsonNode) null;
+
+		when(constraintValidatorContextMock.buildConstraintViolationWithTemplate(any())).thenReturn(constraintViolationBuilderMock);
+
+		// Act
+		final var result = validator.isValid(schemaJsonNode, constraintValidatorContextMock);
 
 		// Assert
 		assertThat(result).isFalse();
@@ -151,23 +181,4 @@ class ValidJsonSchemaConstraintValidatorTest {
 		verify(constraintViolationBuilderMock).addConstraintViolation();
 	}
 
-	@ParameterizedTest
-	@ValueSource(strings = {
-		"{,}", "-"
-	})
-	void validateInvalidJsonSchemaValues(String input) {
-
-		// Arrange
-		when(constraintValidatorContextMock.buildConstraintViolationWithTemplate(any())).thenReturn(constraintViolationBuilderMock);
-
-		// Act
-		final var result = validator.isValid(input, constraintValidatorContextMock);
-
-		// Assert
-		assertThat(result).isFalse();
-		verify(jsonSchemaValidationServiceMock, never()).validate(any(), anyString());
-		verify(constraintValidatorContextMock).disableDefaultConstraintViolation();
-		verify(constraintValidatorContextMock).buildConstraintViolationWithTemplate("must be valid JSON, but was: '%s'".formatted(input));
-		verify(constraintViolationBuilderMock).addConstraintViolation();
-	}
 }

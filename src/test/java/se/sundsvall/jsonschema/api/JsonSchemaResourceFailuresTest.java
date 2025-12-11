@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.zalando.problem.Status.BAD_REQUEST;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,7 +36,7 @@ class JsonSchemaResourceFailuresTest {
 
 		// Act
 		final var response = webTestClient.get()
-			.uri("/invalid-municipality/jsonschemas")
+			.uri("/{municipalityId}/jsonschemas", "invalid")
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectBody(ConstraintViolationProblem.class)
@@ -61,7 +62,7 @@ class JsonSchemaResourceFailuresTest {
 
 		// Act
 		final var response = webTestClient.get()
-			.uri("/invalid-municipality/jsonschemas/{id}", id)
+			.uri("/{municipalityId}/jsonschemas/{id}", "invalid", id)
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectBody(ConstraintViolationProblem.class)
@@ -87,7 +88,7 @@ class JsonSchemaResourceFailuresTest {
 
 		// Act
 		final var response = webTestClient.get()
-			.uri("/invalid-municipality/jsonschemas/{name}/latest", name)
+			.uri("/{municipalityId}/jsonschemas/{name}/versions/latest", "invalid", name)
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectBody(ConstraintViolationProblem.class)
@@ -106,18 +107,18 @@ class JsonSchemaResourceFailuresTest {
 	}
 
 	@Test
-	void createSchemaInvalidMunicipalityId() {
+	void createSchemaInvalidMunicipalityId() throws Exception {
 
 		// Arrange
 		final var schemaRequest = JsonSchemaCreateRequest.create()
 			.withDescription("description")
 			.withName("name")
-			.withValue("{\"$schema\": \"https://json-schema.org/draft/2020-12/schema\"}")
+			.withValue(new ObjectMapper().readTree("{\"$schema\": \"https://json-schema.org/draft/2020-12/schema\"}"))
 			.withVersion("1.0");
 
 		// Act
 		final var response = webTestClient.post()
-			.uri("/invalid-municipality/jsonschemas")
+			.uri("/{municipalityId}/jsonschemas", "invalid")
 			.bodyValue(schemaRequest)
 			.exchange()
 			.expectStatus().isBadRequest()
@@ -160,20 +161,20 @@ class JsonSchemaResourceFailuresTest {
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(
 				tuple("name", "must not be blank"),
-				tuple("value", "must be valid JSON, but was blank"),
+				tuple("value", "must be valid JSON, but was null"),
 				tuple("version", "must not be blank"));
 
 		verifyNoInteractions(jsonSchemaServiceMock);
 	}
 
 	@Test
-	void createSchemaInvalidVersion() {
+	void createSchemaInvalidVersion() throws Exception {
 
 		// Arrange
 		final var schemaRequest = JsonSchemaCreateRequest.create()
 			.withDescription("description")
 			.withName("name")
-			.withValue("{\"$schema\": \"https://json-schema.org/draft/2020-12/schema\"}")
+			.withValue(new ObjectMapper().readTree("{\"$schema\": \"https://json-schema.org/draft/2020-12/schema\"}"))
 			.withVersion("invalid-version");
 
 		// Act
@@ -198,13 +199,13 @@ class JsonSchemaResourceFailuresTest {
 	}
 
 	@Test
-	void createSchemaInvalidSpecificationVersion() {
+	void createSchemaInvalidSpecificationVersion() throws Exception {
 
 		// Arrange
 		final var schemaRequest = JsonSchemaCreateRequest.create()
 			.withDescription("description")
 			.withName("name")
-			.withValue("{\"$schema\": \"https://json-schema.org/draft/2019-09/schema\"}") // Should be 2020-12
+			.withValue(new ObjectMapper().readTree("{\"$schema\": \"https://json-schema.org/draft/2019-09/schema\"}")) // Should be 2020-12
 			.withVersion("1.0");
 
 		// Act
@@ -236,7 +237,7 @@ class JsonSchemaResourceFailuresTest {
 
 		// Act
 		final var response = webTestClient.delete()
-			.uri("/invalid-municipality/jsonschemas/{id}", id)
+			.uri("/{municipalityId}/jsonschemas/{id}", "invalid", id)
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectBody(ConstraintViolationProblem.class)

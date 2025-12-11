@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,7 +93,7 @@ class JsonSchemaResourceTest {
 
 		// Act
 		final var response = webTestClient.get()
-			.uri("/{municipalityId}/jsonschemas/{name}/latest", MUNICIPALITY_ID, name)
+			.uri("/{municipalityId}/jsonschemas/{name}/versions/latest", MUNICIPALITY_ID, name)
 			.exchange()
 			.expectStatus()
 			.isOk()
@@ -106,7 +107,7 @@ class JsonSchemaResourceTest {
 	}
 
 	@Test
-	void createSchema() {
+	void createSchema() throws Exception {
 
 		// Arrange
 		final var id = "schema_1.0";
@@ -115,7 +116,7 @@ class JsonSchemaResourceTest {
 		final var body = JsonSchemaCreateRequest.create()
 			.withDescription("description")
 			.withName(name)
-			.withValue("{\"$schema\": \"https://json-schema.org/draft/2020-12/schema\"}")
+			.withValue(new ObjectMapper().readTree("{\"$schema\": \"https://json-schema.org/draft/2020-12/schema\"}"))
 			.withVersion("1.0");
 
 		when(jsonSchemaServiceMock.create(MUNICIPALITY_ID, body)).thenReturn(jsonSchema);

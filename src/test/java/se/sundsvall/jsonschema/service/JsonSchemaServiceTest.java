@@ -11,6 +11,7 @@ import static org.springframework.data.domain.Pageable.unpaged;
 import static org.zalando.problem.Status.CONFLICT;
 import static org.zalando.problem.Status.NOT_FOUND;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -42,7 +43,7 @@ class JsonSchemaServiceTest {
 	private JsonSchemaService service;
 
 	@Test
-	void getSchemas() {
+	void getSchemas() throws Exception {
 
 		// Arrange
 		final var pageable = PageRequest.of(0, 10);
@@ -53,18 +54,22 @@ class JsonSchemaServiceTest {
 		final var result = service.getSchemas(MUNICIPALITY_ID, pageable);
 
 		// Assert
-		assertThat(result)
-			.hasSize(1)
-			.first()
-			.usingRecursiveComparison()
-			.isEqualTo(entity);
+		assertThat(result).hasSize(1);
+
+		var apiSchema = result.getContent().getFirst();
+		assertThat(apiSchema.getId()).isEqualTo(entity.getId());
+		assertThat(apiSchema.getName()).isEqualTo(entity.getName());
+		assertThat(apiSchema.getVersion()).isEqualTo(entity.getVersion());
+		assertThat(apiSchema.getDescription()).isEqualTo(entity.getDescription());
+		assertThat(apiSchema.getCreated()).isEqualTo(entity.getCreated());
+		assertThat(apiSchema.getValue()).isEqualTo(new ObjectMapper().readTree(entity.getValue()));
 
 		verify(jsonSchemaRepositoryMock).findAllByMunicipalityId(MUNICIPALITY_ID, pageable);
 		verifyNoMoreInteractions(jsonSchemaRepositoryMock);
 	}
 
 	@Test
-	void getSchema() {
+	void getSchema() throws Exception {
 
 		// Arrange
 		final var entity = TestFactory.getJsonSchemaEntity();
@@ -75,9 +80,12 @@ class JsonSchemaServiceTest {
 		final var result = service.getSchema(MUNICIPALITY_ID, id);
 
 		// Assert
-		assertThat(result)
-			.usingRecursiveComparison()
-			.isEqualTo(entity);
+		assertThat(result.getId()).isEqualTo(entity.getId());
+		assertThat(result.getName()).isEqualTo(entity.getName());
+		assertThat(result.getVersion()).isEqualTo(entity.getVersion());
+		assertThat(result.getDescription()).isEqualTo(entity.getDescription());
+		assertThat(result.getCreated()).isEqualTo(entity.getCreated());
+		assertThat(result.getValue()).isEqualTo(new ObjectMapper().readTree(entity.getValue()));
 
 		verify(jsonSchemaRepositoryMock).findByMunicipalityIdAndId(MUNICIPALITY_ID, id);
 		verifyNoMoreInteractions(jsonSchemaRepositoryMock);
@@ -109,7 +117,7 @@ class JsonSchemaServiceTest {
 	}
 
 	@Test
-	void createSchema() {
+	void createSchema() throws Exception {
 
 		// Arrange
 		final var pageable = unpaged();
@@ -124,9 +132,12 @@ class JsonSchemaServiceTest {
 		final var result = service.create(MUNICIPALITY_ID, jsonSchemaCreateRequest);
 
 		// Assert
-		assertThat(result)
-			.usingRecursiveComparison()
-			.isEqualTo(entity);
+		assertThat(result.getId()).isEqualTo(entity.getId());
+		assertThat(result.getName()).isEqualTo(entity.getName());
+		assertThat(result.getVersion()).isEqualTo(entity.getVersion());
+		assertThat(result.getDescription()).isEqualTo(entity.getDescription());
+		assertThat(result.getCreated()).isEqualTo(entity.getCreated());
+		assertThat(result.getValue()).isEqualTo(new ObjectMapper().readTree(entity.getValue()));
 
 		verify(jsonSchemaRepositoryMock).findAllByMunicipalityIdAndName(MUNICIPALITY_ID, jsonSchemaCreateRequest.getName().toLowerCase(), pageable);
 		verify(jsonSchemaRepositoryMock).existsById("%s_%s_%s".formatted(MUNICIPALITY_ID, jsonSchemaCreateRequest.getName(), jsonSchemaCreateRequest.getVersion()).toLowerCase());
@@ -143,7 +154,7 @@ class JsonSchemaServiceTest {
 		assertThat(capturedValue.getName())
 			.isEqualToIgnoringCase(jsonSchemaCreateRequest.getName())
 			.isLowerCase();
-		assertThat(capturedValue.getValue()).isEqualTo(jsonSchemaCreateRequest.getValue());
+		assertThat(capturedValue.getValue()).isEqualTo(jsonSchemaCreateRequest.getValue().toString());
 		assertThat(capturedValue.getVersion()).isEqualTo(jsonSchemaCreateRequest.getVersion());
 	}
 
