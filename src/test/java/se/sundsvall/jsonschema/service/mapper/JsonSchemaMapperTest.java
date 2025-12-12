@@ -2,6 +2,7 @@ package se.sundsvall.jsonschema.service.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import se.sundsvall.jsonschema.TestFactory;
@@ -9,7 +10,7 @@ import se.sundsvall.jsonschema.TestFactory;
 class JsonSchemaMapperTest {
 
 	@Test
-	void toJsonSchema() {
+	void toJsonSchema() throws Exception {
 
 		// Arrange
 		final var entity = TestFactory.getJsonSchemaEntity();
@@ -18,9 +19,12 @@ class JsonSchemaMapperTest {
 		final var result = JsonSchemaMapper.toJsonSchema(entity);
 
 		// Assert
-		assertThat(result)
-			.usingRecursiveComparison()
-			.isEqualTo(entity);
+		assertThat(result.getId()).isEqualTo(entity.getId());
+		assertThat(result.getName()).isEqualTo(entity.getName());
+		assertThat(result.getVersion()).isEqualTo(entity.getVersion());
+		assertThat(result.getDescription()).isEqualTo(entity.getDescription());
+		assertThat(result.getCreated()).isEqualTo(entity.getCreated());
+		assertThat(result.getValue()).isEqualTo(new ObjectMapper().readTree(entity.getValue()));
 	}
 
 	@Test
@@ -34,7 +38,7 @@ class JsonSchemaMapperTest {
 	}
 
 	@Test
-	void toJsonSchemaList() {
+	void toJsonSchemaList() throws Exception {
 
 		// Arrange
 		final var entity = TestFactory.getJsonSchemaEntity();
@@ -44,11 +48,15 @@ class JsonSchemaMapperTest {
 		final var result = JsonSchemaMapper.toJsonSchemaList(entityList);
 
 		// Assert
-		assertThat(result)
-			.hasSize(1)
-			.first()
-			.usingRecursiveComparison()
-			.isEqualTo(entity);
+		assertThat(result).hasSize(1);
+
+		final var schema = result.getFirst();
+		assertThat(schema.getId()).isEqualTo(entity.getId());
+		assertThat(schema.getName()).isEqualTo(entity.getName());
+		assertThat(schema.getVersion()).isEqualTo(entity.getVersion());
+		assertThat(schema.getDescription()).isEqualTo(entity.getDescription());
+		assertThat(schema.getCreated()).isEqualTo(entity.getCreated());
+		assertThat(schema.getValue()).isEqualTo(new ObjectMapper().readTree(entity.getValue()));
 	}
 
 	@Test
@@ -80,7 +88,7 @@ class JsonSchemaMapperTest {
 		assertThat(result.getName())
 			.isEqualToIgnoringCase(jsonSchemaCreateRequest.getName())
 			.isLowerCase();
-		assertThat(result.getValue()).isEqualTo(jsonSchemaCreateRequest.getValue());
+		assertThat(result.getValue()).isEqualTo(jsonSchemaCreateRequest.getValue().toString());
 		assertThat(result.getVersion()).isEqualTo(jsonSchemaCreateRequest.getVersion());
 	}
 }

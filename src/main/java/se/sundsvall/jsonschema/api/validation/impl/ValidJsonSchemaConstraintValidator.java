@@ -2,10 +2,9 @@ package se.sundsvall.jsonschema.api.validation.impl;
 
 import static com.networknt.schema.SpecificationVersion.DRAFT_2020_12;
 import static java.util.Objects.isNull;
-import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.springframework.util.StringUtils.hasText;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.schema.SchemaLocation;
 import com.networknt.schema.SchemaRegistry;
 import com.networknt.schema.dialect.DialectId;
@@ -16,9 +15,8 @@ import org.springframework.util.StringUtils;
 import se.sundsvall.jsonschema.api.validation.ValidJsonSchema;
 import se.sundsvall.jsonschema.service.JsonSchemaValidationService;
 
-public class ValidJsonSchemaConstraintValidator implements ConstraintValidator<ValidJsonSchema, String> {
+public class ValidJsonSchemaConstraintValidator implements ConstraintValidator<ValidJsonSchema, JsonNode> {
 
-	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 	private static final String SUPPORTED_SCHEMA_SPECIFICATION = DialectId.DRAFT_2020_12;
 	private static final SchemaRegistry REGISTRY = SchemaRegistry.withDefaultDialect(DRAFT_2020_12);
 
@@ -35,7 +33,7 @@ public class ValidJsonSchemaConstraintValidator implements ConstraintValidator<V
 	}
 
 	@Override
-	public boolean isValid(final String inputJsonSchema, final ConstraintValidatorContext context) {
+	public boolean isValid(final JsonNode inputJsonSchema, final ConstraintValidatorContext context) {
 		if (isNull(inputJsonSchema) && this.nullable) {
 			return true;
 		}
@@ -52,7 +50,7 @@ public class ValidJsonSchemaConstraintValidator implements ConstraintValidator<V
 
 		// Assert JSON-schema against meta schema.
 		final var metaSchema = REGISTRY.getSchema(SchemaLocation.of(SUPPORTED_SCHEMA_SPECIFICATION));
-		final var validationMessages = jsonSchemaValidationService.validate(inputJsonSchema, metaSchema);
+		final var validationMessages = jsonSchemaValidationService.validate(inputJsonSchema.toString(), metaSchema);
 
 		validationMessages.forEach(message -> addViolation(Optional.ofNullable(message.getInstanceLocation()).map(Object::toString).filter(StringUtils::hasText).map(value -> value + ": ").orElse("") + message.getMessage(), context));
 
@@ -66,10 +64,23 @@ public class ValidJsonSchemaConstraintValidator implements ConstraintValidator<V
 		constraintContext.buildConstraintViolationWithTemplate(value).addConstraintViolation();
 	}
 
-	private boolean hasSupportedSpecification(String inputJsonSchema, ConstraintValidatorContext constraintContext) {
+	private boolean isValidJson(JsonNode inputJsonSchema, ConstraintValidatorContext constraintContext) {
+		if (isNull(inputJsonSchema)) {
+			addViolation("must be valid JSON, but was null", constraintContext);
+			return false;
+		}
+
+		if (!hasText(inputJsonSchema.toString())) {
+			addViolation("must be valid JSON, but was empty", constraintContext);
+			return false;
+		}
+
+		return true;
+	}
+
+	private boolean hasSupportedSpecification(JsonNode inputJsonSchema, ConstraintValidatorContext constraintContext) {
 		try {
-			final var node = OBJECT_MAPPER.readTree(inputJsonSchema);
-			final var schemaNodeValue = Optional.ofNullable(node.get("$schema"))
+			final var schemaNodeValue = Optional.ofNullable(inputJsonSchema.get("$schema"))
 				.map(JsonNode::asText)
 				.orElse(null);
 
@@ -82,19 +93,5 @@ public class ValidJsonSchemaConstraintValidator implements ConstraintValidator<V
 			return false;
 		}
 		return true;
-	}
-
-	private boolean isValidJson(String json, ConstraintValidatorContext context) {
-		if (isBlank(json)) {
-			addViolation("must be valid JSON, but was blank", context);
-			return false;
-		}
-		try {
-			OBJECT_MAPPER.readTree(json);
-			return true;
-		} catch (Exception _) {
-			addViolation("must be valid JSON, but was: '%s'".formatted(json), context);
-			return false;
-		}
 	}
 }

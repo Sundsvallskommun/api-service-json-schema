@@ -23,11 +23,11 @@ import se.sundsvall.jsonschema.integration.db.JsonSchemaRepository;
 import se.sundsvall.jsonschema.service.mapper.JsonSchemaMapper;
 
 @Service
-public class JsonSchemaService {
+public class JsonSchemaStorageService {
 
 	private final JsonSchemaRepository jsonSchemaRepository;
 
-	public JsonSchemaService(JsonSchemaRepository jsonSchemaRepository) {
+	public JsonSchemaStorageService(JsonSchemaRepository jsonSchemaRepository) {
 		this.jsonSchemaRepository = jsonSchemaRepository;
 	}
 

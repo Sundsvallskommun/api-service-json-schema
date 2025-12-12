@@ -11,6 +11,10 @@ openapi:
 spring:
   application:
     name: json-schema
+  cache:
+    cache-names: jsonSchemas
+    caffeine:
+      spec: maximumSize=500; expireAfterWrite=24h
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     hikari:

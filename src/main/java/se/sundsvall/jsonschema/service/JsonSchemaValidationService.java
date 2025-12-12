@@ -1,7 +1,6 @@
 package se.sundsvall.jsonschema.service;
 
 import static com.networknt.schema.InputFormat.JSON;
-import static com.networknt.schema.SpecificationVersion.DRAFT_2020_12;
 import static java.util.Locale.ENGLISH;
 import static java.util.Optional.ofNullable;
 import static org.zalando.problem.Status.BAD_REQUEST;
@@ -11,7 +10,6 @@ import static se.sundsvall.jsonschema.service.Constants.MESSAGE_JSON_SCHEMA_NOT_
 import com.networknt.schema.Error;
 import com.networknt.schema.ExecutionContext;
 import com.networknt.schema.Schema;
-import com.networknt.schema.SchemaRegistry;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -21,28 +19,18 @@ import org.zalando.problem.Problem;
 import org.zalando.problem.violations.ConstraintViolationProblem;
 import org.zalando.problem.violations.Violation;
 import se.sundsvall.jsonschema.integration.db.JsonSchemaRepository;
-import se.sundsvall.jsonschema.integration.db.model.JsonSchemaEntity;
 
 @Service
 public class JsonSchemaValidationService {
 
 	private static final Locale LOCALE = ENGLISH;
-	private static final SchemaRegistry REGISTRY = SchemaRegistry.withDefaultDialect(DRAFT_2020_12);
 
 	private final JsonSchemaRepository jsonSchemaRepository;
+	private final JsonSchemaCache jsonSchemaCache;
 
-	public JsonSchemaValidationService(JsonSchemaRepository jsonSchemaRepository) {
+	public JsonSchemaValidationService(final JsonSchemaRepository jsonSchemaRepository, final JsonSchemaCache jsonSchemaCache) {
 		this.jsonSchemaRepository = jsonSchemaRepository;
-	}
-
-	/**
-	 * Parses a JSON schema string, defaults to Draft 2020-12 if $schema is not specified.
-	 *
-	 * @param  schemaAsString JSON schema as string
-	 * @return                parsed Schema
-	 */
-	public Schema toJsonSchema(String schemaAsString) {
-		return REGISTRY.getSchema(schemaAsString);
+		this.jsonSchemaCache = jsonSchemaCache;
 	}
 
 	/**
@@ -53,7 +41,7 @@ public class JsonSchemaValidationService {
 	 * @return          validation messages (empty if valid)
 	 */
 	public List<Error> validate(String input, String schemaId) {
-		return validate(input, getSchemaById(schemaId));
+		return validate(input, resolveSchema(schemaId));
 	}
 
 	/**
@@ -76,7 +64,7 @@ public class JsonSchemaValidationService {
 	 * @throws ConstraintViolationProblem BAD_REQUEST if input is invalid
 	 */
 	public void validateAndThrow(String input, String schemaId) {
-		validateAndThrow(input, getSchemaById(schemaId));
+		validateAndThrow(input, resolveSchema(schemaId));
 	}
 
 	/**
@@ -88,7 +76,7 @@ public class JsonSchemaValidationService {
 	 */
 	public void validateAndThrow(String input, Schema schema) {
 		final var violations = validate(input, schema).stream()
-			.map(message -> new Violation(Optional.ofNullable(message.getInstanceLocation()).map(Object::toString).orElse(""), message.getMessage()))
+			.map(error -> new Violation(Optional.ofNullable(error.getInstanceLocation()).map(Object::toString).orElse(""), error.getMessage()))
 			.toList();
 
 		if (!violations.isEmpty()) {
@@ -96,15 +84,17 @@ public class JsonSchemaValidationService {
 		}
 	}
 
-	private Schema getSchemaById(String schemaId) {
-		return jsonSchemaRepository.findById(schemaId)
-			.map(JsonSchemaEntity::getValue)
-			.map(this::toJsonSchema)
+	// ---- Private helpers ------------------------------------------------------
+
+	private Schema resolveSchema(String schemaId) {
+		final var entity = jsonSchemaRepository.findById(schemaId)
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, MESSAGE_JSON_SCHEMA_NOT_FOUND_BY_ID.formatted(schemaId)));
+
+		return jsonSchemaCache.getSchema(entity);
 	}
 
 	private static void configureExecutionContext(ExecutionContext executionContext) {
-		executionContext.executionConfig(executionConfig -> executionConfig
+		executionContext.executionConfig(config -> config
 			.annotationCollectionEnabled(true)
 			.annotationCollectionFilter(_ -> true)
 			.locale(LOCALE)

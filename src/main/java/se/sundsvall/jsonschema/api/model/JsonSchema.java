@@ -1,5 +1,6 @@
 package se.sundsvall.jsonschema.api.model;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.OffsetDateTime;
 import java.util.Objects;
@@ -7,7 +8,7 @@ import java.util.Objects;
 @Schema(description = "JsonSchema model")
 public class JsonSchema {
 
-	@Schema(description = "Schema ID. The ID is composed by the municipalityId, schema name and version. I.e.: [municipality_id]_[schema_name]_[schema_version]", example = "2281_person_1.0")
+	@Schema(description = "Schema ID. The ID is composed by the municipalityId, schema name and version. I.e.: [municipality_id]_[schema_name]_[schema_version]", examples = "2281_person_1.0")
 	private String id;
 
 	@Schema(description = "Schema name", examples = "person")
@@ -16,7 +17,7 @@ public class JsonSchema {
 	@Schema(description = "Schema version on the format [major version].[minor version]", examples = "1.0")
 	private String version;
 
-	@Schema(description = "The JSON schema", examples = """
+	@Schema(description = "The JSON schema, specified by: https://json-schema.org/draft/2020-12/schema", example = """
 		{
 		  "$id": "https://example.com/person.schema.json",
 		  "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -34,7 +35,7 @@ public class JsonSchema {
 		  }
 		}
 		""")
-	private String value;
+	private JsonNode value;
 
 	@Schema(description = "Description of the schema purpose", examples = "A JSON-schema that defines a person object")
 	private String description;
@@ -85,15 +86,15 @@ public class JsonSchema {
 		return this;
 	}
 
-	public String getValue() {
+	public JsonNode getValue() {
 		return value;
 	}
 
-	public void setValue(String value) {
+	public void setValue(JsonNode value) {
 		this.value = value;
 	}
 
-	public JsonSchema withValue(String value) {
+	public JsonSchema withValue(JsonNode value) {
 		this.value = value;
 		return this;
 	}

@@ -2,6 +2,7 @@ package se.sundsvall.jsonschema.api.model;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -21,7 +22,7 @@ public class JsonSchemaCreateRequest {
 	private String version;
 
 	@ValidJsonSchema
-	@Schema(description = "The JSON schema, specified by: https://json-schema.org/draft/2020-12/schema", examples = """
+	@Schema(description = "The JSON schema, specified by: https://json-schema.org/draft/2020-12/schema", requiredMode = REQUIRED, example = """
 		{
 		  "$id": "https://example.com/person.schema.json",
 		  "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -38,8 +39,8 @@ public class JsonSchemaCreateRequest {
 		    }
 		  }
 		}
-		""", requiredMode = REQUIRED)
-	private String value;
+		""")
+	private JsonNode value;
 
 	@Schema(description = "Description of the schema purpose", examples = "A JSON-schema that defines a person object")
 	private String description;
@@ -74,15 +75,15 @@ public class JsonSchemaCreateRequest {
 		return this;
 	}
 
-	public String getValue() {
+	public JsonNode getValue() {
 		return value;
 	}
 
-	public void setValue(String value) {
+	public void setValue(JsonNode value) {
 		this.value = value;
 	}
 
-	public JsonSchemaCreateRequest withValue(String value) {
+	public JsonSchemaCreateRequest withValue(JsonNode value) {
 		this.value = value;
 		return this;
 	}
