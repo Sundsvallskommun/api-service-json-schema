@@ -19,7 +19,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import se.sundsvall.jsonschema.Application;
 import se.sundsvall.jsonschema.api.model.JsonSchema;
 import se.sundsvall.jsonschema.api.model.JsonSchemaCreateRequest;
-import se.sundsvall.jsonschema.service.JsonSchemaService;
+import se.sundsvall.jsonschema.service.JsonSchemaStorageService;
 
 @ActiveProfiles("junit")
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
@@ -28,7 +28,7 @@ class JsonSchemaResourceTest {
 	private static final String MUNICIPALITY_ID = "2281";
 
 	@MockitoBean
-	private JsonSchemaService jsonSchemaServiceMock;
+	private JsonSchemaStorageService jsonSchemaStorageServiceMock;
 
 	@Autowired
 	private WebTestClient webTestClient;
@@ -40,7 +40,7 @@ class JsonSchemaResourceTest {
 		final var pageable = PageRequest.of(0, 20);
 		final var matches = new PageImpl<>(List.of(JsonSchema.create().withId("schema_1.0")), pageable, 20);
 
-		when(jsonSchemaServiceMock.getSchemas(MUNICIPALITY_ID, pageable)).thenReturn(matches);
+		when(jsonSchemaStorageServiceMock.getSchemas(MUNICIPALITY_ID, pageable)).thenReturn(matches);
 
 		// Act
 		webTestClient.get()
@@ -56,7 +56,7 @@ class JsonSchemaResourceTest {
 			.jsonPath("$.size").isEqualTo(20);
 
 		// Assert
-		verify(jsonSchemaServiceMock).getSchemas(MUNICIPALITY_ID, pageable);
+		verify(jsonSchemaStorageServiceMock).getSchemas(MUNICIPALITY_ID, pageable);
 	}
 
 	@Test
@@ -66,7 +66,7 @@ class JsonSchemaResourceTest {
 		final var id = "some-schema-id";
 		final var jsonSchema = JsonSchema.create().withId("schema_1.0");
 
-		when(jsonSchemaServiceMock.getSchema(MUNICIPALITY_ID, id)).thenReturn(jsonSchema);
+		when(jsonSchemaStorageServiceMock.getSchema(MUNICIPALITY_ID, id)).thenReturn(jsonSchema);
 
 		// Act
 		final var response = webTestClient.get()
@@ -79,7 +79,7 @@ class JsonSchemaResourceTest {
 
 		// Assert
 		assertThat(response).isEqualTo(jsonSchema);
-		verify(jsonSchemaServiceMock).getSchema(MUNICIPALITY_ID, id);
+		verify(jsonSchemaStorageServiceMock).getSchema(MUNICIPALITY_ID, id);
 	}
 
 	@Test
@@ -89,7 +89,7 @@ class JsonSchemaResourceTest {
 		final var name = "some-schema-name";
 		final var jsonSchema = JsonSchema.create().withId("schema_1.0");
 
-		when(jsonSchemaServiceMock.getLatestSchemaByName(MUNICIPALITY_ID, name)).thenReturn(jsonSchema);
+		when(jsonSchemaStorageServiceMock.getLatestSchemaByName(MUNICIPALITY_ID, name)).thenReturn(jsonSchema);
 
 		// Act
 		final var response = webTestClient.get()
@@ -103,7 +103,7 @@ class JsonSchemaResourceTest {
 		// Assert
 		assertThat(response).isEqualTo(jsonSchema);
 
-		verify(jsonSchemaServiceMock).getLatestSchemaByName(MUNICIPALITY_ID, name);
+		verify(jsonSchemaStorageServiceMock).getLatestSchemaByName(MUNICIPALITY_ID, name);
 	}
 
 	@Test
@@ -119,7 +119,7 @@ class JsonSchemaResourceTest {
 			.withValue(new ObjectMapper().readTree("{\"$schema\": \"https://json-schema.org/draft/2020-12/schema\"}"))
 			.withVersion("1.0");
 
-		when(jsonSchemaServiceMock.create(MUNICIPALITY_ID, body)).thenReturn(jsonSchema);
+		when(jsonSchemaStorageServiceMock.create(MUNICIPALITY_ID, body)).thenReturn(jsonSchema);
 
 		// Act
 		webTestClient.post()
@@ -130,7 +130,7 @@ class JsonSchemaResourceTest {
 			.expectHeader().location("/" + MUNICIPALITY_ID + "/jsonschemas/" + id);
 
 		// Assert
-		verify(jsonSchemaServiceMock).create(MUNICIPALITY_ID, body);
+		verify(jsonSchemaStorageServiceMock).create(MUNICIPALITY_ID, body);
 	}
 
 	@Test
@@ -146,6 +146,6 @@ class JsonSchemaResourceTest {
 			.expectStatus().isNoContent();
 
 		// Assert
-		verify(jsonSchemaServiceMock).delete(MUNICIPALITY_ID, id);
+		verify(jsonSchemaStorageServiceMock).delete(MUNICIPALITY_ID, id);
 	}
 }

@@ -29,7 +29,7 @@ import se.sundsvall.jsonschema.integration.db.JsonSchemaRepository;
 import se.sundsvall.jsonschema.integration.db.model.JsonSchemaEntity;
 
 @ExtendWith(MockitoExtension.class)
-class JsonSchemaServiceTest {
+class JsonSchemaStorageServiceTest {
 
 	private static final String MUNICIPALITY_ID = "2281";
 
@@ -40,7 +40,7 @@ class JsonSchemaServiceTest {
 	private ArgumentCaptor<JsonSchemaEntity> entityCaptor;
 
 	@InjectMocks
-	private JsonSchemaService service;
+	private JsonSchemaStorageService service;
 
 	@Test
 	void getSchemas() throws Exception {
@@ -171,7 +171,7 @@ class JsonSchemaServiceTest {
 
 		// Assert
 		assertThat(exception.getStatus()).isEqualTo(CONFLICT);
-		assertThat(exception.getMessage()).isEqualTo("Conflict: A JsonSchema already exists with ID '2281_person_schema_1.0'!");
+		assertThat(exception.getMessage()).isEqualTo("Conflict: A JsonSchema with ID '2281_person_schema_1.0' already exists!");
 
 		verify(jsonSchemaRepositoryMock).existsById("%s_%s_%s".formatted(MUNICIPALITY_ID, jsonSchemaCreateRequest.getName(), jsonSchemaCreateRequest.getVersion()).toLowerCase());
 		verifyNoMoreInteractions(jsonSchemaRepositoryMock);

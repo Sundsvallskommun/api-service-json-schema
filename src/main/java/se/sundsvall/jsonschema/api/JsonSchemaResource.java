@@ -37,7 +37,7 @@ import org.zalando.problem.violations.ConstraintViolationProblem;
 import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
 import se.sundsvall.jsonschema.api.model.JsonSchema;
 import se.sundsvall.jsonschema.api.model.JsonSchemaCreateRequest;
-import se.sundsvall.jsonschema.service.JsonSchemaService;
+import se.sundsvall.jsonschema.service.JsonSchemaStorageService;
 
 @RestController
 @Validated
@@ -49,9 +49,9 @@ import se.sundsvall.jsonschema.service.JsonSchemaService;
 @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 class JsonSchemaResource {
 
-	private final JsonSchemaService jsonSchemaService;
+	private final JsonSchemaStorageService jsonSchemaService;
 
-	public JsonSchemaResource(JsonSchemaService jsonSchemaService) {
+	public JsonSchemaResource(JsonSchemaStorageService jsonSchemaService) {
 		this.jsonSchemaService = jsonSchemaService;
 	}
 

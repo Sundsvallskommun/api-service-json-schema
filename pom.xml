@@ -13,6 +13,7 @@
 	<name>api-service-json-schema</name>
 	<properties>
 		<json-schema-validator.version>2.0.0</json-schema-validator.version>
+		<jool.version>0.9.15</jool.version>
 		<maven-artifact.version>3.9.11</maven-artifact.version>
 	</properties>
 	<dependencies>
@@ -37,6 +38,12 @@
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-mysql</artifactId>
+		</dependency>
+		<!-- Useful extensions to lambdas (convert checked to unchecked throwables, etc) -->
+		<dependency>
+			<groupId>org.jooq</groupId>
+			<artifactId>jool</artifactId>
+			<version>${jool.version}</version>
 		</dependency>
 		<!-- JSON schema functionality -->
 		<dependency>

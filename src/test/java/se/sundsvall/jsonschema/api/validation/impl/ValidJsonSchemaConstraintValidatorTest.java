@@ -180,5 +180,4 @@ class ValidJsonSchemaConstraintValidatorTest {
 		verify(constraintValidatorContextMock).buildConstraintViolationWithTemplate("must be valid JSON, but was blank");
 		verify(constraintViolationBuilderMock).addConstraintViolation();
 	}
-
 }

@@ -17,7 +17,7 @@ import org.zalando.problem.violations.ConstraintViolationProblem;
 import org.zalando.problem.violations.Violation;
 import se.sundsvall.jsonschema.Application;
 import se.sundsvall.jsonschema.api.model.JsonSchemaCreateRequest;
-import se.sundsvall.jsonschema.service.JsonSchemaService;
+import se.sundsvall.jsonschema.service.JsonSchemaStorageService;
 
 @ActiveProfiles("junit")
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
@@ -26,7 +26,7 @@ class JsonSchemaResourceFailuresTest {
 	private static final String MUNICIPALITY_ID = "2281";
 
 	@MockitoBean
-	private JsonSchemaService jsonSchemaServiceMock;
+	private JsonSchemaStorageService jsonSchemaStorageServiceMock;
 
 	@Autowired
 	private WebTestClient webTestClient;
@@ -51,7 +51,7 @@ class JsonSchemaResourceFailuresTest {
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("getSchemas.municipalityId", "not a valid municipality ID"));
 
-		verifyNoInteractions(jsonSchemaServiceMock);
+		verifyNoInteractions(jsonSchemaStorageServiceMock);
 	}
 
 	@Test
@@ -77,7 +77,7 @@ class JsonSchemaResourceFailuresTest {
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("getSchemaById.municipalityId", "not a valid municipality ID"));
 
-		verifyNoInteractions(jsonSchemaServiceMock);
+		verifyNoInteractions(jsonSchemaStorageServiceMock);
 	}
 
 	@Test
@@ -103,7 +103,7 @@ class JsonSchemaResourceFailuresTest {
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("getLatestSchemaByName.municipalityId", "not a valid municipality ID"));
 
-		verifyNoInteractions(jsonSchemaServiceMock);
+		verifyNoInteractions(jsonSchemaStorageServiceMock);
 	}
 
 	@Test
@@ -134,7 +134,7 @@ class JsonSchemaResourceFailuresTest {
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("createSchema.municipalityId", "not a valid municipality ID"));
 
-		verifyNoInteractions(jsonSchemaServiceMock);
+		verifyNoInteractions(jsonSchemaStorageServiceMock);
 	}
 
 	@Test
@@ -164,7 +164,7 @@ class JsonSchemaResourceFailuresTest {
 				tuple("value", "must be valid JSON, but was null"),
 				tuple("version", "must not be blank"));
 
-		verifyNoInteractions(jsonSchemaServiceMock);
+		verifyNoInteractions(jsonSchemaStorageServiceMock);
 	}
 
 	@Test
@@ -195,7 +195,7 @@ class JsonSchemaResourceFailuresTest {
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("version", "must match \"^(\\d+\\.)?(\\d+)$\""));
 
-		verifyNoInteractions(jsonSchemaServiceMock);
+		verifyNoInteractions(jsonSchemaStorageServiceMock);
 	}
 
 	@Test
@@ -226,7 +226,7 @@ class JsonSchemaResourceFailuresTest {
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("value", "Wrong value in $schema-node. Expected: 'https://json-schema.org/draft/2020-12/schema' Found: 'https://json-schema.org/draft/2019-09/schema'"));
 
-		verifyNoInteractions(jsonSchemaServiceMock);
+		verifyNoInteractions(jsonSchemaStorageServiceMock);
 	}
 
 	@Test
@@ -252,6 +252,6 @@ class JsonSchemaResourceFailuresTest {
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("deleteSchema.municipalityId", "not a valid municipality ID"));
 
-		verifyNoInteractions(jsonSchemaServiceMock);
+		verifyNoInteractions(jsonSchemaStorageServiceMock);
 	}
 }

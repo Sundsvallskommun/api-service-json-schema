@@ -1,7 +1,7 @@
 package se.sundsvall.jsonschema.service.mapper;
 
 import static java.util.Collections.emptyList;
-import static java.util.Objects.isNull;
+import static org.jooq.lambda.Unchecked.function;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,27 +55,17 @@ public final class JsonSchemaMapper {
 	 * Converts a JSON string into a JsonNode, throwing an IllegalArgumentException on error.
 	 */
 	private static JsonNode parseJsonNode(String json) {
-		if (isNull(json)) {
-			return null;
-		}
-		try {
-			return OBJECT_MAPPER.readTree(json);
-		} catch (Exception e) {
-			throw new IllegalArgumentException("Failed to parse JSON schema value", e);
-		}
+		return Optional.ofNullable(json)
+			.map(function(OBJECT_MAPPER::readTree))
+			.orElse(null);
 	}
 
 	/**
 	 * Converts a JsonNode into a String, handling nulls.
 	 */
 	private static String writeJsonNode(JsonNode node) {
-		if (isNull(node)) {
-			return null;
-		}
-		try {
-			return OBJECT_MAPPER.writeValueAsString(node);
-		} catch (Exception e) {
-			throw new IllegalArgumentException("Failed to write JSON schema value", e);
-		}
+		return Optional.ofNullable(node)
+			.map(function(OBJECT_MAPPER::writeValueAsString))
+			.orElse(null);
 	}
 }

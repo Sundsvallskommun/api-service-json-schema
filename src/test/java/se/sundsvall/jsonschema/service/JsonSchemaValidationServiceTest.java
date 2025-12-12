@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.zalando.problem.violations.ConstraintViolationProblem;
 import org.zalando.problem.violations.Violation;
 import se.sundsvall.dept44.test.annotation.resource.Load;
@@ -40,6 +41,9 @@ class JsonSchemaValidationServiceTest {
 	@MockitoBean
 	private JsonSchemaRepository jsonSchemaRepositoryMock;
 
+	@MockitoSpyBean
+	private JsonSchemaCache jsonSchemaCacheMock;
+
 	@Autowired
 	private JsonSchemaValidationService jsonSchemaValidationService;
 
@@ -59,6 +63,9 @@ class JsonSchemaValidationServiceTest {
 
 		// Assert
 		assertThat(validationMessages).isEmpty();
+
+		verify(jsonSchemaRepositoryMock).findById(schemaId);
+		verify(jsonSchemaCacheMock).getSchema(jsonSchemaEntity);
 	}
 
 	@Test
@@ -85,6 +92,9 @@ class JsonSchemaValidationServiceTest {
 				tuple("", "required property 'productId' not found"),
 				tuple("", "required property 'productName' not found"),
 				tuple("", "required property 'price' not found"));
+
+		verify(jsonSchemaRepositoryMock).findById(schemaId);
+		verify(jsonSchemaCacheMock).getSchema(jsonSchemaEntity);
 	}
 
 	@Test
@@ -110,6 +120,9 @@ class JsonSchemaValidationServiceTest {
 				Error::getMessage)
 			.containsExactly(
 				tuple("/productId", "string found, integer expected"));
+
+		verify(jsonSchemaRepositoryMock).findById(schemaId);
+		verify(jsonSchemaCacheMock).getSchema(jsonSchemaEntity);
 	}
 
 	@Test
@@ -134,6 +147,9 @@ class JsonSchemaValidationServiceTest {
 				.orElse(null),
 				Error::getMessage)
 			.containsExactly(tuple("/tags", "must have only unique items in the array"));
+
+		verify(jsonSchemaRepositoryMock).findById(schemaId);
+		verify(jsonSchemaCacheMock).getSchema(jsonSchemaEntity);
 	}
 
 	@Test
@@ -162,6 +178,9 @@ class JsonSchemaValidationServiceTest {
 				tuple("/tags/5", "integer found, string expected"),
 				tuple("/tags", "must have only unique items in the array"),
 				tuple("", "required property 'productName' not found"));
+
+		verify(jsonSchemaRepositoryMock).findById(schemaId);
+		verify(jsonSchemaCacheMock).getSchema(jsonSchemaEntity);
 	}
 
 	@Test
@@ -191,6 +210,9 @@ class JsonSchemaValidationServiceTest {
 				tuple("/tags/5", "integer found, string expected"),
 				tuple("/tags", "must have only unique items in the array"),
 				tuple("", "required property 'productName' not found"));
+
+		verify(jsonSchemaRepositoryMock).findById(schemaId);
+		verify(jsonSchemaCacheMock).getSchema(jsonSchemaEntity);
 	}
 
 	@Test
@@ -206,52 +228,8 @@ class JsonSchemaValidationServiceTest {
 
 		// Act
 		assertDoesNotThrow(() -> jsonSchemaValidationService.validateAndThrow(json, schemaId));
-	}
-
-	@Test
-	void validateBySchemaIdWithValidJson(@Load(VALID_SCHEMA) final String schema, @Load(VALID_JSON) final String json) {
-
-		// Arrange
-		final var schemaId = "schemaId";
-		when(jsonSchemaRepositoryMock.findById(schemaId)).thenReturn(Optional.of(JsonSchemaEntity.create()
-			.withId(schemaId)
-			.withValue(schema)));
-
-		// Act
-		final var validationMessages = jsonSchemaValidationService.validate(json, schemaId);
-
-		// Assert
-		assertThat(validationMessages).isEmpty();
-		verify(jsonSchemaRepositoryMock).findById(schemaId);
-	}
-
-	@Test
-	void validateBySchemaIdWithMiscErrors(@Load(VALID_SCHEMA) final String schema, @Load(INVALID_JSON_MISC_ERRORS) final String json) {
-
-		// Arrange
-		final var schemaId = "schemaId";
-		final var jsonSchemaEntity = JsonSchemaEntity.create()
-			.withId(schemaId)
-			.withValue(schema);
-
-		when(jsonSchemaRepositoryMock.findById(schemaId)).thenReturn(Optional.of(jsonSchemaEntity));
-
-		// Act
-		final var validationMessages = jsonSchemaValidationService.validate(json, schemaId);
-
-		// Assert
-		assertThat(validationMessages)
-			.isNotEmpty()
-			.extracting(e -> Optional.ofNullable(e.getInstanceLocation())
-				.map(Object::toString)
-				.orElse(null),
-				Error::getMessage)
-			.containsExactly(
-				tuple("/price", "must have an exclusive minimum value of 0"),
-				tuple("/tags/5", "integer found, string expected"),
-				tuple("/tags", "must have only unique items in the array"),
-				tuple("", "required property 'productName' not found"));
 
 		verify(jsonSchemaRepositoryMock).findById(schemaId);
+		verify(jsonSchemaCacheMock).getSchema(jsonSchemaEntity);
 	}
 }
