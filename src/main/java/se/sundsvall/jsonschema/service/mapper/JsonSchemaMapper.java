@@ -37,9 +37,7 @@ public final class JsonSchemaMapper {
 	}
 
 	public static JsonSchemaEntity toJsonSchemaEntity(String municipalityId, JsonSchemaCreateRequest request) {
-
 		final var id = ID_PATTERN.formatted(municipalityId, request.getName(), request.getVersion()).toLowerCase();
-
 		return JsonSchemaEntity.create()
 			.withDescription(request.getDescription())
 			.withId(id)
