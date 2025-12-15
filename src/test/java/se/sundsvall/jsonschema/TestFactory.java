@@ -8,6 +8,8 @@ import se.sundsvall.jsonschema.integration.db.model.JsonSchemaEntity;
 
 public final class TestFactory {
 
+	private TestFactory() {}
+
 	public static JsonSchemaEntity getJsonSchemaEntity() {
 		return JsonSchemaEntity.create()
 			.withCreated(OffsetDateTime.now())
