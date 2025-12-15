@@ -47,11 +47,11 @@ import se.sundsvall.jsonschema.service.JsonSchemaStorageService;
 	Problem.class, ConstraintViolationProblem.class
 })))
 @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
-class JsonSchemaResource {
+class JsonSchemaStorageResource {
 
 	private final JsonSchemaStorageService jsonSchemaStorageService;
 
-	public JsonSchemaResource(JsonSchemaStorageService jsonSchemaService) {
+	public JsonSchemaStorageResource(JsonSchemaStorageService jsonSchemaService) {
 		this.jsonSchemaStorageService = jsonSchemaService;
 	}
 

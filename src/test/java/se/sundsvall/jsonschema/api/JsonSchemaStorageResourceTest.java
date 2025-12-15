@@ -23,7 +23,7 @@ import se.sundsvall.jsonschema.service.JsonSchemaStorageService;
 
 @ActiveProfiles("junit")
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
-class JsonSchemaResourceTest {
+class JsonSchemaStorageResourceTest {
 
 	private static final String MUNICIPALITY_ID = "2281";
 
