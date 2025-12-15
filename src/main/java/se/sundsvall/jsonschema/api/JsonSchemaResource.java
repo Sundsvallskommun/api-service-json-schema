@@ -49,10 +49,10 @@ import se.sundsvall.jsonschema.service.JsonSchemaStorageService;
 @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 class JsonSchemaResource {
 
-	private final JsonSchemaStorageService jsonSchemaService;
+	private final JsonSchemaStorageService jsonSchemaStorageService;
 
 	public JsonSchemaResource(JsonSchemaStorageService jsonSchemaService) {
-		this.jsonSchemaService = jsonSchemaService;
+		this.jsonSchemaStorageService = jsonSchemaService;
 	}
 
 	@GetMapping(produces = APPLICATION_JSON_VALUE)
@@ -61,7 +61,7 @@ class JsonSchemaResource {
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@ParameterObject final Pageable pageable) {
 
-		return ok(jsonSchemaService.getSchemas(municipalityId, pageable));
+		return ok(jsonSchemaStorageService.getSchemas(municipalityId, pageable));
 	}
 
 	@GetMapping(path = "{id}", produces = APPLICATION_JSON_VALUE)
@@ -73,7 +73,7 @@ class JsonSchemaResource {
 		@Parameter(name = "municipalityId", description = "MunicipalityID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "id", description = "Schema ID", example = "2281_person_1.0") @NotBlank @PathVariable final String id) {
 
-		return ok(jsonSchemaService.getSchema(municipalityId, id));
+		return ok(jsonSchemaStorageService.getSchema(municipalityId, id));
 	}
 
 	@GetMapping(path = "{name}/versions/latest", produces = APPLICATION_JSON_VALUE)
@@ -85,7 +85,7 @@ class JsonSchemaResource {
 		@Parameter(name = "municipalityId", description = "MunicipalityID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "name", description = "Schema name", example = "person") @NotBlank @PathVariable final String name) {
 
-		return ok(jsonSchemaService.getLatestSchemaByName(municipalityId, name));
+		return ok(jsonSchemaStorageService.getLatestSchemaByName(municipalityId, name));
 	}
 
 	@PostMapping(consumes = APPLICATION_JSON_VALUE, produces = ALL_VALUE)
@@ -95,7 +95,7 @@ class JsonSchemaResource {
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Valid @NotNull @RequestBody final JsonSchemaCreateRequest body) {
 
-		final var createdJsonSchema = jsonSchemaService.create(municipalityId, body);
+		final var createdJsonSchema = jsonSchemaStorageService.create(municipalityId, body);
 
 		return created(fromPath("/{municipalityId}/jsonschemas/{id}").buildAndExpand(municipalityId, createdJsonSchema.getId()).toUri())
 			.header(CONTENT_TYPE, ALL_VALUE)
@@ -111,7 +111,7 @@ class JsonSchemaResource {
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "id", description = "Schema ID", example = "2281_person_1.0") @PathVariable @NotBlank final String id) {
 
-		jsonSchemaService.delete(municipalityId, id);
+		jsonSchemaStorageService.delete(municipalityId, id);
 
 		return noContent().build();
 	}
