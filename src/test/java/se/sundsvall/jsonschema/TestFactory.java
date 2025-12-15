@@ -27,7 +27,7 @@ public final class TestFactory {
 		try {
 			value = new ObjectMapper().readTree("{\"$schema\": \"https://json-schema.org/draft/2020-12/schema\"}");
 		} catch (Exception _) {
-			// Should not happen
+			// Should not happen.
 		}
 
 		return JsonSchemaCreateRequest.create()
