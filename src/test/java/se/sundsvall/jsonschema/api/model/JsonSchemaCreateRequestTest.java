@@ -9,6 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.AllOf.allOf;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
 class JsonSchemaCreateRequestTest {
@@ -24,11 +25,11 @@ class JsonSchemaCreateRequestTest {
 	}
 
 	@Test
-	void testBuilderMethods() {
+	void testBuilderMethods() throws Exception {
 
 		final var description = "description";
 		final var name = "name";
-		final var value = "value";
+		final var value = new ObjectMapper().readTree("{}");
 		final var version = "version";
 
 		final var bean = JsonSchemaCreateRequest.create()

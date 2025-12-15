@@ -1,7 +1,10 @@
 package se.sundsvall.jsonschema.service.mapper;
 
 import static java.util.Collections.emptyList;
+import static org.jooq.lambda.Unchecked.function;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Optional;
 import se.sundsvall.jsonschema.api.model.JsonSchema;
@@ -10,35 +13,57 @@ import se.sundsvall.jsonschema.integration.db.model.JsonSchemaEntity;
 
 public final class JsonSchemaMapper {
 
+	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 	private static final String ID_PATTERN = "%s_%s_%s"; // [municipality_id]_[schema_name]_[schema_version]
 
 	private JsonSchemaMapper() {}
 
-	public static JsonSchema toJsonSchema(JsonSchemaEntity jsonSchemaEntity) {
-		return Optional.ofNullable(jsonSchemaEntity)
-			.map(entity -> JsonSchema.create()
-				.withCreated(entity.getCreated())
-				.withDescription(entity.getDescription())
-				.withId(entity.getId())
-				.withName(entity.getName())
-				.withValue(entity.getValue())
-				.withVersion(entity.getVersion()))
+	public static JsonSchema toJsonSchema(JsonSchemaEntity entity) {
+		return Optional.ofNullable(entity)
+			.map(e -> JsonSchema.create()
+				.withCreated(e.getCreated())
+				.withDescription(e.getDescription())
+				.withId(e.getId())
+				.withName(e.getName())
+				.withValue(parseJsonNode(e.getValue()))
+				.withVersion(e.getVersion()))
 			.orElse(null);
 	}
 
-	public static List<JsonSchema> toJsonSchemaList(List<JsonSchemaEntity> jsonSchemaEntityList) {
-		return Optional.ofNullable(jsonSchemaEntityList).orElse(emptyList()).stream()
+	public static List<JsonSchema> toJsonSchemaList(List<JsonSchemaEntity> entityList) {
+		return Optional.ofNullable(entityList).orElse(emptyList()).stream()
 			.map(JsonSchemaMapper::toJsonSchema)
 			.toList();
 	}
 
-	public static JsonSchemaEntity toJsonSchemaEntity(String municipalityId, JsonSchemaCreateRequest jsonSchemaCreateRequest) {
+	public static JsonSchemaEntity toJsonSchemaEntity(String municipalityId, JsonSchemaCreateRequest request) {
+		final var id = ID_PATTERN.formatted(municipalityId, request.getName(), request.getVersion()).toLowerCase();
 		return JsonSchemaEntity.create()
-			.withDescription(jsonSchemaCreateRequest.getDescription())
-			.withId(ID_PATTERN.formatted(municipalityId, jsonSchemaCreateRequest.getName(), jsonSchemaCreateRequest.getVersion()).toLowerCase())
+			.withDescription(request.getDescription())
+			.withId(id)
 			.withMunicipalityId(municipalityId)
-			.withName(jsonSchemaCreateRequest.getName().toLowerCase())
-			.withValue(jsonSchemaCreateRequest.getValue())
-			.withVersion(jsonSchemaCreateRequest.getVersion());
+			.withName(request.getName().toLowerCase())
+			.withValue(writeJsonNode(request.getValue()))
+			.withVersion(request.getVersion());
+	}
+
+	// ---- Private helpers ------------------------------------------------------
+
+	/**
+	 * Converts a JSON string into a JsonNode, throwing an IllegalArgumentException on error.
+	 */
+	private static JsonNode parseJsonNode(String json) {
+		return Optional.ofNullable(json)
+			.map(function(OBJECT_MAPPER::readTree))
+			.orElse(null);
+	}
+
+	/**
+	 * Converts a JsonNode into a String, handling nulls.
+	 */
+	private static String writeJsonNode(JsonNode node) {
+		return Optional.ofNullable(node)
+			.map(function(OBJECT_MAPPER::writeValueAsString))
+			.orElse(null);
 	}
 }

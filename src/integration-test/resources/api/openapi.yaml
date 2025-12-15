@@ -7,7 +7,7 @@ info:
     url: https://opensource.org/licenses/MIT
   version: "1.0"
 servers:
-- url: http://localhost:63537
+- url: http://localhost:51945
   description: Generated server url
 paths:
   /{municipalityId}/jsonschemas:
@@ -112,11 +112,62 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
-  /{municipalityId}/jsonschemas/{name}/latest:
+  /{municipalityId}/jsonschemas/{id}/validations:
+    post:
+      tags:
+      - JSON-schema validation
+      summary: Validate a JSON structure against the specified schema
+      operationId: validateJson
+      parameters:
+      - name: municipalityId
+        in: path
+        description: Municipality ID
+        required: true
+        schema:
+          type: string
+        example: 2281
+      - name: id
+        in: path
+        description: Schema ID
+        required: true
+        schema:
+          type: string
+          minLength: 1
+        example: 2281_person_1.0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        required: true
+      responses:
+        "204":
+          description: No content - JSON is valid according to the schema
+        "404":
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "400":
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+  /{municipalityId}/jsonschemas/{name}/versions/latest:
     get:
       tags:
       - JSON-schemas
-      summary: Get latest JSON schema by name
+      summary: Get latest version of a schema identified by schema name
       operationId: getLatestSchemaByName
       parameters:
       - name: municipalityId
@@ -141,6 +192,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/JsonSchema"
+        "404":
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
         "400":
           description: Bad Request
           content:
@@ -176,7 +233,7 @@ paths:
         schema:
           type: string
           minLength: 1
-        example: person_1.0
+        example: 2281_person_1.0
       responses:
         "200":
           description: OK
@@ -184,6 +241,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/JsonSchema"
+        "404":
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
         "400":
           description: Bad Request
           content:
@@ -218,7 +281,7 @@ paths:
         schema:
           type: string
           minLength: 1
-        example: person_1.0
+        example: 2281_person_1.0
       responses:
         "204":
           description: No content - Successful operation
@@ -260,6 +323,7 @@ paths:
       x-wso2-mutual-ssl: Optional
 components:
   schemas:
+    JsonNode: {}
     JsonSchemaCreateRequest:
       type: object
       description: JsonSchemaCreateRequest model
@@ -278,26 +342,20 @@ components:
           minLength: 1
           pattern: ^(\d+\.)?(\d+)$
         value:
-          type: string
+          $ref: "#/components/schemas/JsonNode"
           description: "The JSON schema, specified by: https://json-schema.org/draft/2020-12/schema"
-          examples:
-          - |
-            {
-              "$id": "https://example.com/person.schema.json",
-              "$schema": "https://json-schema.org/draft/2020-12/schema",
-              "title": "Person",
-              "type": "object",
-              "properties": {
-                "firstName": {
-                  "type": "string",
-                  "description": "The person's first name."
-                },
-                "lastName": {
-                  "type": "string",
-                  "description": "The person's last name."
-                }
-              }
-            }
+          example:
+            $id: https://example.com/person.schema.json
+            $schema: https://json-schema.org/draft/2020-12/schema
+            title: Person
+            type: object
+            properties:
+              firstName:
+                type: string
+                description: The person's first name.
+              lastName:
+                type: string
+                description: The person's last name.
         description:
           type: string
           description: Description of the schema purpose
@@ -328,11 +386,11 @@ components:
     StatusType:
       type: object
       properties:
+        reasonPhrase:
+          type: string
         statusCode:
           type: integer
           format: int32
-        reasonPhrase:
-          type: string
     ConstraintViolationProblem:
       type: object
       properties:
@@ -505,7 +563,8 @@ components:
           type: string
           description: "Schema ID. The ID is composed by the municipalityId, schema\
             \ name and version. I.e.: [municipality_id]_[schema_name]_[schema_version]"
-          example: 2281_person_1.0
+          examples:
+          - 2281_person_1.0
         name:
           type: string
           description: Schema name
@@ -517,26 +576,20 @@ components:
           examples:
           - "1.0"
         value:
-          type: string
-          description: The JSON schema
-          examples:
-          - |
-            {
-              "$id": "https://example.com/person.schema.json",
-              "$schema": "https://json-schema.org/draft/2020-12/schema",
-              "title": "Person",
-              "type": "object",
-              "properties": {
-                "firstName": {
-                  "type": "string",
-                  "description": "The person's first name."
-                },
-                "lastName": {
-                  "type": "string",
-                  "description": "The person's last name."
-                }
-              }
-            }
+          $ref: "#/components/schemas/JsonNode"
+          description: "The JSON schema, specified by: https://json-schema.org/draft/2020-12/schema"
+          example:
+            $id: https://example.com/person.schema.json
+            $schema: https://json-schema.org/draft/2020-12/schema
+            title: Person
+            type: object
+            properties:
+              firstName:
+                type: string
+                description: The person's first name.
+              lastName:
+                type: string
+                description: The person's last name.
         description:
           type: string
           description: Description of the schema purpose
@@ -549,12 +602,12 @@ components:
     PageJsonSchema:
       type: object
       properties:
-        totalElements:
-          type: integer
-          format: int64
         totalPages:
           type: integer
           format: int32
+        totalElements:
+          type: integer
+          format: int64
         size:
           type: integer
           format: int32
@@ -565,17 +618,17 @@ components:
         number:
           type: integer
           format: int32
+        first:
+          type: boolean
+        last:
+          type: boolean
+        sort:
+          $ref: "#/components/schemas/SortObject"
         numberOfElements:
           type: integer
           format: int32
         pageable:
           $ref: "#/components/schemas/PageableObject"
-        sort:
-          $ref: "#/components/schemas/SortObject"
-        first:
-          type: boolean
-        last:
-          type: boolean
         empty:
           type: boolean
     PageableObject:
@@ -584,25 +637,25 @@ components:
         offset:
           type: integer
           format: int64
-        pageSize:
-          type: integer
-          format: int32
-        pageNumber:
-          type: integer
-          format: int32
+        paged:
+          type: boolean
         sort:
           $ref: "#/components/schemas/SortObject"
         unpaged:
           type: boolean
-        paged:
-          type: boolean
+        pageNumber:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
     SortObject:
       type: object
       properties:
         empty:
           type: boolean
-        unsorted:
-          type: boolean
         sorted:
+          type: boolean
+        unsorted:
           type: boolean
   securitySchemes: {}

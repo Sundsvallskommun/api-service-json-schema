@@ -37,7 +37,7 @@ import org.zalando.problem.violations.ConstraintViolationProblem;
 import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
 import se.sundsvall.jsonschema.api.model.JsonSchema;
 import se.sundsvall.jsonschema.api.model.JsonSchemaCreateRequest;
-import se.sundsvall.jsonschema.service.JsonSchemaService;
+import se.sundsvall.jsonschema.service.JsonSchemaStorageService;
 
 @RestController
 @Validated
@@ -49,50 +49,53 @@ import se.sundsvall.jsonschema.service.JsonSchemaService;
 @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 class JsonSchemaResource {
 
-	private final JsonSchemaService jsonSchemaService;
+	private final JsonSchemaStorageService jsonSchemaStorageService;
 
-	public JsonSchemaResource(JsonSchemaService jsonSchemaService) {
-		this.jsonSchemaService = jsonSchemaService;
+	public JsonSchemaResource(JsonSchemaStorageService jsonSchemaService) {
+		this.jsonSchemaStorageService = jsonSchemaService;
 	}
 
 	@GetMapping(produces = APPLICATION_JSON_VALUE)
-	@Operation(summary = "Get JSON schemas", responses = {
-		@ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true)
-	})
+	@Operation(summary = "Get JSON schemas", responses = @ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true))
 	ResponseEntity<Page<JsonSchema>> getSchemas(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@ParameterObject final Pageable pageable) {
 
-		return ok(jsonSchemaService.getSchemas(municipalityId, pageable));
+		return ok(jsonSchemaStorageService.getSchemas(municipalityId, pageable));
 	}
 
 	@GetMapping(path = "{id}", produces = APPLICATION_JSON_VALUE)
-	@Operation(summary = "Get a JSON schema", responses = @ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true))
+	@Operation(summary = "Get a JSON schema", responses = {
+		@ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
+		@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+	})
 	ResponseEntity<JsonSchema> getSchemaById(
 		@Parameter(name = "municipalityId", description = "MunicipalityID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
-		@Parameter(name = "id", description = "Schema ID", example = "person_1.0") @NotBlank @PathVariable final String id) {
+		@Parameter(name = "id", description = "Schema ID", example = "2281_person_1.0") @NotBlank @PathVariable final String id) {
 
-		return ok(jsonSchemaService.getSchema(municipalityId, id));
+		return ok(jsonSchemaStorageService.getSchema(municipalityId, id));
 	}
 
-	@GetMapping(path = "{name}/latest", produces = APPLICATION_JSON_VALUE)
-	@Operation(summary = "Get latest JSON schema by name", responses = @ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true))
+	@GetMapping(path = "{name}/versions/latest", produces = APPLICATION_JSON_VALUE)
+	@Operation(summary = "Get latest version of a schema identified by schema name", responses = {
+		@ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
+		@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+	})
 	ResponseEntity<JsonSchema> getLatestSchemaByName(
 		@Parameter(name = "municipalityId", description = "MunicipalityID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "name", description = "Schema name", example = "person") @NotBlank @PathVariable final String name) {
 
-		return ok(jsonSchemaService.getLatestSchemaByName(municipalityId, name));
+		return ok(jsonSchemaStorageService.getLatestSchemaByName(municipalityId, name));
 	}
 
 	@PostMapping(consumes = APPLICATION_JSON_VALUE, produces = ALL_VALUE)
-	@Operation(summary = "Create a JSON schema", responses = {
-		@ApiResponse(responseCode = "201", description = "Created - Successful operation", headers = @Header(name = LOCATION, description = "Location of the created resource."), useReturnTypeSchema = true)
-	})
+	@Operation(summary = "Create a JSON schema",
+		responses = @ApiResponse(responseCode = "201", description = "Created - Successful operation", headers = @Header(name = LOCATION, description = "Location of the created resource."), useReturnTypeSchema = true))
 	ResponseEntity<Void> createSchema(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Valid @NotNull @RequestBody final JsonSchemaCreateRequest body) {
 
-		final var createdJsonSchema = jsonSchemaService.create(municipalityId, body);
+		final var createdJsonSchema = jsonSchemaStorageService.create(municipalityId, body);
 
 		return created(fromPath("/{municipalityId}/jsonschemas/{id}").buildAndExpand(municipalityId, createdJsonSchema.getId()).toUri())
 			.header(CONTENT_TYPE, ALL_VALUE)
@@ -106,9 +109,9 @@ class JsonSchemaResource {
 	})
 	ResponseEntity<Void> deleteSchema(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
-		@Parameter(name = "id", description = "Schema ID", example = "person_1.0") @PathVariable @NotBlank final String id) {
+		@Parameter(name = "id", description = "Schema ID", example = "2281_person_1.0") @PathVariable @NotBlank final String id) {
 
-		jsonSchemaService.delete(municipalityId, id);
+		jsonSchemaStorageService.delete(municipalityId, id);
 
 		return noContent().build();
 	}

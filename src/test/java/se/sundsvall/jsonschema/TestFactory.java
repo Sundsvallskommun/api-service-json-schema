@@ -1,10 +1,14 @@
 package se.sundsvall.jsonschema;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.OffsetDateTime;
 import se.sundsvall.jsonschema.api.model.JsonSchemaCreateRequest;
 import se.sundsvall.jsonschema.integration.db.model.JsonSchemaEntity;
 
 public final class TestFactory {
+
+	private TestFactory() {}
 
 	public static JsonSchemaEntity getJsonSchemaEntity() {
 		return JsonSchemaEntity.create()
@@ -18,10 +22,18 @@ public final class TestFactory {
 	}
 
 	public static JsonSchemaCreateRequest getJsonSchemaCreateRequest() {
+
+		JsonNode value = null;
+		try {
+			value = new ObjectMapper().readTree("{\"$schema\": \"https://json-schema.org/draft/2020-12/schema\"}");
+		} catch (Exception _) {
+			// Should not happen.
+		}
+
 		return JsonSchemaCreateRequest.create()
 			.withDescription("description")
 			.withName("Person_Schema")
-			.withValue("{}")
+			.withValue(value)
 			.withVersion("1.0");
 	}
 }
