@@ -1,0 +1,83 @@
+{
+	"content": [
+		{
+			"id": "2281_schema_1.0.0",
+			"name": "schema",
+			"version": "1.0.0",
+			"value": {
+				"type": "object",
+				"properties": {
+					"firstName": {
+						"type": "string"
+					},
+					"lastName": {
+						"type": "string"
+					}
+				}
+			},
+			"description": "Schema 1",
+			"created": "2025-01-01T12:13:14+01:00"
+		},
+		{
+			"id": "2281_schema_1.5.0",
+			"name": "schema",
+			"version": "1.5.0",
+			"value": {
+				"type": "object",
+				"properties": {
+					"firstName": {
+						"type": "string"
+					},
+					"lastName": {
+						"type": "string"
+					}
+				}
+			},
+			"description": "Schema 1",
+			"created": "2025-02-02T12:13:14+01:00"
+		},
+		{
+			"id": "2281_schema_with_references_1.0.0",
+			"name": "schema_with_references",
+			"version": "1.0.0",
+			"value": {
+				"type": "object",
+				"properties": {
+					"firstName": {
+						"type": "string"
+					},
+					"lastName": {
+						"type": "string"
+					}
+				}
+			},
+			"description": "Schema 2",
+			"created": "2025-02-02T12:13:14+01:00"
+		}
+	],
+	"pageable": {
+		"pageNumber": 0,
+		"pageSize": 20,
+		"sort": {
+			"empty": true,
+			"unsorted": true,
+			"sorted": false
+		},
+		"offset": 0,
+		"unpaged": false,
+		"paged": true
+	},
+	"totalElements": 3,
+	"totalPages": 1,
+	"last": true,
+	"size": 20,
+	"number": 0,
+	"first": true,
+	"numberOfElements": 3,
+	"sort": {
+		"empty": true,
+		"unsorted": true,
+		"sorted": false
+	},
+	"empty": false
+}
