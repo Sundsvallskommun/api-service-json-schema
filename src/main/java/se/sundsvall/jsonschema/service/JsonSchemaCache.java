@@ -45,6 +45,8 @@ public class JsonSchemaCache {
 	 */
 	@Cacheable(value = "jsonSchemas", key = "#entity.id")
 	public Schema getSchema(JsonSchemaEntity entity) {
-		return REGISTRY.getSchema(entity.getValue());
+		final var schema = REGISTRY.getSchema(entity.getValue());
+		schema.initializeValidators();
+		return schema;
 	}
 }
