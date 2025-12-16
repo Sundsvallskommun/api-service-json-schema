@@ -20,7 +20,9 @@ class JsonSchemaMapperTest {
 
 		// Assert
 		assertThat(result.getId()).isEqualTo(entity.getId());
+		assertThat(result.getLastUsedForValidation()).isEqualTo(entity.getLastUsedForValidation());
 		assertThat(result.getName()).isEqualTo(entity.getName());
+		assertThat(result.getValidationUsageCount()).isEqualTo(entity.getValidationUsageCount());
 		assertThat(result.getVersion()).isEqualTo(entity.getVersion());
 		assertThat(result.getDescription()).isEqualTo(entity.getDescription());
 		assertThat(result.getCreated()).isEqualTo(entity.getCreated());
@@ -52,7 +54,9 @@ class JsonSchemaMapperTest {
 
 		final var schema = result.getFirst();
 		assertThat(schema.getId()).isEqualTo(entity.getId());
+		assertThat(schema.getLastUsedForValidation()).isEqualTo(entity.getLastUsedForValidation());
 		assertThat(schema.getName()).isEqualTo(entity.getName());
+		assertThat(schema.getValidationUsageCount()).isEqualTo(entity.getValidationUsageCount());
 		assertThat(schema.getVersion()).isEqualTo(entity.getVersion());
 		assertThat(schema.getDescription()).isEqualTo(entity.getDescription());
 		assertThat(schema.getCreated()).isEqualTo(entity.getCreated());

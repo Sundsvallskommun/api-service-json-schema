@@ -43,6 +43,8 @@ class JsonSchemaEntityTest {
 		final var id = "id";
 		final var municipalityId = "municipalityId";
 		final var name = "name";
+		final var lastUsedForValidation = now();
+		final var validationUsageCount = 42L;
 		final var value = "value";
 		final var version = "version";
 
@@ -50,8 +52,10 @@ class JsonSchemaEntityTest {
 			.withCreated(created)
 			.withDescription(description)
 			.withId(id)
+			.withLastUsedForValidation(lastUsedForValidation)
 			.withMunicipalityId(municipalityId)
 			.withName(name)
+			.withValidationUsageCount(validationUsageCount)
 			.withValue(value)
 			.withVersion(version);
 
@@ -59,16 +63,18 @@ class JsonSchemaEntityTest {
 		assertThat(bean.getCreated()).isEqualTo(created);
 		assertThat(bean.getDescription()).isEqualTo(description);
 		assertThat(bean.getId()).isEqualTo(id);
+		assertThat(bean.getLastUsedForValidation()).isEqualTo(lastUsedForValidation);
 		assertThat(bean.getMunicipalityId()).isEqualTo(municipalityId);
 		assertThat(bean.getName()).isEqualTo(name);
+		assertThat(bean.getValidationUsageCount()).isEqualTo(validationUsageCount);
 		assertThat(bean.getValue()).isEqualTo(value);
 		assertThat(bean.getVersion()).isEqualTo(version);
 	}
 
 	@Test
 	void testNoDirtOnCreatedBean() {
-		assertThat(JsonSchemaEntity.create()).hasAllNullFieldsOrProperties();
-		assertThat(new JsonSchemaEntity()).hasAllNullFieldsOrProperties();
+		assertThat(JsonSchemaEntity.create()).hasAllNullFieldsOrPropertiesExcept("validationUsageCount");
+		assertThat(new JsonSchemaEntity()).hasAllNullFieldsOrPropertiesExcept("validationUsageCount");
 	}
 
 	@Test

@@ -1,7 +1,9 @@
 
     create table json_schema (
         created datetime(6),
+        last_used_for_validation datetime(6),
         municipality_id varchar(8),
+        validation_usage_count bigint not null,
         version varchar(32),
         name varchar(64),
         description longtext,

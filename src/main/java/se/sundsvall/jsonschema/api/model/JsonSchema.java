@@ -43,6 +43,12 @@ public class JsonSchema {
 	@Schema(description = "Created timestamp")
 	private OffsetDateTime created;
 
+	@Schema(description = "Number of times this schema has been used to validate a JSON instance")
+	private long validationUsageCount;
+
+	@Schema(description = "Timestamp when this schema was last used to validate a JSON instance")
+	private OffsetDateTime lastUsedForValidation;
+
 	public static JsonSchema create() {
 		return new JsonSchema();
 	}
@@ -125,9 +131,35 @@ public class JsonSchema {
 		return this;
 	}
 
+	public long getValidationUsageCount() {
+		return validationUsageCount;
+	}
+
+	public void setValidationUsageCount(long validationUsageCount) {
+		this.validationUsageCount = validationUsageCount;
+	}
+
+	public JsonSchema withValidationUsageCount(long validationUsageCount) {
+		this.validationUsageCount = validationUsageCount;
+		return this;
+	}
+
+	public OffsetDateTime getLastUsedForValidation() {
+		return lastUsedForValidation;
+	}
+
+	public void setLastUsedForValidation(OffsetDateTime lastUsedForValidation) {
+		this.lastUsedForValidation = lastUsedForValidation;
+	}
+
+	public JsonSchema withLastUsedForValidation(OffsetDateTime lastUsedForValidation) {
+		this.lastUsedForValidation = lastUsedForValidation;
+		return this;
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(created, description, id, name, value, version);
+		return Objects.hash(created, description, id, lastUsedForValidation, name, validationUsageCount, value, version);
 	}
 
 	@Override
@@ -142,12 +174,13 @@ public class JsonSchema {
 			return false;
 		}
 		JsonSchema other = (JsonSchema) obj;
-		return Objects.equals(created, other.created) && Objects.equals(description, other.description) && Objects.equals(id, other.id) && Objects.equals(name, other.name) && Objects.equals(value,
-			other.value) && Objects.equals(version, other.version);
+		return Objects.equals(created, other.created) && Objects.equals(description, other.description) && Objects.equals(id, other.id) && Objects.equals(lastUsedForValidation, other.lastUsedForValidation) && Objects.equals(name, other.name)
+			&& validationUsageCount == other.validationUsageCount && Objects.equals(value, other.value) && Objects.equals(version, other.version);
 	}
 
 	@Override
 	public String toString() {
-		return "JsonSchema [id=" + id + ", name=" + name + ", version=" + version + ", value=" + value + ", description=" + description + ", created=" + created + "]";
+		return "JsonSchema [id=" + id + ", name=" + name + ", version=" + version + ", value=" + value + ", description=" + description + ", created=" + created + ", validationUsageCount=" + validationUsageCount + ", lastUsedForValidation="
+			+ lastUsedForValidation + "]";
 	}
 }

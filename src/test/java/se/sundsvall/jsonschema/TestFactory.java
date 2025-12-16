@@ -1,8 +1,9 @@
 package se.sundsvall.jsonschema;
 
+import static java.time.OffsetDateTime.now;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.time.OffsetDateTime;
 import se.sundsvall.jsonschema.api.model.JsonSchemaCreateRequest;
 import se.sundsvall.jsonschema.integration.db.model.JsonSchemaEntity;
 
@@ -12,11 +13,13 @@ public final class TestFactory {
 
 	public static JsonSchemaEntity getJsonSchemaEntity() {
 		return JsonSchemaEntity.create()
-			.withCreated(OffsetDateTime.now())
+			.withCreated(now())
 			.withDescription("description")
 			.withId("2281_person_schema_1.0.0")
+			.withLastUsedForValidation(now())
 			.withMunicipalityId("2281")
 			.withName("person_schema")
+			.withValidationUsageCount(42L)
 			.withValue("{}")
 			.withVersion("1.0");
 	}

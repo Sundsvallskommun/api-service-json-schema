@@ -19,5 +19,6 @@
 		}
 	},
 	"description": "A JSON-schema that defines a person object",
-	"created": "${json-unit.any-string}"
+	"created": "${json-unit.any-string}",
+	"validationUsageCount": 0
 }

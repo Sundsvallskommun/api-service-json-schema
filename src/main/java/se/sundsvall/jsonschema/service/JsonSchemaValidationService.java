@@ -10,6 +10,7 @@ import static se.sundsvall.jsonschema.service.Constants.MESSAGE_JSON_SCHEMA_NOT_
 import com.networknt.schema.Error;
 import com.networknt.schema.ExecutionContext;
 import com.networknt.schema.Schema;
+import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -19,6 +20,7 @@ import org.zalando.problem.Problem;
 import org.zalando.problem.violations.ConstraintViolationProblem;
 import org.zalando.problem.violations.Violation;
 import se.sundsvall.jsonschema.integration.db.JsonSchemaRepository;
+import se.sundsvall.jsonschema.integration.db.model.JsonSchemaEntity;
 
 @Service
 public class JsonSchemaValidationService {
@@ -90,7 +92,15 @@ public class JsonSchemaValidationService {
 		final var entity = jsonSchemaRepository.findById(schemaId)
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, MESSAGE_JSON_SCHEMA_NOT_FOUND_BY_ID.formatted(schemaId)));
 
+		registerValidationAttempt(entity);
+
 		return jsonSchemaCache.getSchema(entity);
+	}
+
+	private void registerValidationAttempt(final JsonSchemaEntity entity) {
+		jsonSchemaRepository.save(entity
+			.withLastUsedForValidation(OffsetDateTime.now())
+			.withValidationUsageCount(entity.getValidationUsageCount() + 1));
 	}
 
 	private static void configureExecutionContext(ExecutionContext executionContext) {

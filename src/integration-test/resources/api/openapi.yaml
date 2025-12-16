@@ -7,7 +7,7 @@ info:
     url: https://opensource.org/licenses/MIT
   version: "1.0"
 servers:
-- url: http://localhost:51945
+- url: http://localhost:56135
   description: Generated server url
 paths:
   /{municipalityId}/jsonschemas:
@@ -386,11 +386,11 @@ components:
     StatusType:
       type: object
       properties:
-        reasonPhrase:
-          type: string
         statusCode:
           type: integer
           format: int32
+        reasonPhrase:
+          type: string
     ConstraintViolationProblem:
       type: object
       properties:
@@ -599,15 +599,25 @@ components:
           type: string
           format: date-time
           description: Created timestamp
+        validationUsageCount:
+          type: integer
+          format: int64
+          description: Number of times this schema has been used to validate a JSON
+            instance
+        lastUsedForValidation:
+          type: string
+          format: date-time
+          description: Timestamp when this schema was last used to validate a JSON
+            instance
     PageJsonSchema:
       type: object
       properties:
-        totalPages:
-          type: integer
-          format: int32
         totalElements:
           type: integer
           format: int64
+        totalPages:
+          type: integer
+          format: int32
         size:
           type: integer
           format: int32
@@ -637,25 +647,25 @@ components:
         offset:
           type: integer
           format: int64
-        paged:
+        unpaged:
           type: boolean
         sort:
           $ref: "#/components/schemas/SortObject"
-        unpaged:
-          type: boolean
         pageNumber:
           type: integer
           format: int32
         pageSize:
           type: integer
           format: int32
+        paged:
+          type: boolean
     SortObject:
       type: object
       properties:
         empty:
           type: boolean
-        sorted:
-          type: boolean
         unsorted:
+          type: boolean
+        sorted:
           type: boolean
   securitySchemes: {}
