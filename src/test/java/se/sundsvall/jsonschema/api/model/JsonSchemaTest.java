@@ -39,7 +39,9 @@ class JsonSchemaTest {
 		final var created = OffsetDateTime.now();
 		final var description = "description";
 		final var id = "id";
+		final var lastUsedForValidation = OffsetDateTime.now();
 		final var name = "name";
+		final var validationUsageCount = 42;
 		final var value = new ObjectMapper().readTree("{}");
 		final var version = "version";
 
@@ -47,7 +49,9 @@ class JsonSchemaTest {
 			.withCreated(created)
 			.withDescription(description)
 			.withId(id)
+			.withLastUsedForValidation(lastUsedForValidation)
 			.withName(name)
+			.withValidationUsageCount(validationUsageCount)
 			.withValue(value)
 			.withVersion(version);
 
@@ -55,14 +59,16 @@ class JsonSchemaTest {
 		assertThat(bean.getCreated()).isEqualTo(created);
 		assertThat(bean.getDescription()).isEqualTo(description);
 		assertThat(bean.getId()).isEqualTo(id);
+		assertThat(bean.getLastUsedForValidation()).isEqualTo(lastUsedForValidation);
 		assertThat(bean.getName()).isEqualTo(name);
+		assertThat(bean.getValidationUsageCount()).isEqualTo(validationUsageCount);
 		assertThat(bean.getValue()).isEqualTo(value);
 		assertThat(bean.getVersion()).isEqualTo(version);
 	}
 
 	@Test
 	void testNoDirtOnCreatedBean() {
-		assertThat(JsonSchema.create()).hasAllNullFieldsOrProperties();
-		assertThat(new JsonSchema()).hasAllNullFieldsOrProperties();
+		assertThat(JsonSchema.create()).hasAllNullFieldsOrPropertiesExcept("validationUsageCount");
+		assertThat(new JsonSchema()).hasAllNullFieldsOrPropertiesExcept("validationUsageCount");
 	}
 }

@@ -35,6 +35,7 @@ import org.hibernate.annotations.TimeZoneStorage;
 public class JsonSchemaEntity {
 
 	@Id
+	@Column(name = "id")
 	private String id;
 
 	@Column(name = "municipality_id", length = 8)
@@ -55,7 +56,21 @@ public class JsonSchemaEntity {
 	private String description;
 
 	@TimeZoneStorage(NORMALIZE)
+	@Column(name = "created")
 	private OffsetDateTime created;
+
+	/*
+	 * =======================
+	 * Validation usage stats
+	 * =======================
+	 */
+
+	@Column(name = "validation_usage_count", nullable = false)
+	private long validationUsageCount;
+
+	@TimeZoneStorage(NORMALIZE)
+	@Column(name = "last_used_for_validation")
+	private OffsetDateTime lastUsedForValidation;
 
 	public static JsonSchemaEntity create() {
 		return new JsonSchemaEntity();
@@ -152,6 +167,32 @@ public class JsonSchemaEntity {
 		return this;
 	}
 
+	public long getValidationUsageCount() {
+		return validationUsageCount;
+	}
+
+	public void setValidationUsageCount(long validationUsageCount) {
+		this.validationUsageCount = validationUsageCount;
+	}
+
+	public JsonSchemaEntity withValidationUsageCount(long validationUsageCount) {
+		this.validationUsageCount = validationUsageCount;
+		return this;
+	}
+
+	public OffsetDateTime getLastUsedForValidation() {
+		return lastUsedForValidation;
+	}
+
+	public void setLastUsedForValidation(OffsetDateTime lastUsedForValidation) {
+		this.lastUsedForValidation = lastUsedForValidation;
+	}
+
+	public JsonSchemaEntity withLastUsedForValidation(OffsetDateTime lastUsedForValidation) {
+		this.lastUsedForValidation = lastUsedForValidation;
+		return this;
+	}
+
 	@PrePersist
 	void prePersist() {
 		created = now(systemDefault()).truncatedTo(MILLIS);
@@ -159,7 +200,7 @@ public class JsonSchemaEntity {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(created, description, id, municipalityId, name, value, version);
+		return Objects.hash(created, description, id, lastUsedForValidation, municipalityId, name, validationUsageCount, value, version);
 	}
 
 	@Override
@@ -174,12 +215,13 @@ public class JsonSchemaEntity {
 			return false;
 		}
 		JsonSchemaEntity other = (JsonSchemaEntity) obj;
-		return Objects.equals(created, other.created) && Objects.equals(description, other.description) && Objects.equals(id, other.id) && Objects.equals(municipalityId, other.municipalityId) && Objects.equals(name, other.name) && Objects.equals(value,
-			other.value) && Objects.equals(version, other.version);
+		return Objects.equals(created, other.created) && Objects.equals(description, other.description) && Objects.equals(id, other.id) && Objects.equals(lastUsedForValidation, other.lastUsedForValidation) && Objects.equals(municipalityId,
+			other.municipalityId) && Objects.equals(name, other.name) && validationUsageCount == other.validationUsageCount && Objects.equals(value, other.value) && Objects.equals(version, other.version);
 	}
 
 	@Override
 	public String toString() {
-		return "JsonSchemaEntity [id=" + id + ", municipalityId=" + municipalityId + ", name=" + name + ", version=" + version + ", value=" + value + ", description=" + description + ", created=" + created + "]";
+		return "JsonSchemaEntity [id=" + id + ", municipalityId=" + municipalityId + ", name=" + name + ", version=" + version + ", value=" + value + ", description=" + description + ", created=" + created + ", validationUsageCount=" + validationUsageCount
+			+ ", lastUsedForValidation=" + lastUsedForValidation + "]";
 	}
 }

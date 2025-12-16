@@ -24,7 +24,9 @@ public final class JsonSchemaMapper {
 				.withCreated(e.getCreated())
 				.withDescription(e.getDescription())
 				.withId(e.getId())
+				.withLastUsedForValidation(e.getLastUsedForValidation())
 				.withName(e.getName())
+				.withValidationUsageCount(e.getValidationUsageCount())
 				.withValue(parseJsonNode(e.getValue()))
 				.withVersion(e.getVersion()))
 			.orElse(null);
