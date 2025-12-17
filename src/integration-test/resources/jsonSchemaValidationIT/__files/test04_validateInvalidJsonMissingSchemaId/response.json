@@ -1,0 +1,5 @@
+{
+	"title": "Not Found",
+	"status": 404,
+	"detail": "No JsonSchema with ID 'non-existing-id' was found!"
+}

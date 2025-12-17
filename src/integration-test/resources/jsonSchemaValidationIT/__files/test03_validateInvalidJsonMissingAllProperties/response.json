@@ -1,0 +1,19 @@
+{
+	"type": "https://zalando.github.io/problem/constraint-violation",
+	"status": 400,
+	"violations": [
+		{
+			"field": "",
+			"message": "required property 'productId' not found"
+		},
+		{
+			"field": "",
+			"message": "required property 'productName' not found"
+		},
+		{
+			"field": "",
+			"message": "required property 'price' not found"
+		}
+	],
+	"title": "Constraint Violation"
+}

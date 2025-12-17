@@ -16,16 +16,16 @@ import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
 import se.sundsvall.jsonschema.Application;
 
 /**
- * JsonSchemaIT integration tests.
+ * JsonSchemaStorageIT integration tests.
  *
  * @see src/test/resources/db/scripts/jsonSchemaIT.sql for data setup.
  */
-@WireMockAppTestSuite(files = "classpath:/jsonSchemaIT/", classes = Application.class)
+@WireMockAppTestSuite(files = "classpath:/jsonSchemaStorageIT/", classes = Application.class)
 @Sql(scripts = {
 	"/db/scripts/truncate.sql",
 	"/db/scripts/jsonSchemaIT.sql"
 })
-class JsonSchemaIT extends AbstractAppTest {
+class JsonSchemaStorageIT extends AbstractAppTest {
 
 	private static final String REQUEST_FILE = "request.json";
 	private static final String RESPONSE_FILE = "response.json";
