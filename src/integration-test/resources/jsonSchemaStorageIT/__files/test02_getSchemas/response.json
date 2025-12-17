@@ -1,6 +1,50 @@
 {
 	"content": [
 		{
+			"id": "2281_product_1.0.0",
+			"name": "product",
+			"version": "1.0.0",
+			"value": {
+				"$schema": "https://json-schema.org/draft/2020-12/schema",
+				"$id": "https://example.com/product.schema.json",
+				"title": "Product",
+				"description": "A product from Acme catalog",
+				"type": "object",
+				"properties": {
+					"productId": {
+						"description": "The unique identifier for a product",
+						"type": "integer"
+					},
+					"productName": {
+						"description": "Name of the product",
+						"type": "string"
+					},
+					"price": {
+						"description": "The price of the product",
+						"type": "number",
+						"exclusiveMinimum": 0
+					},
+					"tags": {
+						"description": "Tags for the product",
+						"type": "array",
+						"items": {
+							"type": "string"
+						},
+						"minItems": 1,
+						"uniqueItems": true
+					}
+				},
+				"required": [
+					"productId",
+					"productName",
+					"price"
+				]
+			},
+			"description": "Product schema",
+			"created": "2025-03-01T12:13:14+01:00",
+			"validationUsageCount": 0
+		},
+		{
 			"id": "2281_schema_1.0.0",
 			"name": "schema",
 			"version": "1.0.0",
@@ -63,24 +107,24 @@
 		"pageSize": 20,
 		"sort": {
 			"empty": true,
-			"unsorted": true,
-			"sorted": false
+			"sorted": false,
+			"unsorted": true
 		},
 		"offset": 0,
 		"unpaged": false,
 		"paged": true
 	},
-	"totalElements": 3,
 	"totalPages": 1,
+	"totalElements": 4,
 	"last": true,
 	"size": 20,
 	"number": 0,
-	"first": true,
-	"numberOfElements": 3,
+	"numberOfElements": 4,
 	"sort": {
 		"empty": true,
-		"unsorted": true,
-		"sorted": false
+		"sorted": false,
+		"unsorted": true
 	},
+	"first": true,
 	"empty": false
 }

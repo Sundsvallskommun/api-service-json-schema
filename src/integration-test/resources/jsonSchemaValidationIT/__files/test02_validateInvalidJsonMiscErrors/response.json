@@ -1,0 +1,23 @@
+{
+	"type": "https://zalando.github.io/problem/constraint-violation",
+	"status": 400,
+	"violations": [
+		{
+			"field": "/price",
+			"message": "must have an exclusive minimum value of 0"
+		},
+		{
+			"field": "/tags/5",
+			"message": "integer found, string expected"
+		},
+		{
+			"field": "/tags",
+			"message": "must have only unique items in the array"
+		},
+		{
+			"field": "",
+			"message": "required property 'productName' not found"
+		}
+	],
+	"title": "Constraint Violation"
+}
