@@ -7,7 +7,7 @@ info:
     url: https://opensource.org/licenses/MIT
   version: "1.0"
 servers:
-- url: http://localhost:51633
+- url: http://localhost:50276
   description: Generated server url
 paths:
   /{municipalityId}/schemas/{schemaId}/ui-schema:
@@ -468,19 +468,16 @@ components:
         value:
           $ref: "#/components/schemas/JsonNode"
           description: The UI schema
-          example: |
-            {
-              "ui:title": "Title",
-              "ui:description": "Description",
-              "ui:submitButtonOptions": {
-                "props": {
-                  "disabled": false,
-                  "className": "btn btn-info",
-                },
-                  "norender": false,
-                  "submitText": "Submit"
-                }
-            }
+          example:
+            firstName:
+              ui:widget: text
+              ui:placeholder: Enter first name
+            lastName:
+              ui:widget: text
+              ui:placeholder: Enter last name
+            ui:order:
+            - firstName
+            - lastName
         description:
           type: string
           description: Description of the UI schema purpose
@@ -502,9 +499,9 @@ components:
           additionalProperties: {}
         status:
           $ref: "#/components/schemas/StatusType"
-        title:
-          type: string
         detail:
+          type: string
+        title:
           type: string
     StatusType:
       type: object
@@ -634,9 +631,9 @@ components:
           additionalProperties: {}
         status:
           $ref: "#/components/schemas/StatusType"
-        title:
-          type: string
         detail:
+          type: string
+        title:
           type: string
         suppressed:
           type: array
@@ -785,12 +782,12 @@ components:
     PageJsonSchema:
       type: object
       properties:
-        totalPages:
-          type: integer
-          format: int32
         totalElements:
           type: integer
           format: int64
+        totalPages:
+          type: integer
+          format: int32
         size:
           type: integer
           format: int32
@@ -824,14 +821,14 @@ components:
           $ref: "#/components/schemas/SortObject"
         paged:
           type: boolean
-        pageSize:
-          type: integer
-          format: int32
+        unpaged:
+          type: boolean
         pageNumber:
           type: integer
           format: int32
-        unpaged:
-          type: boolean
+        pageSize:
+          type: integer
+          format: int32
     SortObject:
       type: object
       properties:
@@ -854,19 +851,16 @@ components:
         value:
           $ref: "#/components/schemas/JsonNode"
           description: The UI schema
-          example: |
-            {
-              "ui:title": "Title",
-              "ui:description": "Description",
-              "ui:submitButtonOptions": {
-                "props": {
-                  "disabled": false,
-                  "className": "btn btn-info",
-                },
-                  "norender": false,
-                  "submitText": "Submit"
-                }
-            }
+          example:
+            firstName:
+              ui:widget: text
+              ui:placeholder: Enter first name
+            lastName:
+              ui:widget: text
+              ui:placeholder: Enter last name
+            ui:order:
+            - firstName
+            - lastName
           readOnly: true
         description:
           type: string

@@ -13,16 +13,18 @@ public class UiSchemaRequest {
 	@NotNull
 	@Schema(description = "The UI schema", requiredMode = REQUIRED, example = """
 		{
-		  "ui:title": "Title",
-		  "ui:description": "Description",
-		  "ui:submitButtonOptions": {
-		    "props": {
-		      "disabled": false,
-		      "className": "btn btn-info",
+		    "firstName": {
+		        "ui:widget": "text",
+		        "ui:placeholder": "Enter first name"
 		    },
-		      "norender": false,
-		      "submitText": "Submit"
-		    }
+		    "lastName": {
+		        "ui:widget": "text",
+		        "ui:placeholder": "Enter last name"
+		    },
+		    "ui:order": [
+		        "firstName",
+		        "lastName"
+		    ]
 		}
 		""")
 	private JsonNode value;
