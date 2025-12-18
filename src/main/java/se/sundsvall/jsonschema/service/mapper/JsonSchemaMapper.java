@@ -27,7 +27,7 @@ public final class JsonSchemaMapper {
 				.withLastUsedForValidation(e.getLastUsedForValidation())
 				.withName(e.getName())
 				.withValidationUsageCount(e.getValidationUsageCount())
-				.withValue(parseJsonNode(e.getValue()))
+				.withValue(toJsonNode(e.getValue()))
 				.withVersion(e.getVersion()))
 			.orElse(null);
 	}
@@ -45,14 +45,14 @@ public final class JsonSchemaMapper {
 			.withId(id)
 			.withMunicipalityId(municipalityId)
 			.withName(request.getName().toLowerCase())
-			.withValue(writeJsonNode(request.getValue()))
+			.withValue(toJsonString(request.getValue()))
 			.withVersion(request.getVersion());
 	}
 
 	/**
 	 * Converts a JSON string into a JsonNode, throwing an IllegalArgumentException on error.
 	 */
-	public static JsonNode parseJsonNode(String json) {
+	public static JsonNode toJsonNode(String json) {
 		return Optional.ofNullable(json)
 			.map(function(OBJECT_MAPPER::readTree))
 			.orElse(null);
@@ -61,7 +61,7 @@ public final class JsonSchemaMapper {
 	/**
 	 * Converts a JsonNode into a String, handling nulls.
 	 */
-	public static String writeJsonNode(JsonNode node) {
+	public static String toJsonString(JsonNode node) {
 		return Optional.ofNullable(node)
 			.map(function(OBJECT_MAPPER::writeValueAsString))
 			.orElse(null);

@@ -3,8 +3,8 @@ package se.sundsvall.jsonschema.api;
 import static org.mockito.Mockito.verify;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static se.sundsvall.jsonschema.service.mapper.JsonSchemaMapper.parseJsonNode;
-import static se.sundsvall.jsonschema.service.mapper.JsonSchemaMapper.writeJsonNode;
+import static se.sundsvall.jsonschema.service.mapper.JsonSchemaMapper.toJsonNode;
+import static se.sundsvall.jsonschema.service.mapper.JsonSchemaMapper.toJsonString;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +39,8 @@ class JsonSchemaValidationResourceTest {
 				"price": 12.5
 			}
 			""";
-		final var jsonNode = parseJsonNode(json);
-		final var jsonString = writeJsonNode(jsonNode);
+		final var jsonNode = toJsonNode(json);
+		final var jsonString = toJsonString(jsonNode);
 
 		// Act
 		webTestClient.post()

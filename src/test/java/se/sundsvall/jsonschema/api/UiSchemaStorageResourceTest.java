@@ -2,7 +2,7 @@ package se.sundsvall.jsonschema.api;
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static se.sundsvall.jsonschema.service.mapper.JsonSchemaMapper.parseJsonNode;
+import static se.sundsvall.jsonschema.service.mapper.JsonSchemaMapper.toJsonNode;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ class UiSchemaStorageResourceTest {
 
 		// Arrange
 		final var schemaId = "some-schema-id";
-		final var uiSchema = UiSchema.create().withValue(parseJsonNode("{}"));
+		final var uiSchema = UiSchema.create().withValue(toJsonNode("{}"));
 
 		// when(uiSchemaStorageServiceMock.getSchema(MUNICIPALITY_ID, id)).thenReturn(jsonSchema);
 
@@ -55,7 +55,7 @@ class UiSchemaStorageResourceTest {
 		final var schemaId = "some-schema-id";
 		final var body = UiSchemaRequest.create()
 			.withDescription("description")
-			.withValue(parseJsonNode("{}"));
+			.withValue(toJsonNode("{}"));
 
 		// when(uiSchemaStorageServiceMock.create(MUNICIPALITY_ID, body)).thenReturn(jsonSchema);
 
