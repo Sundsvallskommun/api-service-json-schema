@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Optional;
 import se.sundsvall.jsonschema.api.model.JsonSchema;
-import se.sundsvall.jsonschema.api.model.JsonSchemaCreateRequest;
+import se.sundsvall.jsonschema.api.model.JsonSchemaRequest;
 import se.sundsvall.jsonschema.integration.db.model.JsonSchemaEntity;
 
 public final class JsonSchemaMapper {
@@ -38,7 +38,7 @@ public final class JsonSchemaMapper {
 			.toList();
 	}
 
-	public static JsonSchemaEntity toJsonSchemaEntity(String municipalityId, JsonSchemaCreateRequest request) {
+	public static JsonSchemaEntity toJsonSchemaEntity(String municipalityId, JsonSchemaRequest request) {
 		final var id = ID_PATTERN.formatted(municipalityId, request.getName(), request.getVersion()).toLowerCase();
 		return JsonSchemaEntity.create()
 			.withDescription(request.getDescription())
@@ -49,12 +49,10 @@ public final class JsonSchemaMapper {
 			.withVersion(request.getVersion());
 	}
 
-	// ---- Private helpers ------------------------------------------------------
-
 	/**
 	 * Converts a JSON string into a JsonNode, throwing an IllegalArgumentException on error.
 	 */
-	private static JsonNode parseJsonNode(String json) {
+	public static JsonNode parseJsonNode(String json) {
 		return Optional.ofNullable(json)
 			.map(function(OBJECT_MAPPER::readTree))
 			.orElse(null);
@@ -63,7 +61,7 @@ public final class JsonSchemaMapper {
 	/**
 	 * Converts a JsonNode into a String, handling nulls.
 	 */
-	private static String writeJsonNode(JsonNode node) {
+	public static String writeJsonNode(JsonNode node) {
 		return Optional.ofNullable(node)
 			.map(function(OBJECT_MAPPER::writeValueAsString))
 			.orElse(null);

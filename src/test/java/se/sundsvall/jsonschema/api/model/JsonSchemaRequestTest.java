@@ -1,0 +1,53 @@
+package se.sundsvall.jsonschema.api.model;
+
+import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
+import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanEquals;
+import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanHashCode;
+import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanToString;
+import static com.google.code.beanmatchers.BeanMatchers.hasValidGettersAndSetters;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.AllOf.allOf;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Test;
+
+class JsonSchemaRequestTest {
+
+	@Test
+	void testBean() {
+		assertThat(JsonSchemaRequest.class, allOf(
+			hasValidBeanConstructor(),
+			hasValidGettersAndSetters(),
+			hasValidBeanHashCode(),
+			hasValidBeanEquals(),
+			hasValidBeanToString()));
+	}
+
+	@Test
+	void testBuilderMethods() throws Exception {
+
+		final var description = "description";
+		final var name = "name";
+		final var value = new ObjectMapper().readTree("{}");
+		final var version = "version";
+
+		final var bean = JsonSchemaRequest.create()
+			.withDescription(description)
+			.withName(name)
+			.withValue(value)
+			.withVersion(version);
+
+		assertThat(bean).isNotNull().hasNoNullFieldsOrProperties();
+		assertThat(bean.getDescription()).isEqualTo(description);
+		assertThat(bean.getName()).isEqualTo(name);
+		assertThat(bean.getValue()).isEqualTo(value);
+		assertThat(bean.getVersion()).isEqualTo(version);
+	}
+
+	@Test
+	void testNoDirtOnCreatedBean() {
+		assertThat(JsonSchemaRequest.create()).hasAllNullFieldsOrProperties();
+		assertThat(new JsonSchemaRequest()).hasAllNullFieldsOrProperties();
+	}
+}

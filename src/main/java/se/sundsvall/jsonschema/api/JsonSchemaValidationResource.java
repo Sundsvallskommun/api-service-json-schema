@@ -4,7 +4,9 @@ import static org.springframework.http.MediaType.ALL_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.noContent;
+import static se.sundsvall.jsonschema.service.mapper.JsonSchemaMapper.writeJsonNode;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -27,7 +29,7 @@ import se.sundsvall.jsonschema.service.JsonSchemaValidationService;
 
 @RestController
 @Validated
-@RequestMapping(value = "/{municipalityId}/jsonschemas")
+@RequestMapping(value = "/{municipalityId}/schemas")
 @Tag(name = "JSON-schema validation")
 @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(oneOf = {
 	Problem.class, ConstraintViolationProblem.class
@@ -41,17 +43,17 @@ class JsonSchemaValidationResource {
 		this.jsonSchemaValidationService = jsonSchemaValidationService;
 	}
 
-	@PostMapping(path = "/{id}/validations", consumes = APPLICATION_JSON_VALUE, produces = ALL_VALUE)
-	@Operation(summary = "Validate a JSON structure against the specified schema", responses = {
+	@PostMapping(path = "/{id}/validation", consumes = APPLICATION_JSON_VALUE, produces = ALL_VALUE)
+	@Operation(operationId = "validateJson", summary = "Validate a JSON structure against the specified schema", responses = {
 		@ApiResponse(responseCode = "204", description = "No content - JSON is valid according to the schema", useReturnTypeSchema = true),
 		@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	})
 	public ResponseEntity<Void> validateJson(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable String municipalityId,
 		@Parameter(name = "id", description = "Schema ID", example = "2281_person_1.0") @PathVariable @NotBlank final String id,
-		@NotNull @RequestBody String json) {
+		@NotNull @RequestBody JsonNode json) {
 
-		jsonSchemaValidationService.validateAndThrow(json, id);
+		jsonSchemaValidationService.validateAndThrow(writeJsonNode(json), id);
 
 		return noContent().build();
 	}

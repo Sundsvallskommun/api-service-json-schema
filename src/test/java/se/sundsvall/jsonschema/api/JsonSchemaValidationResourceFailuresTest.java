@@ -40,7 +40,7 @@ class JsonSchemaValidationResourceFailuresTest {
 
 		// Act
 		final var response = webTestClient.post()
-			.uri("/{municipalityId}/jsonschemas/{id}/validations", "invalid", id)
+			.uri("/{municipalityId}/schemas/{id}/validation", "invalid", id)
 			.contentType(APPLICATION_JSON)
 			.bodyValue(json)
 			.exchange()
@@ -67,7 +67,7 @@ class JsonSchemaValidationResourceFailuresTest {
 
 		// Act
 		final var response = webTestClient.post()
-			.uri("/{municipalityId}/jsonschemas/{id}/validations", MUNICIPALITY_ID, " ")
+			.uri("/{municipalityId}/schemas/{id}/validation", MUNICIPALITY_ID, " ")
 			.contentType(APPLICATION_JSON)
 			.bodyValue(json)
 			.exchange()
@@ -91,7 +91,7 @@ class JsonSchemaValidationResourceFailuresTest {
 
 		// Act
 		final var response = webTestClient.post()
-			.uri("/{municipalityId}/jsonschemas/{id}/validations", MUNICIPALITY_ID, "schema_1.0")
+			.uri("/{municipalityId}/schemas/{id}/validation", MUNICIPALITY_ID, "schema_1.0")
 			.contentType(APPLICATION_JSON)
 			.exchange()
 			.expectStatus().isBadRequest()
@@ -106,7 +106,7 @@ class JsonSchemaValidationResourceFailuresTest {
 		assertThat(response.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getDetail()).isEqualTo(
-			"Required request body is missing: public org.springframework.http.ResponseEntity<java.lang.Void> se.sundsvall.jsonschema.api.JsonSchemaValidationResource.validateJson(java.lang.String,java.lang.String,java.lang.String)");
+			"Required request body is missing: public org.springframework.http.ResponseEntity<java.lang.Void> se.sundsvall.jsonschema.api.JsonSchemaValidationResource.validateJson(java.lang.String,java.lang.String,com.fasterxml.jackson.databind.JsonNode)");
 
 		verifyNoInteractions(validationServiceMock);
 	}

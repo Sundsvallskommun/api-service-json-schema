@@ -10,7 +10,7 @@ import java.util.Objects;
 import se.sundsvall.jsonschema.api.validation.ValidJsonSchema;
 
 @Schema(description = "JsonSchemaCreateRequest model")
-public class JsonSchemaCreateRequest {
+public class JsonSchemaRequest {
 
 	@NotBlank
 	@Schema(description = "Schema name", examples = "person", requiredMode = REQUIRED)
@@ -45,8 +45,8 @@ public class JsonSchemaCreateRequest {
 	@Schema(description = "Description of the schema purpose", examples = "A JSON-schema that defines a person object")
 	private String description;
 
-	public static JsonSchemaCreateRequest create() {
-		return new JsonSchemaCreateRequest();
+	public static JsonSchemaRequest create() {
+		return new JsonSchemaRequest();
 	}
 
 	public String getName() {
@@ -57,7 +57,7 @@ public class JsonSchemaCreateRequest {
 		this.name = name;
 	}
 
-	public JsonSchemaCreateRequest withName(String name) {
+	public JsonSchemaRequest withName(String name) {
 		this.name = name;
 		return this;
 	}
@@ -70,7 +70,7 @@ public class JsonSchemaCreateRequest {
 		this.version = version;
 	}
 
-	public JsonSchemaCreateRequest withVersion(String version) {
+	public JsonSchemaRequest withVersion(String version) {
 		this.version = version;
 		return this;
 	}
@@ -83,7 +83,7 @@ public class JsonSchemaCreateRequest {
 		this.value = value;
 	}
 
-	public JsonSchemaCreateRequest withValue(JsonNode value) {
+	public JsonSchemaRequest withValue(JsonNode value) {
 		this.value = value;
 		return this;
 	}
@@ -96,7 +96,7 @@ public class JsonSchemaCreateRequest {
 		this.description = description;
 	}
 
-	public JsonSchemaCreateRequest withDescription(String description) {
+	public JsonSchemaRequest withDescription(String description) {
 		this.description = description;
 		return this;
 	}
@@ -117,12 +117,12 @@ public class JsonSchemaCreateRequest {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		JsonSchemaCreateRequest other = (JsonSchemaCreateRequest) obj;
+		JsonSchemaRequest other = (JsonSchemaRequest) obj;
 		return Objects.equals(description, other.description) && Objects.equals(name, other.name) && Objects.equals(value, other.value) && Objects.equals(version, other.version);
 	}
 
 	@Override
 	public String toString() {
-		return "JsonSchemaCreateRequest [name=" + name + ", version=" + version + ", value=" + value + ", description=" + description + "]";
+		return "JsonSchemaRequest [name=" + name + ", version=" + version + ", value=" + value + ", description=" + description + "]";
 	}
 }

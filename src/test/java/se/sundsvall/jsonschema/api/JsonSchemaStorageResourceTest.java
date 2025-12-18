@@ -18,7 +18,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import se.sundsvall.jsonschema.Application;
 import se.sundsvall.jsonschema.api.model.JsonSchema;
-import se.sundsvall.jsonschema.api.model.JsonSchemaCreateRequest;
+import se.sundsvall.jsonschema.api.model.JsonSchemaRequest;
 import se.sundsvall.jsonschema.service.JsonSchemaStorageService;
 
 @ActiveProfiles("junit")
@@ -44,7 +44,7 @@ class JsonSchemaStorageResourceTest {
 
 		// Act
 		webTestClient.get()
-			.uri("/{municipalityId}/jsonschemas", MUNICIPALITY_ID)
+			.uri("/{municipalityId}/schemas", MUNICIPALITY_ID)
 			.exchange()
 			.expectStatus()
 			.isOk()
@@ -70,7 +70,7 @@ class JsonSchemaStorageResourceTest {
 
 		// Act
 		final var response = webTestClient.get()
-			.uri("/{municipalityId}/jsonschemas/{id}", MUNICIPALITY_ID, id)
+			.uri("/{municipalityId}/schemas/{id}", MUNICIPALITY_ID, id)
 			.exchange()
 			.expectStatus()
 			.isOk()
@@ -93,7 +93,7 @@ class JsonSchemaStorageResourceTest {
 
 		// Act
 		final var response = webTestClient.get()
-			.uri("/{municipalityId}/jsonschemas/{name}/versions/latest", MUNICIPALITY_ID, name)
+			.uri("/{municipalityId}/schemas/{name}/versions/latest", MUNICIPALITY_ID, name)
 			.exchange()
 			.expectStatus()
 			.isOk()
@@ -113,7 +113,7 @@ class JsonSchemaStorageResourceTest {
 		final var id = "schema_1.0";
 		final var name = "schema";
 		final var jsonSchema = JsonSchema.create().withId(id);
-		final var body = JsonSchemaCreateRequest.create()
+		final var body = JsonSchemaRequest.create()
 			.withDescription("description")
 			.withName(name)
 			.withValue(new ObjectMapper().readTree("{\"$schema\": \"https://json-schema.org/draft/2020-12/schema\"}"))
@@ -123,11 +123,11 @@ class JsonSchemaStorageResourceTest {
 
 		// Act
 		webTestClient.post()
-			.uri("/{municipalityId}/jsonschemas", MUNICIPALITY_ID)
+			.uri("/{municipalityId}/schemas", MUNICIPALITY_ID)
 			.bodyValue(body)
 			.exchange()
 			.expectStatus().isCreated()
-			.expectHeader().location("/" + MUNICIPALITY_ID + "/jsonschemas/" + id);
+			.expectHeader().location("/" + MUNICIPALITY_ID + "/schemas/" + id);
 
 		// Assert
 		verify(jsonSchemaStorageServiceMock).create(MUNICIPALITY_ID, body);
@@ -141,7 +141,7 @@ class JsonSchemaStorageResourceTest {
 
 		// Act
 		webTestClient.delete()
-			.uri("/{municipalityId}/jsonschemas/{id}", MUNICIPALITY_ID, id)
+			.uri("/{municipalityId}/schemas/{id}", MUNICIPALITY_ID, id)
 			.exchange()
 			.expectStatus().isNoContent();
 

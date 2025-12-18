@@ -4,7 +4,7 @@ import static java.time.OffsetDateTime.now;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import se.sundsvall.jsonschema.api.model.JsonSchemaCreateRequest;
+import se.sundsvall.jsonschema.api.model.JsonSchemaRequest;
 import se.sundsvall.jsonschema.integration.db.model.JsonSchemaEntity;
 
 public final class TestFactory {
@@ -24,7 +24,7 @@ public final class TestFactory {
 			.withVersion("1.0");
 	}
 
-	public static JsonSchemaCreateRequest getJsonSchemaCreateRequest() {
+	public static JsonSchemaRequest getJsonSchemaCreateRequest() {
 
 		JsonNode value = null;
 		try {
@@ -33,7 +33,7 @@ public final class TestFactory {
 			// Should not happen.
 		}
 
-		return JsonSchemaCreateRequest.create()
+		return JsonSchemaRequest.create()
 			.withDescription("description")
 			.withName("Person_Schema")
 			.withValue(value)

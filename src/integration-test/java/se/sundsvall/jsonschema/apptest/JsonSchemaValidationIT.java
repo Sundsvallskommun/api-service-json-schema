@@ -23,7 +23,7 @@ import se.sundsvall.jsonschema.Application;
 })
 class JsonSchemaValidationIT extends AbstractAppTest {
 
-	private static final String PATH = "/%s/jsonschemas/%s/validations";
+	private static final String PATH = "/%s/schemas/%s/validation";
 	private static final String REQUEST_FILE = "request.json";
 	private static final String RESPONSE_FILE = "response.json";
 	private static final String MUNICIPALITY_ID = "2281";

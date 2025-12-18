@@ -7,10 +7,147 @@ info:
     url: https://opensource.org/licenses/MIT
   version: "1.0"
 servers:
-- url: http://localhost:56135
+- url: http://localhost:51633
   description: Generated server url
 paths:
-  /{municipalityId}/jsonschemas:
+  /{municipalityId}/schemas/{schemaId}/ui-schema:
+    get:
+      tags:
+      - UI-schemas
+      summary: Get the UI schema that belongs to the provided JSON schema
+      operationId: getUiSchemaById
+      parameters:
+      - name: municipalityId
+        in: path
+        description: Municipality ID
+        required: true
+        schema:
+          type: string
+        example: 2281
+      - name: schemaId
+        in: path
+        description: Schema ID
+        required: true
+        schema:
+          type: string
+          minLength: 1
+        example: 2281_person_1.0
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UiSchema"
+        "404":
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "400":
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+    put:
+      tags:
+      - UI-schemas
+      summary: Create or replace a UI schema for the provided JSON schema
+      operationId: createOrUpdateUiSchema
+      parameters:
+      - name: municipalityId
+        in: path
+        description: Municipality ID
+        required: true
+        schema:
+          type: string
+        example: 2281
+      - name: schemaId
+        in: path
+        description: Schema ID
+        required: true
+        schema:
+          type: string
+          minLength: 1
+        example: 2281_person_1.0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UiSchemaRequest"
+        required: true
+      responses:
+        "204":
+          description: No content - Successful operation
+        "400":
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+    delete:
+      tags:
+      - UI-schemas
+      summary: Delete the UI schema for the provided JSON schema
+      operationId: deleteUiSchema
+      parameters:
+      - name: municipalityId
+        in: path
+        description: Municipality ID
+        required: true
+        schema:
+          type: string
+        example: 2281
+      - name: schemaId
+        in: path
+        description: Schema ID
+        required: true
+        schema:
+          type: string
+          minLength: 1
+        example: 2281_person_1.0
+      responses:
+        "204":
+          description: No content - Successful operation
+        "404":
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "400":
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+  /{municipalityId}/schemas:
     get:
       tags:
       - JSON-schemas
@@ -19,7 +156,7 @@ paths:
       parameters:
       - name: municipalityId
         in: path
-        description: Municipality id
+        description: Municipality ID
         required: true
         schema:
           type: string
@@ -87,7 +224,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/JsonSchemaCreateRequest"
+              $ref: "#/components/schemas/JsonSchemaRequest"
         required: true
       responses:
         "201":
@@ -112,7 +249,7 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
-  /{municipalityId}/jsonschemas/{id}/validations:
+  /{municipalityId}/schemas/{id}/validation:
     post:
       tags:
       - JSON-schema validation
@@ -138,7 +275,7 @@ paths:
         content:
           application/json:
             schema:
-              type: string
+              $ref: "#/components/schemas/JsonNode"
         required: true
       responses:
         "204":
@@ -163,7 +300,7 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
-  /{municipalityId}/jsonschemas/{name}/versions/latest:
+  /{municipalityId}/schemas/{name}/versions/latest:
     get:
       tags:
       - JSON-schemas
@@ -172,7 +309,7 @@ paths:
       parameters:
       - name: municipalityId
         in: path
-        description: MunicipalityID
+        description: Municipality ID
         required: true
         schema:
           type: string
@@ -212,7 +349,7 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
-  /{municipalityId}/jsonschemas/{id}:
+  /{municipalityId}/schemas/{id}:
     get:
       tags:
       - JSON-schemas
@@ -221,7 +358,7 @@ paths:
       parameters:
       - name: municipalityId
         in: path
-        description: MunicipalityID
+        description: Municipality ID
         required: true
         schema:
           type: string
@@ -324,47 +461,33 @@ paths:
 components:
   schemas:
     JsonNode: {}
-    JsonSchemaCreateRequest:
+    UiSchemaRequest:
       type: object
       description: JsonSchemaCreateRequest model
       properties:
-        name:
-          type: string
-          description: Schema name
-          examples:
-          - person
-          minLength: 1
-        version:
-          type: string
-          description: "Schema version on the format [major version].[minor version]"
-          examples:
-          - "1.0"
-          minLength: 1
-          pattern: ^(\d+\.)?(\d+)$
         value:
           $ref: "#/components/schemas/JsonNode"
-          description: "The JSON schema, specified by: https://json-schema.org/draft/2020-12/schema"
-          example:
-            $id: https://example.com/person.schema.json
-            $schema: https://json-schema.org/draft/2020-12/schema
-            title: Person
-            type: object
-            properties:
-              firstName:
-                type: string
-                description: The person's first name.
-              lastName:
-                type: string
-                description: The person's last name.
+          description: The UI schema
+          example: |
+            {
+              "ui:title": "Title",
+              "ui:description": "Description",
+              "ui:submitButtonOptions": {
+                "props": {
+                  "disabled": false,
+                  "className": "btn btn-info",
+                },
+                  "norender": false,
+                  "submitText": "Submit"
+                }
+            }
         description:
           type: string
-          description: Description of the schema purpose
+          description: Description of the UI schema purpose
           examples:
-          - A JSON-schema that defines a person object
+          - A UI-schema that defines the rendering of the person form
       required:
-      - name
       - value
-      - version
     Problem:
       type: object
       properties:
@@ -379,18 +502,18 @@ components:
           additionalProperties: {}
         status:
           $ref: "#/components/schemas/StatusType"
-        detail:
-          type: string
         title:
+          type: string
+        detail:
           type: string
     StatusType:
       type: object
       properties:
+        reasonPhrase:
+          type: string
         statusCode:
           type: integer
           format: int32
-        reasonPhrase:
-          type: string
     ConstraintViolationProblem:
       type: object
       properties:
@@ -511,9 +634,9 @@ components:
           additionalProperties: {}
         status:
           $ref: "#/components/schemas/StatusType"
-        detail:
-          type: string
         title:
+          type: string
+        detail:
           type: string
         suppressed:
           type: array
@@ -555,26 +678,23 @@ components:
           type: string
         message:
           type: string
-    JsonSchema:
+    JsonSchemaRequest:
       type: object
-      description: JsonSchema model
+      description: JsonSchemaCreateRequest model
       properties:
-        id:
-          type: string
-          description: "Schema ID. The ID is composed by the municipalityId, schema\
-            \ name and version. I.e.: [municipality_id]_[schema_name]_[schema_version]"
-          examples:
-          - 2281_person_1.0
         name:
           type: string
           description: Schema name
           examples:
           - person
+          minLength: 1
         version:
           type: string
           description: "Schema version on the format [major version].[minor version]"
           examples:
           - "1.0"
+          minLength: 1
+          pattern: ^(\d+\.)?(\d+)$
         value:
           $ref: "#/components/schemas/JsonNode"
           description: "The JSON schema, specified by: https://json-schema.org/draft/2020-12/schema"
@@ -595,29 +715,82 @@ components:
           description: Description of the schema purpose
           examples:
           - A JSON-schema that defines a person object
+      required:
+      - name
+      - value
+      - version
+    JsonSchema:
+      type: object
+      description: JsonSchema model
+      properties:
+        id:
+          type: string
+          description: "Schema ID. The ID is composed by the municipalityId, schema\
+            \ name and version. I.e.: [municipality_id]_[schema_name]_[schema_version]"
+          examples:
+          - 2281_person_1.0
+          readOnly: true
+        name:
+          type: string
+          description: Schema name
+          examples:
+          - person
+          readOnly: true
+        version:
+          type: string
+          description: "Schema version on the format [major version].[minor version]"
+          examples:
+          - "1.0"
+          readOnly: true
+        value:
+          $ref: "#/components/schemas/JsonNode"
+          description: "The JSON schema, specified by: https://json-schema.org/draft/2020-12/schema"
+          example:
+            $id: https://example.com/person.schema.json
+            $schema: https://json-schema.org/draft/2020-12/schema
+            title: Person
+            type: object
+            properties:
+              firstName:
+                type: string
+                description: The person's first name.
+              lastName:
+                type: string
+                description: The person's last name.
+          readOnly: true
+        description:
+          type: string
+          description: Description of the schema purpose
+          examples:
+          - A JSON-schema that defines a person object
+          readOnly: true
         created:
           type: string
           format: date-time
           description: Created timestamp
+          readOnly: true
         validationUsageCount:
           type: integer
           format: int64
           description: Number of times this schema has been used to validate a JSON
             instance
+          readOnly: true
         lastUsedForValidation:
           type: string
           format: date-time
           description: Timestamp when this schema was last used to validate a JSON
             instance
+          readOnly: true
+      readOnly: true
     PageJsonSchema:
       type: object
       properties:
-        totalElements:
-          type: integer
-          format: int64
         totalPages:
           type: integer
           format: int32
+        totalElements:
+          type: integer
+          format: int64
         size:
           type: integer
           format: int32
@@ -647,25 +820,64 @@ components:
         offset:
           type: integer
           format: int64
-        unpaged:
-          type: boolean
         sort:
           $ref: "#/components/schemas/SortObject"
-        pageNumber:
-          type: integer
-          format: int32
+        paged:
+          type: boolean
         pageSize:
           type: integer
           format: int32
-        paged:
+        pageNumber:
+          type: integer
+          format: int32
+        unpaged:
           type: boolean
     SortObject:
       type: object
       properties:
         empty:
           type: boolean
-        unsorted:
-          type: boolean
         sorted:
           type: boolean
+        unsorted:
+          type: boolean
+    UiSchema:
+      type: object
+      description: UI schema model
+      properties:
+        id:
+          type: string
+          description: UI Schema ID
+          examples:
+          - f83529c1-2dff-4a5d-aab0-8d4ec082a995
+          readOnly: true
+        value:
+          $ref: "#/components/schemas/JsonNode"
+          description: The UI schema
+          example: |
+            {
+              "ui:title": "Title",
+              "ui:description": "Description",
+              "ui:submitButtonOptions": {
+                "props": {
+                  "disabled": false,
+                  "className": "btn btn-info",
+                },
+                  "norender": false,
+                  "submitText": "Submit"
+                }
+            }
+          readOnly: true
+        description:
+          type: string
+          description: Description of the UI schema purpose
+          examples:
+          - An UI-schema that defines how the form in the web-app should be rendered
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          description: Created timestamp
+          readOnly: true
+      readOnly: true
   securitySchemes: {}

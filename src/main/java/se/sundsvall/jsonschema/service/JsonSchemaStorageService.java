@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Problem;
 import se.sundsvall.jsonschema.api.model.JsonSchema;
-import se.sundsvall.jsonschema.api.model.JsonSchemaCreateRequest;
+import se.sundsvall.jsonschema.api.model.JsonSchemaRequest;
 import se.sundsvall.jsonschema.integration.db.JsonSchemaRepository;
 import se.sundsvall.jsonschema.service.mapper.JsonSchemaMapper;
 
@@ -84,7 +84,7 @@ public class JsonSchemaStorageService {
 	 * @throws org.zalando.problem.ThrowableProblem if a conflicting schema already exists
 	 */
 	@Transactional
-	public JsonSchema create(String municipalityId, JsonSchemaCreateRequest request) {
+	public JsonSchema create(String municipalityId, JsonSchemaRequest request) {
 		final var schemaEntity = toJsonSchemaEntity(municipalityId, request);
 
 		validateSchemaDoesNotAlreadyExist(schemaEntity.getId());
@@ -117,7 +117,7 @@ public class JsonSchemaStorageService {
 		}
 	}
 
-	private void validateNoGreaterVersionExists(String municipalityId, JsonSchemaCreateRequest request) {
+	private void validateNoGreaterVersionExists(String municipalityId, JsonSchemaRequest request) {
 		final var newVersion = new ComparableVersion(request.getVersion());
 
 		jsonSchemaRepository.findAllByMunicipalityIdAndName(municipalityId, request.getName().toLowerCase(), unpaged()).stream()

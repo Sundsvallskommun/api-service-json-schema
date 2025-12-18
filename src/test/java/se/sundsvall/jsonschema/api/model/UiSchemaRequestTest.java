@@ -12,11 +12,11 @@ import static org.hamcrest.core.AllOf.allOf;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
-class JsonSchemaCreateRequestTest {
+class UiSchemaRequestTest {
 
 	@Test
 	void testBean() {
-		assertThat(JsonSchemaCreateRequest.class, allOf(
+		assertThat(UiSchemaRequest.class, allOf(
 			hasValidBeanConstructor(),
 			hasValidGettersAndSetters(),
 			hasValidBeanHashCode(),
@@ -28,26 +28,20 @@ class JsonSchemaCreateRequestTest {
 	void testBuilderMethods() throws Exception {
 
 		final var description = "description";
-		final var name = "name";
 		final var value = new ObjectMapper().readTree("{}");
-		final var version = "version";
 
-		final var bean = JsonSchemaCreateRequest.create()
+		final var bean = UiSchemaRequest.create()
 			.withDescription(description)
-			.withName(name)
-			.withValue(value)
-			.withVersion(version);
+			.withValue(value);
 
 		assertThat(bean).isNotNull().hasNoNullFieldsOrProperties();
 		assertThat(bean.getDescription()).isEqualTo(description);
-		assertThat(bean.getName()).isEqualTo(name);
 		assertThat(bean.getValue()).isEqualTo(value);
-		assertThat(bean.getVersion()).isEqualTo(version);
 	}
 
 	@Test
 	void testNoDirtOnCreatedBean() {
-		assertThat(JsonSchemaCreateRequest.create()).hasAllNullFieldsOrProperties();
-		assertThat(new JsonSchemaCreateRequest()).hasAllNullFieldsOrProperties();
+		assertThat(UiSchemaRequest.create()).hasAllNullFieldsOrProperties();
+		assertThat(new UiSchemaRequest()).hasAllNullFieldsOrProperties();
 	}
 }
