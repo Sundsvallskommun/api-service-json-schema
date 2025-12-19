@@ -34,6 +34,7 @@ import se.sundsvall.jsonschema.integration.db.model.JsonSchemaEntity;
 class JsonSchemaRepositoryTest {
 
 	private static final String ID_OF_JSON_SCHEMA = "2281_schema_1.0.0";
+	private static final String ID_OF_JSON_SCHEMA_WITH_UI_SCHEMA = "2281_schema_with_uischema_1.0.0";
 
 	@Autowired
 	private JsonSchemaRepository repository;
@@ -181,5 +182,18 @@ class JsonSchemaRepositoryTest {
 		// Assert
 		assertThat(page).isNotNull();
 		assertThat(page.getContent()).isEmpty();
+	}
+
+	@Test
+	void findByIdAndVerifyExistingUiSchema() {
+
+		// Act
+		final var result = repository.findById(ID_OF_JSON_SCHEMA_WITH_UI_SCHEMA);
+
+		// Assert
+		assertThat(result).isPresent();
+		assertThat(result.get().getId()).isEqualTo(ID_OF_JSON_SCHEMA_WITH_UI_SCHEMA);
+		assertThat(result.get().getUiSchema()).isNotNull();
+		assertThat(result.get().getUiSchema().getDescription()).isEqualTo("UI schema for rendering the person form");
 	}
 }

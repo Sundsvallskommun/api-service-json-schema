@@ -18,7 +18,7 @@ import java.util.Random;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class JsonSchemaEntityTest {
+class UiSchemaEntityTest {
 
 	@BeforeAll
 	static void setup() {
@@ -27,7 +27,7 @@ class JsonSchemaEntityTest {
 
 	@Test
 	void testBean() {
-		assertThat(JsonSchemaEntity.class, allOf(
+		assertThat(UiSchemaEntity.class, allOf(
 			hasValidBeanConstructor(),
 			hasValidGettersAndSetters(),
 			hasValidBeanHashCode(),
@@ -41,48 +41,33 @@ class JsonSchemaEntityTest {
 		final var created = now().minusDays(1);
 		final var description = "description";
 		final var id = "id";
-		final var municipalityId = "municipalityId";
-		final var name = "name";
-		final var lastUsedForValidation = now();
-		final var uiSchema = UiSchemaEntity.create().withId("xxx");
-		final var validationUsageCount = 42L;
+		final var jsonSchema = JsonSchemaEntity.create().withId("xxx");
 		final var value = "value";
-		final var version = "version";
 
-		final var bean = JsonSchemaEntity.create()
+		final var bean = UiSchemaEntity.create()
 			.withCreated(created)
 			.withDescription(description)
+			.withJsonSchema(jsonSchema)
 			.withId(id)
-			.withLastUsedForValidation(lastUsedForValidation)
-			.withMunicipalityId(municipalityId)
-			.withName(name)
-			.withUiSchema(uiSchema)
-			.withValidationUsageCount(validationUsageCount)
-			.withValue(value)
-			.withVersion(version);
+			.withValue(value);
 
 		assertThat(bean).isNotNull().hasNoNullFieldsOrProperties();
 		assertThat(bean.getCreated()).isEqualTo(created);
 		assertThat(bean.getDescription()).isEqualTo(description);
 		assertThat(bean.getId()).isEqualTo(id);
-		assertThat(bean.getLastUsedForValidation()).isEqualTo(lastUsedForValidation);
-		assertThat(bean.getMunicipalityId()).isEqualTo(municipalityId);
-		assertThat(bean.getName()).isEqualTo(name);
-		assertThat(bean.getUiSchema()).isEqualTo(uiSchema);
-		assertThat(bean.getValidationUsageCount()).isEqualTo(validationUsageCount);
+		assertThat(bean.getJsonSchema()).isEqualTo(jsonSchema);
 		assertThat(bean.getValue()).isEqualTo(value);
-		assertThat(bean.getVersion()).isEqualTo(version);
 	}
 
 	@Test
 	void testNoDirtOnCreatedBean() {
-		assertThat(JsonSchemaEntity.create()).hasAllNullFieldsOrPropertiesExcept("validationUsageCount");
-		assertThat(new JsonSchemaEntity()).hasAllNullFieldsOrPropertiesExcept("validationUsageCount");
+		assertThat(UiSchemaEntity.create()).hasAllNullFieldsOrProperties();
+		assertThat(new UiSchemaEntity()).hasAllNullFieldsOrProperties();
 	}
 
 	@Test
 	void testPrePersist() {
-		final var bean = JsonSchemaEntity.create();
+		final var bean = UiSchemaEntity.create();
 
 		bean.prePersist();
 

@@ -83,8 +83,8 @@
 			"validationUsageCount": 0
 		},
 		{
-			"id": "2281_schema_with_references_1.0.0",
-			"name": "schema_with_references",
+			"id": "2281_schema_with_uischema_1.0.0",
+			"name": "Schema_with_uischema",
 			"version": "1.0.0",
 			"value": {
 				"type": "object",

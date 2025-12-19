@@ -62,7 +62,7 @@ class JsonSchemaStorageIT extends AbstractAppTest {
 	@Test
 	void test03_getSchema() {
 		setupCall()
-			.withServicePath("/%s/schemas/%s".formatted(MUNICIPALITY_ID, "2281_schema_with_references_1.0.0"))
+			.withServicePath("/%s/schemas/%s".formatted(MUNICIPALITY_ID, "2281_schema_with_uischema_1.0.0"))
 			.withHttpMethod(GET)
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponse(RESPONSE_FILE)

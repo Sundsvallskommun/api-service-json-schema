@@ -1,5 +1,7 @@
 package se.sundsvall.jsonschema.integration.db.model;
 
+import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.FetchType.LAZY;
 import static java.time.OffsetDateTime.now;
 import static java.time.ZoneId.systemDefault;
 import static java.time.temporal.ChronoUnit.MILLIS;
@@ -10,6 +12,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -58,6 +61,14 @@ public class JsonSchemaEntity {
 	@TimeZoneStorage(NORMALIZE)
 	@Column(name = "created")
 	private OffsetDateTime created;
+
+	@OneToOne(
+		mappedBy = "jsonSchema",
+		cascade = ALL,
+		orphanRemoval = true,
+		fetch = LAZY,
+		optional = true)
+	private UiSchemaEntity uiSchema;
 
 	/*
 	 * =======================
@@ -167,6 +178,19 @@ public class JsonSchemaEntity {
 		return this;
 	}
 
+	public UiSchemaEntity getUiSchema() {
+		return uiSchema;
+	}
+
+	public void setUiSchema(UiSchemaEntity uiSchema) {
+		this.uiSchema = uiSchema;
+	}
+
+	public JsonSchemaEntity withUiSchema(UiSchemaEntity uiSchema) {
+		this.uiSchema = uiSchema;
+		return this;
+	}
+
 	public long getValidationUsageCount() {
 		return validationUsageCount;
 	}
@@ -200,7 +224,7 @@ public class JsonSchemaEntity {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(created, description, id, lastUsedForValidation, municipalityId, name, validationUsageCount, value, version);
+		return Objects.hash(created, description, id, lastUsedForValidation, municipalityId, name, uiSchema, validationUsageCount, value, version);
 	}
 
 	@Override
@@ -216,12 +240,12 @@ public class JsonSchemaEntity {
 		}
 		JsonSchemaEntity other = (JsonSchemaEntity) obj;
 		return Objects.equals(created, other.created) && Objects.equals(description, other.description) && Objects.equals(id, other.id) && Objects.equals(lastUsedForValidation, other.lastUsedForValidation) && Objects.equals(municipalityId,
-			other.municipalityId) && Objects.equals(name, other.name) && validationUsageCount == other.validationUsageCount && Objects.equals(value, other.value) && Objects.equals(version, other.version);
+			other.municipalityId) && Objects.equals(name, other.name) && Objects.equals(uiSchema, other.uiSchema) && validationUsageCount == other.validationUsageCount && Objects.equals(value, other.value) && Objects.equals(version, other.version);
 	}
 
 	@Override
 	public String toString() {
-		return "JsonSchemaEntity [id=" + id + ", municipalityId=" + municipalityId + ", name=" + name + ", version=" + version + ", value=" + value + ", description=" + description + ", created=" + created + ", validationUsageCount=" + validationUsageCount
-			+ ", lastUsedForValidation=" + lastUsedForValidation + "]";
+		return "JsonSchemaEntity [id=" + id + ", municipalityId=" + municipalityId + ", name=" + name + ", version=" + version + ", value=" + value + ", description=" + description + ", created=" + created + ", uiSchema=" + uiSchema
+			+ ", validationUsageCount=" + validationUsageCount + ", lastUsedForValidation=" + lastUsedForValidation + "]";
 	}
 }
