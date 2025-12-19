@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Pattern;
 import java.util.Objects;
 import se.sundsvall.jsonschema.api.validation.ValidJsonSchema;
 
-@Schema(description = "JsonSchemaCreateRequest model")
+@Schema(description = "JsonSchemaRequest model")
 public class JsonSchemaRequest {
 
 	@NotBlank

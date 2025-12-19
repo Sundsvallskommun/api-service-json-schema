@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import java.util.Objects;
 
-@Schema(description = "JsonSchemaCreateRequest model")
+@Schema(description = "UiSchemaRequest model")
 public class UiSchemaRequest {
 
 	@NotNull

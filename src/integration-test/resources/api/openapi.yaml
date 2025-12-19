@@ -7,7 +7,7 @@ info:
     url: https://opensource.org/licenses/MIT
   version: "1.0"
 servers:
-- url: http://localhost:50276
+- url: http://localhost:62479
   description: Generated server url
 paths:
   /{municipalityId}/schemas/{schemaId}/ui-schema:
@@ -463,7 +463,7 @@ components:
     JsonNode: {}
     UiSchemaRequest:
       type: object
-      description: JsonSchemaCreateRequest model
+      description: UiSchemaRequest model
       properties:
         value:
           $ref: "#/components/schemas/JsonNode"
@@ -506,11 +506,11 @@ components:
     StatusType:
       type: object
       properties:
-        reasonPhrase:
-          type: string
         statusCode:
           type: integer
           format: int32
+        reasonPhrase:
+          type: string
     ConstraintViolationProblem:
       type: object
       properties:
@@ -677,7 +677,7 @@ components:
           type: string
     JsonSchemaRequest:
       type: object
-      description: JsonSchemaCreateRequest model
+      description: JsonSchemaRequest model
       properties:
         name:
           type: string
@@ -821,14 +821,14 @@ components:
           $ref: "#/components/schemas/SortObject"
         paged:
           type: boolean
-        unpaged:
-          type: boolean
         pageNumber:
           type: integer
           format: int32
         pageSize:
           type: integer
           format: int32
+        unpaged:
+          type: boolean
     SortObject:
       type: object
       properties:
@@ -840,7 +840,7 @@ components:
           type: boolean
     UiSchema:
       type: object
-      description: UI schema model
+      description: UiSchema model
       properties:
         id:
           type: string

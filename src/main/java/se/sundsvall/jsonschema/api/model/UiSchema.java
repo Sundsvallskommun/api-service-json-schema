@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
-@Schema(description = "UI schema model", accessMode = READ_ONLY)
+@Schema(description = "UiSchema model", accessMode = READ_ONLY)
 public class UiSchema {
 
 	@Schema(description = "UI Schema ID", examples = "f83529c1-2dff-4a5d-aab0-8d4ec082a995", accessMode = READ_ONLY)
