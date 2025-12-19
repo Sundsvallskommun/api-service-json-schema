@@ -34,7 +34,7 @@ class JsonSchemaStorageIT extends AbstractAppTest {
 	@Test
 	void test01_createSchema() {
 		final var location = setupCall()
-			.withServicePath("/%s/jsonschemas".formatted(MUNICIPALITY_ID))
+			.withServicePath("/%s/schemas".formatted(MUNICIPALITY_ID))
 			.withHttpMethod(POST)
 			.withRequest(REQUEST_FILE)
 			.withExpectedResponseStatus(CREATED)
@@ -52,7 +52,7 @@ class JsonSchemaStorageIT extends AbstractAppTest {
 	@Test
 	void test02_getSchemas() {
 		setupCall()
-			.withServicePath("/%s/jsonschemas".formatted(MUNICIPALITY_ID))
+			.withServicePath("/%s/schemas".formatted(MUNICIPALITY_ID))
 			.withHttpMethod(GET)
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponse(RESPONSE_FILE)
@@ -62,7 +62,7 @@ class JsonSchemaStorageIT extends AbstractAppTest {
 	@Test
 	void test03_getSchema() {
 		setupCall()
-			.withServicePath("/%s/jsonschemas/%s".formatted(MUNICIPALITY_ID, "2281_schema_with_references_1.0.0"))
+			.withServicePath("/%s/schemas/%s".formatted(MUNICIPALITY_ID, "2281_schema_with_references_1.0.0"))
 			.withHttpMethod(GET)
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponse(RESPONSE_FILE)
@@ -72,13 +72,13 @@ class JsonSchemaStorageIT extends AbstractAppTest {
 	@Test
 	void test04_deleteSchema() {
 		setupCall()
-			.withServicePath("/%s/jsonschemas/%s".formatted(MUNICIPALITY_ID, "2281_schema_1.0.0"))
+			.withServicePath("/%s/schemas/%s".formatted(MUNICIPALITY_ID, "2281_schema_1.0.0"))
 			.withHttpMethod(DELETE)
 			.withExpectedResponseStatus(NO_CONTENT)
 			.sendRequestAndVerifyResponse();
 
 		setupCall()
-			.withServicePath("/%s/jsonschemas/%s".formatted(MUNICIPALITY_ID, "2281_schema_1.0.0"))
+			.withServicePath("/%s/schemas/%s".formatted(MUNICIPALITY_ID, "2281_schema_1.0.0"))
 			.withHttpMethod(GET)
 			.withExpectedResponseStatus(NOT_FOUND)
 			.sendRequestAndVerifyResponse();
@@ -87,7 +87,7 @@ class JsonSchemaStorageIT extends AbstractAppTest {
 	@Test
 	void test05_getLatestSchemaByName() {
 		setupCall()
-			.withServicePath("/%s/jsonschemas/%s/versions/latest".formatted(MUNICIPALITY_ID, "schema"))
+			.withServicePath("/%s/schemas/%s/versions/latest".formatted(MUNICIPALITY_ID, "schema"))
 			.withHttpMethod(GET)
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponse(RESPONSE_FILE)

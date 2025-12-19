@@ -16,7 +16,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.zalando.problem.violations.ConstraintViolationProblem;
 import org.zalando.problem.violations.Violation;
 import se.sundsvall.jsonschema.Application;
-import se.sundsvall.jsonschema.api.model.JsonSchemaCreateRequest;
+import se.sundsvall.jsonschema.api.model.JsonSchemaRequest;
 import se.sundsvall.jsonschema.service.JsonSchemaStorageService;
 
 @ActiveProfiles("junit")
@@ -36,7 +36,7 @@ class JsonSchemaResourceFailuresTest {
 
 		// Act
 		final var response = webTestClient.get()
-			.uri("/{municipalityId}/jsonschemas", "invalid")
+			.uri("/{municipalityId}/schemas", "invalid")
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectBody(ConstraintViolationProblem.class)
@@ -62,7 +62,7 @@ class JsonSchemaResourceFailuresTest {
 
 		// Act
 		final var response = webTestClient.get()
-			.uri("/{municipalityId}/jsonschemas/{id}", "invalid", id)
+			.uri("/{municipalityId}/schemas/{id}", "invalid", id)
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectBody(ConstraintViolationProblem.class)
@@ -88,7 +88,7 @@ class JsonSchemaResourceFailuresTest {
 
 		// Act
 		final var response = webTestClient.get()
-			.uri("/{municipalityId}/jsonschemas/{name}/versions/latest", "invalid", name)
+			.uri("/{municipalityId}/schemas/{name}/versions/latest", "invalid", name)
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectBody(ConstraintViolationProblem.class)
@@ -110,7 +110,7 @@ class JsonSchemaResourceFailuresTest {
 	void createSchemaInvalidMunicipalityId() throws Exception {
 
 		// Arrange
-		final var schemaRequest = JsonSchemaCreateRequest.create()
+		final var schemaRequest = JsonSchemaRequest.create()
 			.withDescription("description")
 			.withName("name")
 			.withValue(new ObjectMapper().readTree("{\"$schema\": \"https://json-schema.org/draft/2020-12/schema\"}"))
@@ -118,7 +118,7 @@ class JsonSchemaResourceFailuresTest {
 
 		// Act
 		final var response = webTestClient.post()
-			.uri("/{municipalityId}/jsonschemas", "invalid")
+			.uri("/{municipalityId}/schemas", "invalid")
 			.bodyValue(schemaRequest)
 			.exchange()
 			.expectStatus().isBadRequest()
@@ -141,11 +141,11 @@ class JsonSchemaResourceFailuresTest {
 	void createSchemaEmptyRequestBody() {
 
 		// Arrange
-		final var schemaRequest = JsonSchemaCreateRequest.create();
+		final var schemaRequest = JsonSchemaRequest.create();
 
 		// Act
 		final var response = webTestClient.post()
-			.uri("/{municipalityId}/jsonschemas", MUNICIPALITY_ID)
+			.uri("/{municipalityId}/schemas", MUNICIPALITY_ID)
 			.bodyValue(schemaRequest)
 			.exchange()
 			.expectStatus().isBadRequest()
@@ -171,7 +171,7 @@ class JsonSchemaResourceFailuresTest {
 	void createSchemaInvalidVersion() throws Exception {
 
 		// Arrange
-		final var schemaRequest = JsonSchemaCreateRequest.create()
+		final var schemaRequest = JsonSchemaRequest.create()
 			.withDescription("description")
 			.withName("name")
 			.withValue(new ObjectMapper().readTree("{\"$schema\": \"https://json-schema.org/draft/2020-12/schema\"}"))
@@ -179,7 +179,7 @@ class JsonSchemaResourceFailuresTest {
 
 		// Act
 		final var response = webTestClient.post()
-			.uri("/{municipalityId}/jsonschemas", MUNICIPALITY_ID)
+			.uri("/{municipalityId}/schemas", MUNICIPALITY_ID)
 			.bodyValue(schemaRequest)
 			.exchange()
 			.expectStatus().isBadRequest()
@@ -202,7 +202,7 @@ class JsonSchemaResourceFailuresTest {
 	void createSchemaInvalidSpecificationVersion() throws Exception {
 
 		// Arrange
-		final var schemaRequest = JsonSchemaCreateRequest.create()
+		final var schemaRequest = JsonSchemaRequest.create()
 			.withDescription("description")
 			.withName("name")
 			.withValue(new ObjectMapper().readTree("{\"$schema\": \"https://json-schema.org/draft/2019-09/schema\"}")) // Should be 2020-12
@@ -210,7 +210,7 @@ class JsonSchemaResourceFailuresTest {
 
 		// Act
 		final var response = webTestClient.post()
-			.uri("/{municipalityId}/jsonschemas", MUNICIPALITY_ID)
+			.uri("/{municipalityId}/schemas", MUNICIPALITY_ID)
 			.bodyValue(schemaRequest)
 			.exchange()
 			.expectStatus().isBadRequest()
@@ -237,7 +237,7 @@ class JsonSchemaResourceFailuresTest {
 
 		// Act
 		final var response = webTestClient.delete()
-			.uri("/{municipalityId}/jsonschemas/{id}", "invalid", id)
+			.uri("/{municipalityId}/schemas/{id}", "invalid", id)
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectBody(ConstraintViolationProblem.class)

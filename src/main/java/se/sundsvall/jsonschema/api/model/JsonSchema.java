@@ -1,20 +1,22 @@
 package se.sundsvall.jsonschema.api.model;
 
+import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
-@Schema(description = "JsonSchema model")
+@Schema(description = "JsonSchema model", accessMode = READ_ONLY)
 public class JsonSchema {
 
-	@Schema(description = "Schema ID. The ID is composed by the municipalityId, schema name and version. I.e.: [municipality_id]_[schema_name]_[schema_version]", examples = "2281_person_1.0")
+	@Schema(description = "Schema ID. The ID is composed by the municipalityId, schema name and version. I.e.: [municipality_id]_[schema_name]_[schema_version]", examples = "2281_person_1.0", accessMode = READ_ONLY)
 	private String id;
 
-	@Schema(description = "Schema name", examples = "person")
+	@Schema(description = "Schema name", examples = "person", accessMode = READ_ONLY)
 	private String name;
 
-	@Schema(description = "Schema version on the format [major version].[minor version]", examples = "1.0")
+	@Schema(description = "Schema version on the format [major version].[minor version]", examples = "1.0", accessMode = READ_ONLY)
 	private String version;
 
 	@Schema(description = "The JSON schema, specified by: https://json-schema.org/draft/2020-12/schema", example = """
@@ -34,19 +36,19 @@ public class JsonSchema {
 		    }
 		  }
 		}
-		""")
+		""", accessMode = READ_ONLY)
 	private JsonNode value;
 
-	@Schema(description = "Description of the schema purpose", examples = "A JSON-schema that defines a person object")
+	@Schema(description = "Description of the schema purpose", examples = "A JSON-schema that defines a person object", accessMode = READ_ONLY)
 	private String description;
 
-	@Schema(description = "Created timestamp")
+	@Schema(description = "Created timestamp", accessMode = READ_ONLY)
 	private OffsetDateTime created;
 
-	@Schema(description = "Number of times this schema has been used to validate a JSON instance")
+	@Schema(description = "Number of times this schema has been used to validate a JSON instance", accessMode = READ_ONLY)
 	private long validationUsageCount;
 
-	@Schema(description = "Timestamp when this schema was last used to validate a JSON instance")
+	@Schema(description = "Timestamp when this schema was last used to validate a JSON instance", accessMode = READ_ONLY)
 	private OffsetDateTime lastUsedForValidation;
 
 	public static JsonSchema create() {
