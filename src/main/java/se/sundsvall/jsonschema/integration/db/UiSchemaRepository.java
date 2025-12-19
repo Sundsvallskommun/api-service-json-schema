@@ -8,5 +8,5 @@ import se.sundsvall.jsonschema.integration.db.model.UiSchemaEntity;
 @CircuitBreaker(name = "uiSchemaRepository")
 public interface UiSchemaRepository extends JpaRepository<UiSchemaEntity, String> {
 
-	Optional<UiSchemaEntity> findByJsonSchemaId(String json_schema_id);
+	Optional<UiSchemaEntity> findByJsonSchemaId(String jsonSchemaId);
 }
