@@ -7,10 +7,10 @@ info:
     url: https://opensource.org/licenses/MIT
   version: "1.0"
 servers:
-- url: http://localhost:62479
+- url: http://localhost:64850
   description: Generated server url
 paths:
-  /{municipalityId}/schemas/{schemaId}/ui-schema:
+  /{municipalityId}/schemas/{id}/ui-schema:
     get:
       tags:
       - UI-schemas
@@ -24,7 +24,7 @@ paths:
         schema:
           type: string
         example: 2281
-      - name: schemaId
+      - name: id
         in: path
         description: Schema ID
         required: true
@@ -72,7 +72,7 @@ paths:
         schema:
           type: string
         example: 2281
-      - name: schemaId
+      - name: id
         in: path
         description: Schema ID
         required: true
@@ -116,7 +116,7 @@ paths:
         schema:
           type: string
         example: 2281
-      - name: schemaId
+      - name: id
         in: path
         description: Schema ID
         required: true
@@ -506,11 +506,11 @@ components:
     StatusType:
       type: object
       properties:
+        reasonPhrase:
+          type: string
         statusCode:
           type: integer
           format: int32
-        reasonPhrase:
-          type: string
     ConstraintViolationProblem:
       type: object
       properties:
@@ -821,10 +821,10 @@ components:
           $ref: "#/components/schemas/SortObject"
         paged:
           type: boolean
-        pageNumber:
+        pageSize:
           type: integer
           format: int32
-        pageSize:
+        pageNumber:
           type: integer
           format: int32
         unpaged:

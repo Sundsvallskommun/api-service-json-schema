@@ -1,3 +1,4 @@
 SET FOREIGN_KEY_CHECKS = 0;
 TRUNCATE table json_schema;
+TRUNCATE table ui_schema;
 SET FOREIGN_KEY_CHECKS = 1;

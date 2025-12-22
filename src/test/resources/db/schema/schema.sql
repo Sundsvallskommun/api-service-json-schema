@@ -12,6 +12,15 @@
         primary key (id)
     ) engine=InnoDB;
 
+    create table ui_schema (
+        created datetime(6),
+        description longtext,
+        id varchar(255) not null,
+        json_schema_id varchar(255) not null,
+        value longtext,
+        primary key (id)
+    ) engine=InnoDB;
+
     create index idx_municipality_id 
        on json_schema (municipality_id);
 
@@ -23,3 +32,11 @@
 
     alter table if exists json_schema 
        add constraint uc_json_schema_municipality_id_name_version unique (municipality_id, name, version);
+
+    alter table if exists ui_schema 
+       add constraint uq_ui_schema_json_schema unique (json_schema_id);
+
+    alter table if exists ui_schema 
+       add constraint fk_ui_schema_json_schema 
+       foreign key (json_schema_id) 
+       references json_schema (id);

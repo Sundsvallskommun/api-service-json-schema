@@ -32,7 +32,7 @@ import se.sundsvall.jsonschema.api.model.UiSchemaRequest;
 
 @RestController
 @Validated
-@RequestMapping(value = "/{municipalityId}/schemas/{schemaId}/ui-schema")
+@RequestMapping(value = "/{municipalityId}/schemas/{id}/ui-schema")
 @Tag(name = "UI-schemas")
 @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(oneOf = {
 	Problem.class, ConstraintViolationProblem.class
@@ -49,7 +49,7 @@ class UiSchemaStorageResource {
 	})
 	ResponseEntity<UiSchema> getUiSchemaById(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
-		@Parameter(name = "schemaId", description = "Schema ID", example = "2281_person_1.0") @NotBlank @PathVariable final String schemaId) {
+		@Parameter(name = "id", description = "Schema ID", example = "2281_person_1.0") @NotBlank @PathVariable final String id) {
 
 		return ok(UiSchema.create());
 	}
@@ -60,7 +60,7 @@ class UiSchemaStorageResource {
 		responses = @ApiResponse(responseCode = "204", description = "No content - Successful operation", useReturnTypeSchema = true))
 	ResponseEntity<Void> createOrUpdateUiSchema(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
-		@Parameter(name = "schemaId", description = "Schema ID", example = "2281_person_1.0") @NotBlank @PathVariable final String schemaId,
+		@Parameter(name = "id", description = "Schema ID", example = "2281_person_1.0") @NotBlank @PathVariable final String id,
 		@Valid @NotNull @RequestBody final UiSchemaRequest body) {
 
 		return noContent().build();
@@ -73,7 +73,7 @@ class UiSchemaStorageResource {
 	})
 	ResponseEntity<Void> deleteUiSchema(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
-		@Parameter(name = "schemaId", description = "Schema ID", example = "2281_person_1.0") @PathVariable @NotBlank final String schemaId) {
+		@Parameter(name = "id", description = "Schema ID", example = "2281_person_1.0") @PathVariable @NotBlank final String id) {
 
 		return noContent().build();
 	}
