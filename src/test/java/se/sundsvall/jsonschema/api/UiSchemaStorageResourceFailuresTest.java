@@ -21,7 +21,7 @@ import se.sundsvall.jsonschema.service.UiSchemaStorageService;
 
 @ActiveProfiles("junit")
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
-class UiSchemaResourceFailuresTest {
+class UiSchemaStorageResourceFailuresTest {
 
 	private static final String MUNICIPALITY_ID = "2281";
 	private static final String SCHEMA_ID = "2281_product_1.0";
