@@ -21,6 +21,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 import se.sundsvall.dept44.test.annotation.resource.Load;
 import se.sundsvall.dept44.test.extension.ResourceLoaderExtension;
 import se.sundsvall.jsonschema.service.JsonSchemaValidationService;
@@ -61,6 +62,21 @@ class ValidJsonSchemaConstraintValidatorTest {
 		// Assert
 		assertThat(result).isTrue();
 		verify(jsonSchemaValidationServiceMock).validate(eq(schemaJsonNode.toString()), any(Schema.class));
+		verifyNoInteractions(constraintValidatorContextMock, constraintViolationBuilderMock);
+	}
+
+	@Test
+	void validateWhenSchemaIsNullAndNullableIsTrueu() {
+
+		// Arrange
+		ReflectionTestUtils.setField(validator, "nullable", true);
+
+		// Act
+		final var result = validator.isValid(null, constraintValidatorContextMock);
+
+		// Assert
+		assertThat(result).isTrue();
+		verify(jsonSchemaValidationServiceMock, never()).validate(any(), any(Schema.class));
 		verifyNoInteractions(constraintValidatorContextMock, constraintViolationBuilderMock);
 	}
 

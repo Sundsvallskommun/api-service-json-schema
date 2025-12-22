@@ -1,17 +1,22 @@
 package se.sundsvall.jsonschema.api;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static se.sundsvall.jsonschema.service.mapper.JsonSchemaMapper.toJsonNode;
+import static se.sundsvall.jsonschema.service.mapper.JsonMapper.toJsonNode;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import se.sundsvall.jsonschema.Application;
 import se.sundsvall.jsonschema.api.model.UiSchema;
 import se.sundsvall.jsonschema.api.model.UiSchemaRequest;
+import se.sundsvall.jsonschema.service.UiSchemaStorageService;
 
 @ActiveProfiles("junit")
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
@@ -19,8 +24,8 @@ class UiSchemaStorageResourceTest {
 
 	private static final String MUNICIPALITY_ID = "2281";
 
-	// @MockitoBean
-	// private UiSchemaStorageService uiSchemaStorageServiceMock;
+	@MockitoBean
+	private UiSchemaStorageService uiSchemaStorageServiceMock;
 
 	@Autowired
 	private WebTestClient webTestClient;
@@ -32,7 +37,7 @@ class UiSchemaStorageResourceTest {
 		final var schemaId = "some-schema-id";
 		final var uiSchema = UiSchema.create().withValue(toJsonNode("{}"));
 
-		// when(uiSchemaStorageServiceMock.getSchema(MUNICIPALITY_ID, id)).thenReturn(jsonSchema);
+		when(uiSchemaStorageServiceMock.getSchema(MUNICIPALITY_ID, schemaId)).thenReturn(uiSchema);
 
 		// Act
 		final var response = webTestClient.get()
@@ -44,30 +49,28 @@ class UiSchemaStorageResourceTest {
 			.expectBody(UiSchema.class).returnResult().getResponseBody();
 
 		// Assert
-		// assertThat(response).isEqualTo(uiSchema);
-		// verify(uiSchemaStorageServiceMock).getSchema(MUNICIPALITY_ID, id);
+		assertThat(response).isEqualTo(uiSchema);
+		verify(uiSchemaStorageServiceMock).getSchema(MUNICIPALITY_ID, schemaId);
 	}
 
 	@Test
-	void createOrUpdateUiSchema() throws Exception {
+	void createOrReplaceUiSchema() {
 
 		// Arrange
 		final var schemaId = "some-schema-id";
-		final var body = UiSchemaRequest.create()
+		final var requestBody = UiSchemaRequest.create()
 			.withDescription("description")
 			.withValue(toJsonNode("{}"));
-
-		// when(uiSchemaStorageServiceMock.create(MUNICIPALITY_ID, body)).thenReturn(jsonSchema);
 
 		// Act
 		webTestClient.put()
 			.uri("/{municipalityId}/schemas/{schemaId}/ui-schema", MUNICIPALITY_ID, schemaId)
-			.bodyValue(body)
+			.bodyValue(requestBody)
 			.exchange()
 			.expectStatus().isNoContent();
 
 		// Assert
-		// verify(uiSchemaStorageServiceMock).create(MUNICIPALITY_ID, body);
+		verify(uiSchemaStorageServiceMock).createOrReplace(MUNICIPALITY_ID, schemaId, requestBody);
 	}
 
 	@Test
@@ -83,6 +86,6 @@ class UiSchemaStorageResourceTest {
 			.expectStatus().isNoContent();
 
 		// Assert
-		// verify(uiSchemaStorageServiceMock).delete(MUNICIPALITY_ID, id);
+		verify(uiSchemaStorageServiceMock).delete(MUNICIPALITY_ID, schemaId);
 	}
 }

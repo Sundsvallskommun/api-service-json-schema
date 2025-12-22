@@ -1,10 +1,9 @@
 package se.sundsvall.jsonschema.service.mapper;
 
 import static java.util.Collections.emptyList;
-import static org.jooq.lambda.Unchecked.function;
+import static se.sundsvall.jsonschema.service.mapper.JsonMapper.toJsonNode;
+import static se.sundsvall.jsonschema.service.mapper.JsonMapper.toJsonString;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Optional;
 import se.sundsvall.jsonschema.api.model.JsonSchema;
@@ -13,7 +12,6 @@ import se.sundsvall.jsonschema.integration.db.model.JsonSchemaEntity;
 
 public final class JsonSchemaMapper {
 
-	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 	private static final String ID_PATTERN = "%s_%s_%s"; // [municipality_id]_[schema_name]_[schema_version]
 
 	private JsonSchemaMapper() {}
@@ -47,23 +45,5 @@ public final class JsonSchemaMapper {
 			.withName(request.getName().toLowerCase())
 			.withValue(toJsonString(request.getValue()))
 			.withVersion(request.getVersion());
-	}
-
-	/**
-	 * Converts a JSON string into a JsonNode, throwing an IllegalArgumentException on error.
-	 */
-	public static JsonNode toJsonNode(String json) {
-		return Optional.ofNullable(json)
-			.map(function(OBJECT_MAPPER::readTree))
-			.orElse(null);
-	}
-
-	/**
-	 * Converts a JsonNode into a String, handling nulls.
-	 */
-	public static String toJsonString(JsonNode node) {
-		return Optional.ofNullable(node)
-			.map(function(OBJECT_MAPPER::writeValueAsString))
-			.orElse(null);
 	}
 }

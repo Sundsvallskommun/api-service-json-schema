@@ -1,11 +1,14 @@
 package se.sundsvall.jsonschema;
 
 import static java.time.OffsetDateTime.now;
+import static java.util.UUID.randomUUID;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import se.sundsvall.jsonschema.api.model.JsonSchemaRequest;
+import se.sundsvall.jsonschema.api.model.UiSchemaRequest;
 import se.sundsvall.jsonschema.integration.db.model.JsonSchemaEntity;
+import se.sundsvall.jsonschema.integration.db.model.UiSchemaEntity;
 
 public final class TestFactory {
 
@@ -38,5 +41,42 @@ public final class TestFactory {
 			.withName("Person_Schema")
 			.withValue(value)
 			.withVersion("1.0");
+	}
+
+	public static UiSchemaEntity getUiSchemaEntity() {
+		return UiSchemaEntity.create()
+			.withCreated(now())
+			.withDescription("description")
+			.withId(randomUUID().toString())
+			.withValue("{}");
+	}
+
+	public static UiSchemaRequest getUiSchemaCreateRequest() {
+
+		JsonNode value = null;
+		try {
+			value = new ObjectMapper().readTree("""
+				{
+				    "firstName": {
+				        "ui:widget": "text",
+				        "ui:placeholder": "Enter first name"
+				    },
+				    "lastName": {
+				        "ui:widget": "text",
+				        "ui:placeholder": "Enter last name"
+				    },
+				    "ui:order": [
+				        "firstName",
+				        "lastName"
+				    ]
+				}
+				""");
+		} catch (Exception _) {
+			// Should not happen.
+		}
+
+		return UiSchemaRequest.create()
+			.withDescription("description")
+			.withValue(value);
 	}
 }
