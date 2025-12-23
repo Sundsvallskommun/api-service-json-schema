@@ -14,7 +14,7 @@
 	<properties>
 		<json-schema-validator.version>3.0.0</json-schema-validator.version>
 		<jool.version>0.9.15</jool.version>
-		<maven-artifact.version>3.9.11</maven-artifact.version>
+		<maven-artifact.version>3.9.12</maven-artifact.version>
 	</properties>
 	<dependencies>
 		<dependency>
