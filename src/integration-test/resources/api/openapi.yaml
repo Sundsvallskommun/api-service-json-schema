@@ -7,7 +7,7 @@ info:
     url: https://opensource.org/licenses/MIT
   version: "1.0"
 servers:
-- url: http://localhost:64850
+- url: http://localhost:60760
   description: Generated server url
 paths:
   /{municipalityId}/schemas/{id}/ui-schema:
@@ -63,7 +63,7 @@ paths:
       tags:
       - UI-schemas
       summary: Create or replace a UI schema for the provided JSON schema
-      operationId: createOrUpdateUiSchema
+      operationId: createOrReplaceUiSchema
       parameters:
       - name: municipalityId
         in: path
@@ -506,11 +506,11 @@ components:
     StatusType:
       type: object
       properties:
-        reasonPhrase:
-          type: string
         statusCode:
           type: integer
           format: int32
+        reasonPhrase:
+          type: string
     ConstraintViolationProblem:
       type: object
       properties:
@@ -782,12 +782,12 @@ components:
     PageJsonSchema:
       type: object
       properties:
-        totalElements:
-          type: integer
-          format: int64
         totalPages:
           type: integer
           format: int32
+        totalElements:
+          type: integer
+          format: int64
         size:
           type: integer
           format: int32
@@ -802,11 +802,11 @@ components:
           type: boolean
         last:
           type: boolean
-        sort:
-          $ref: "#/components/schemas/SortObject"
         numberOfElements:
           type: integer
           format: int32
+        sort:
+          $ref: "#/components/schemas/SortObject"
         pageable:
           $ref: "#/components/schemas/PageableObject"
         empty:
@@ -817,14 +817,14 @@ components:
         offset:
           type: integer
           format: int64
-        sort:
-          $ref: "#/components/schemas/SortObject"
         paged:
           type: boolean
-        pageSize:
+        sort:
+          $ref: "#/components/schemas/SortObject"
+        pageNumber:
           type: integer
           format: int32
-        pageNumber:
+        pageSize:
           type: integer
           format: int32
         unpaged:

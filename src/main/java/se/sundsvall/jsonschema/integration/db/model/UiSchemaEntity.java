@@ -151,6 +151,6 @@ public class UiSchemaEntity {
 
 	@Override
 	public String toString() {
-		return "UiSchemaEntity [id=" + id + ", jsonSchema=" + jsonSchema + ", value=" + value + ", description=" + description + ", created=" + created + "]";
+		return "UiSchemaEntity [id=" + id + ", jsonSchema=" + (jsonSchema != null ? jsonSchema.getId() : null) + ", value=" + value + ", description=" + description + ", created=" + created + "]";
 	}
 }

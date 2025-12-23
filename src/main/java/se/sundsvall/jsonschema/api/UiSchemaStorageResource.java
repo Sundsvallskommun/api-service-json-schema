@@ -29,6 +29,7 @@ import org.zalando.problem.violations.ConstraintViolationProblem;
 import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
 import se.sundsvall.jsonschema.api.model.UiSchema;
 import se.sundsvall.jsonschema.api.model.UiSchemaRequest;
+import se.sundsvall.jsonschema.service.UiSchemaStorageService;
 
 @RestController
 @Validated
@@ -40,7 +41,11 @@ import se.sundsvall.jsonschema.api.model.UiSchemaRequest;
 @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 class UiSchemaStorageResource {
 
-	public UiSchemaStorageResource() {}
+	private UiSchemaStorageService uiSchemaStorageService;
+
+	public UiSchemaStorageResource(UiSchemaStorageService service) {
+		this.uiSchemaStorageService = service;
+	}
 
 	@GetMapping(produces = APPLICATION_JSON_VALUE)
 	@Operation(operationId = "getUiSchemaById", summary = "Get the UI schema that belongs to the provided JSON schema", responses = {
@@ -51,17 +56,19 @@ class UiSchemaStorageResource {
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "id", description = "Schema ID", example = "2281_person_1.0") @NotBlank @PathVariable final String id) {
 
-		return ok(UiSchema.create());
+		return ok(uiSchemaStorageService.getSchema(municipalityId, id));
 	}
 
 	@PutMapping(consumes = APPLICATION_JSON_VALUE, produces = ALL_VALUE)
-	@Operation(operationId = "createOrUpdateUiSchema",
+	@Operation(operationId = "createOrReplaceUiSchema",
 		summary = "Create or replace a UI schema for the provided JSON schema",
 		responses = @ApiResponse(responseCode = "204", description = "No content - Successful operation", useReturnTypeSchema = true))
-	ResponseEntity<Void> createOrUpdateUiSchema(
+	ResponseEntity<Void> createOrReplaceUiSchema(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "id", description = "Schema ID", example = "2281_person_1.0") @NotBlank @PathVariable final String id,
-		@Valid @NotNull @RequestBody final UiSchemaRequest body) {
+		@Valid @NotNull @RequestBody final UiSchemaRequest requestBody) {
+
+		uiSchemaStorageService.createOrReplace(municipalityId, id, requestBody);
 
 		return noContent().build();
 	}
@@ -74,6 +81,8 @@ class UiSchemaStorageResource {
 	ResponseEntity<Void> deleteUiSchema(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "id", description = "Schema ID", example = "2281_person_1.0") @PathVariable @NotBlank final String id) {
+
+		uiSchemaStorageService.delete(municipalityId, id);
 
 		return noContent().build();
 	}
