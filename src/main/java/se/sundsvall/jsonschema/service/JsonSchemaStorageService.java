@@ -60,7 +60,7 @@ public class JsonSchemaStorageService {
 	}
 
 	/**
-	 * Get latest schema by municipality ID and schema name, enriched with number of references.
+	 * Get latest schema by municipality ID and schema name.
 	 *
 	 * @param  municipalityId                       the municipality ID
 	 * @param  name                                 the schema name

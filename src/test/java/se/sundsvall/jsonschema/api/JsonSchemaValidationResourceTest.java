@@ -3,8 +3,8 @@ package se.sundsvall.jsonschema.api;
 import static org.mockito.Mockito.verify;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static se.sundsvall.jsonschema.service.mapper.JsonSchemaMapper.toJsonNode;
-import static se.sundsvall.jsonschema.service.mapper.JsonSchemaMapper.toJsonString;
+import static se.sundsvall.jsonschema.service.mapper.JsonMapper.toJsonNode;
+import static se.sundsvall.jsonschema.service.mapper.JsonMapper.toJsonString;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

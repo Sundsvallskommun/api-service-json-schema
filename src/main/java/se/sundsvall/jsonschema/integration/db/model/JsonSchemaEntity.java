@@ -245,7 +245,8 @@ public class JsonSchemaEntity {
 
 	@Override
 	public String toString() {
-		return "JsonSchemaEntity [id=" + id + ", municipalityId=" + municipalityId + ", name=" + name + ", version=" + version + ", value=" + value + ", description=" + description + ", created=" + created + ", uiSchema=" + uiSchema
+		return "JsonSchemaEntity [id=" + id + ", municipalityId=" + municipalityId + ", name=" + name + ", version=" + version + ", value=" + value + ", description=" + description + ", created=" + created + ", uiSchema=" + (uiSchema != null ? uiSchema
+			.getId() : null)
 			+ ", validationUsageCount=" + validationUsageCount + ", lastUsedForValidation=" + lastUsedForValidation + "]";
 	}
 }
