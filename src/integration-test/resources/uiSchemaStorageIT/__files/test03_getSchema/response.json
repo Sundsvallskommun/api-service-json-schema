@@ -1,0 +1,19 @@
+{
+	"id": "5acd163f-f959-4ba3-ab81-9c705753eaf3",
+	"value": {
+		"firstName": {
+			"ui:widget": "text",
+			"ui:placeholder": "Enter first name"
+		},
+		"lastName": {
+			"ui:widget": "text",
+			"ui:placeholder": "Enter last name"
+		},
+		"ui:order": [
+			"firstName",
+			"lastName"
+		]
+	},
+	"description": "UI schema for rendering the person form",
+	"created": "2025-01-01T10:05:00+01:00"
+}

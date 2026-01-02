@@ -1,0 +1,19 @@
+{
+	"id": "${json-unit.any-string}",
+	"value": {
+		"streetAddress": {
+			"ui:widget": "text",
+			"ui:placeholder": "Enter street address"
+		},
+		"zipCode": {
+			"ui:widget": "text",
+			"ui:placeholder": "Enter zip code"
+		},
+		"ui:order": [
+			"streetAddress",
+			"zipCode"
+		]
+	},
+	"description": "A UI-schema that defines the rendering of an address form",
+	"created": "${json-unit.any-string}"
+}

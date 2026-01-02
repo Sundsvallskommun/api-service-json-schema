@@ -1,0 +1,19 @@
+{
+	"id": "${json-unit.any-string}",
+	"value": {
+		"firstName": {
+			"ui:widget": "text",
+			"ui:placeholder": "Enter first name"
+		},
+		"lastName": {
+			"ui:widget": "text",
+			"ui:placeholder": "Enter last name"
+		},
+		"ui:order": [
+			"firstName",
+			"lastName"
+		]
+	},
+	"description": "A UI-schema that defines the rendering of a person form",
+	"created": "${json-unit.any-string}"
+}
