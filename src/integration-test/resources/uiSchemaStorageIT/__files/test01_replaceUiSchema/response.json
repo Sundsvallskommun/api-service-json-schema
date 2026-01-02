@@ -1,19 +1,19 @@
 {
 	"id": "${json-unit.any-string}",
 	"value": {
-		"firstName": {
+		"streetAddress": {
 			"ui:widget": "text",
-			"ui:placeholder": "Enter first name"
+			"ui:placeholder": "Enter street address"
 		},
-		"lastName": {
+		"zipCode": {
 			"ui:widget": "text",
-			"ui:placeholder": "Enter last name"
+			"ui:placeholder": "Enter zip code"
 		},
 		"ui:order": [
-			"firstName",
-			"lastName"
+			"streetAddress",
+			"zipCode"
 		]
 	},
-	"description": "A UI-schema that defines the rendering of a person form",
+	"description": "A UI-schema that defines the rendering of an address form",
 	"created": "${json-unit.any-string}"
 }
