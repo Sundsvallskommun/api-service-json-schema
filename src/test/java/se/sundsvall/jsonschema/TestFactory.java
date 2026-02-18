@@ -1,14 +1,14 @@
 package se.sundsvall.jsonschema;
 
-import static java.time.OffsetDateTime.now;
-import static java.util.UUID.randomUUID;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import se.sundsvall.jsonschema.api.model.JsonSchemaRequest;
 import se.sundsvall.jsonschema.api.model.UiSchemaRequest;
 import se.sundsvall.jsonschema.integration.db.model.JsonSchemaEntity;
 import se.sundsvall.jsonschema.integration.db.model.UiSchemaEntity;
+
+import static java.time.OffsetDateTime.now;
+import static java.util.UUID.randomUUID;
 
 public final class TestFactory {
 

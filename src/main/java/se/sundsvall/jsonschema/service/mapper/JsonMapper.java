@@ -1,10 +1,10 @@
 package se.sundsvall.jsonschema.service.mapper;
 
-import static org.jooq.lambda.Unchecked.function;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Optional;
+
+import static org.jooq.lambda.Unchecked.function;
 
 public final class JsonMapper {
 

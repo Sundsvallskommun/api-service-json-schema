@@ -1,9 +1,5 @@
 package se.sundsvall.jsonschema.api.validation.impl;
 
-import static com.networknt.schema.SpecificationVersion.DRAFT_2020_12;
-import static java.util.Objects.isNull;
-import static org.springframework.util.StringUtils.hasText;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.networknt.schema.SchemaLocation;
 import com.networknt.schema.SchemaRegistry;
@@ -14,6 +10,10 @@ import java.util.Optional;
 import org.springframework.util.StringUtils;
 import se.sundsvall.jsonschema.api.validation.ValidJsonSchema;
 import se.sundsvall.jsonschema.service.JsonSchemaValidationService;
+
+import static com.networknt.schema.SpecificationVersion.DRAFT_2020_12;
+import static java.util.Objects.isNull;
+import static org.springframework.util.StringUtils.hasText;
 
 public class ValidJsonSchemaConstraintValidator implements ConstraintValidator<ValidJsonSchema, JsonNode> {
 

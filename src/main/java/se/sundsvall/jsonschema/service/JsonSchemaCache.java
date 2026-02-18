@@ -1,12 +1,12 @@
 package se.sundsvall.jsonschema.service;
 
-import static com.networknt.schema.SpecificationVersion.DRAFT_2020_12;
-
 import com.networknt.schema.Schema;
 import com.networknt.schema.SchemaRegistry;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import se.sundsvall.jsonschema.integration.db.model.JsonSchemaEntity;
+
+import static com.networknt.schema.SpecificationVersion.DRAFT_2020_12;
 
 /**
  * Cache component responsible for parsing and caching JSON Schema definitions.

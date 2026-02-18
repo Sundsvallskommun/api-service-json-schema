@@ -1,14 +1,14 @@
 package se.sundsvall.jsonschema.service.mapper;
 
-import static java.util.Collections.emptyList;
-import static se.sundsvall.jsonschema.service.mapper.JsonMapper.toJsonNode;
-import static se.sundsvall.jsonschema.service.mapper.JsonMapper.toJsonString;
-
 import java.util.List;
 import java.util.Optional;
 import se.sundsvall.jsonschema.api.model.JsonSchema;
 import se.sundsvall.jsonschema.api.model.JsonSchemaRequest;
 import se.sundsvall.jsonschema.integration.db.model.JsonSchemaEntity;
+
+import static java.util.Collections.emptyList;
+import static se.sundsvall.jsonschema.service.mapper.JsonMapper.toJsonNode;
+import static se.sundsvall.jsonschema.service.mapper.JsonMapper.toJsonString;
 
 public final class JsonSchemaMapper {
 

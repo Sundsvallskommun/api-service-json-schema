@@ -1,7 +1,5 @@
 package se.sundsvall.jsonschema.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.networknt.schema.Schema;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,6 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.test.context.ActiveProfiles;
 import se.sundsvall.jsonschema.integration.db.model.JsonSchemaEntity;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = {
 	JsonSchemaCache.class,
