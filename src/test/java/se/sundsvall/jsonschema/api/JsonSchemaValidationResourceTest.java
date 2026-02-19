@@ -1,11 +1,5 @@
 package se.sundsvall.jsonschema.api;
 
-import static org.mockito.Mockito.verify;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static se.sundsvall.jsonschema.service.mapper.JsonMapper.toJsonNode;
-import static se.sundsvall.jsonschema.service.mapper.JsonMapper.toJsonString;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,6 +8,12 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import se.sundsvall.jsonschema.Application;
 import se.sundsvall.jsonschema.service.JsonSchemaValidationService;
+
+import static org.mockito.Mockito.verify;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static se.sundsvall.jsonschema.service.mapper.JsonMapper.toJsonNode;
+import static se.sundsvall.jsonschema.service.mapper.JsonMapper.toJsonString;
 
 @ActiveProfiles("junit")
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)

@@ -1,16 +1,5 @@
 package se.sundsvall.jsonschema.service;
 
-import static java.util.Comparator.comparing;
-import static org.springframework.data.domain.Pageable.unpaged;
-import static org.zalando.problem.Status.CONFLICT;
-import static org.zalando.problem.Status.NOT_FOUND;
-import static se.sundsvall.jsonschema.service.Constants.JSON_SCHEMA_ALREADY_EXISTS;
-import static se.sundsvall.jsonschema.service.Constants.JSON_SCHEMA_WITH_GREATER_VERSION_EXISTS;
-import static se.sundsvall.jsonschema.service.Constants.MESSAGE_JSON_SCHEMA_NOT_FOUND_BY_ID;
-import static se.sundsvall.jsonschema.service.Constants.MESSAGE_JSON_SCHEMA_NOT_FOUND_BY_NAME;
-import static se.sundsvall.jsonschema.service.mapper.JsonSchemaMapper.toJsonSchema;
-import static se.sundsvall.jsonschema.service.mapper.JsonSchemaMapper.toJsonSchemaEntity;
-
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +10,17 @@ import se.sundsvall.jsonschema.api.model.JsonSchema;
 import se.sundsvall.jsonschema.api.model.JsonSchemaRequest;
 import se.sundsvall.jsonschema.integration.db.JsonSchemaRepository;
 import se.sundsvall.jsonschema.service.mapper.JsonSchemaMapper;
+
+import static java.util.Comparator.comparing;
+import static org.springframework.data.domain.Pageable.unpaged;
+import static org.zalando.problem.Status.CONFLICT;
+import static org.zalando.problem.Status.NOT_FOUND;
+import static se.sundsvall.jsonschema.service.Constants.JSON_SCHEMA_ALREADY_EXISTS;
+import static se.sundsvall.jsonschema.service.Constants.JSON_SCHEMA_WITH_GREATER_VERSION_EXISTS;
+import static se.sundsvall.jsonschema.service.Constants.MESSAGE_JSON_SCHEMA_NOT_FOUND_BY_ID;
+import static se.sundsvall.jsonschema.service.Constants.MESSAGE_JSON_SCHEMA_NOT_FOUND_BY_NAME;
+import static se.sundsvall.jsonschema.service.mapper.JsonSchemaMapper.toJsonSchema;
+import static se.sundsvall.jsonschema.service.mapper.JsonSchemaMapper.toJsonSchemaEntity;
 
 @Service
 public class JsonSchemaStorageService {

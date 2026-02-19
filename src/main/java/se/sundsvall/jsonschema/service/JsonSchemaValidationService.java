@@ -1,12 +1,5 @@
 package se.sundsvall.jsonschema.service;
 
-import static com.networknt.schema.InputFormat.JSON;
-import static java.util.Locale.ENGLISH;
-import static java.util.Optional.ofNullable;
-import static org.zalando.problem.Status.BAD_REQUEST;
-import static org.zalando.problem.Status.NOT_FOUND;
-import static se.sundsvall.jsonschema.service.Constants.MESSAGE_JSON_SCHEMA_NOT_FOUND_BY_ID;
-
 import com.networknt.schema.Error;
 import com.networknt.schema.ExecutionContext;
 import com.networknt.schema.Schema;
@@ -21,6 +14,13 @@ import org.zalando.problem.violations.ConstraintViolationProblem;
 import org.zalando.problem.violations.Violation;
 import se.sundsvall.jsonschema.integration.db.JsonSchemaRepository;
 import se.sundsvall.jsonschema.integration.db.model.JsonSchemaEntity;
+
+import static com.networknt.schema.InputFormat.JSON;
+import static java.util.Locale.ENGLISH;
+import static java.util.Optional.ofNullable;
+import static org.zalando.problem.Status.BAD_REQUEST;
+import static org.zalando.problem.Status.NOT_FOUND;
+import static se.sundsvall.jsonschema.service.Constants.MESSAGE_JSON_SCHEMA_NOT_FOUND_BY_ID;
 
 @Service
 public class JsonSchemaValidationService {

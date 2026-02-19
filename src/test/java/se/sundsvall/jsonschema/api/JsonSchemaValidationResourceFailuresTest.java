@@ -1,12 +1,5 @@
 package se.sundsvall.jsonschema.api;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.groups.Tuple.tuple;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.zalando.problem.Status.BAD_REQUEST;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +11,13 @@ import org.zalando.problem.violations.ConstraintViolationProblem;
 import org.zalando.problem.violations.Violation;
 import se.sundsvall.jsonschema.Application;
 import se.sundsvall.jsonschema.service.JsonSchemaValidationService;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.zalando.problem.Status.BAD_REQUEST;
 
 @ActiveProfiles("junit")
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)

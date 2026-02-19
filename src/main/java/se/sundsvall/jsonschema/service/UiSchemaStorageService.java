@@ -1,11 +1,5 @@
 package se.sundsvall.jsonschema.service;
 
-import static java.util.Objects.isNull;
-import static org.zalando.problem.Status.NOT_FOUND;
-import static se.sundsvall.jsonschema.service.Constants.MESSAGE_JSON_SCHEMA_NOT_FOUND_BY_ID;
-import static se.sundsvall.jsonschema.service.Constants.MESSAGE_UI_SCHEMA_NOT_FOUND_BY_JSON_SCHEMA_ID;
-import static se.sundsvall.jsonschema.service.mapper.UiSchemaMapper.toUiSchemaEntity;
-
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +10,12 @@ import se.sundsvall.jsonschema.api.model.UiSchemaRequest;
 import se.sundsvall.jsonschema.integration.db.JsonSchemaRepository;
 import se.sundsvall.jsonschema.integration.db.model.JsonSchemaEntity;
 import se.sundsvall.jsonschema.service.mapper.UiSchemaMapper;
+
+import static java.util.Objects.isNull;
+import static org.zalando.problem.Status.NOT_FOUND;
+import static se.sundsvall.jsonschema.service.Constants.MESSAGE_JSON_SCHEMA_NOT_FOUND_BY_ID;
+import static se.sundsvall.jsonschema.service.Constants.MESSAGE_UI_SCHEMA_NOT_FOUND_BY_JSON_SCHEMA_ID;
+import static se.sundsvall.jsonschema.service.mapper.UiSchemaMapper.toUiSchemaEntity;
 
 @Service
 public class UiSchemaStorageService {

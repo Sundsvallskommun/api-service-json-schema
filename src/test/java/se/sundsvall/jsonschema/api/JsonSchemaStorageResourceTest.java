@@ -1,11 +1,5 @@
 package se.sundsvall.jsonschema.api;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -20,6 +14,12 @@ import se.sundsvall.jsonschema.Application;
 import se.sundsvall.jsonschema.api.model.JsonSchema;
 import se.sundsvall.jsonschema.api.model.JsonSchemaRequest;
 import se.sundsvall.jsonschema.service.JsonSchemaStorageService;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @ActiveProfiles("junit")
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)

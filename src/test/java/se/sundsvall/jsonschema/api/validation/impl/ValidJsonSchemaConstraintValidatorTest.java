@@ -1,16 +1,5 @@
 package se.sundsvall.jsonschema.api.validation.impl;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Answers.CALLS_REAL_METHODS;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.schema.Schema;
@@ -25,6 +14,17 @@ import org.springframework.test.util.ReflectionTestUtils;
 import se.sundsvall.dept44.test.annotation.resource.Load;
 import se.sundsvall.dept44.test.extension.ResourceLoaderExtension;
 import se.sundsvall.jsonschema.service.JsonSchemaValidationService;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Answers.CALLS_REAL_METHODS;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith({
 	MockitoExtension.class, ResourceLoaderExtension.class

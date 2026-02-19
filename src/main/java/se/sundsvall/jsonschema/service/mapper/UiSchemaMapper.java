@@ -1,13 +1,13 @@
 package se.sundsvall.jsonschema.service.mapper;
 
-import static se.sundsvall.jsonschema.service.mapper.JsonMapper.toJsonNode;
-import static se.sundsvall.jsonschema.service.mapper.JsonMapper.toJsonString;
-
 import java.util.Optional;
 import se.sundsvall.jsonschema.api.model.UiSchema;
 import se.sundsvall.jsonschema.api.model.UiSchemaRequest;
 import se.sundsvall.jsonschema.integration.db.model.JsonSchemaEntity;
 import se.sundsvall.jsonschema.integration.db.model.UiSchemaEntity;
+
+import static se.sundsvall.jsonschema.service.mapper.JsonMapper.toJsonNode;
+import static se.sundsvall.jsonschema.service.mapper.JsonMapper.toJsonString;
 
 public final class UiSchemaMapper {
 

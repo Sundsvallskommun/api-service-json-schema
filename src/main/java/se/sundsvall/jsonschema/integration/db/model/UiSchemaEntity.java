@@ -1,12 +1,5 @@
 package se.sundsvall.jsonschema.integration.db.model;
 
-import static jakarta.persistence.FetchType.LAZY;
-import static java.time.OffsetDateTime.now;
-import static java.time.ZoneId.systemDefault;
-import static java.time.temporal.ChronoUnit.MILLIS;
-import static org.hibernate.annotations.TimeZoneStorageType.NORMALIZE;
-import static org.hibernate.type.SqlTypes.LONG32VARCHAR;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ForeignKey;
@@ -21,6 +14,13 @@ import java.util.Objects;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.TimeZoneStorage;
 import org.hibernate.annotations.UuidGenerator;
+
+import static jakarta.persistence.FetchType.LAZY;
+import static java.time.OffsetDateTime.now;
+import static java.time.ZoneId.systemDefault;
+import static java.time.temporal.ChronoUnit.MILLIS;
+import static org.hibernate.annotations.TimeZoneStorageType.NORMALIZE;
+import static org.hibernate.type.SqlTypes.LONG32VARCHAR;
 
 @Entity
 @Table(

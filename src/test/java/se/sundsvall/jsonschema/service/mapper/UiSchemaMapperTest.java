@@ -1,10 +1,10 @@
 package se.sundsvall.jsonschema.service.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import se.sundsvall.jsonschema.TestFactory;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class UiSchemaMapperTest {
 
