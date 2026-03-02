@@ -1,7 +1,7 @@
 package se.sundsvall.jsonschema.service.mapper;
 
-import java.io.UncheckedIOException;
 import org.junit.jupiter.api.Test;
+import tools.jackson.core.exc.UnexpectedEndOfInputException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -12,7 +12,7 @@ class JsonMapperTest {
 	void toJsonNode() {
 
 		// Arrange
-		String json = """
+		final String json = """
 			{
 			  "firstName": "Joe",
 			  "age": 42
@@ -48,7 +48,7 @@ class JsonMapperTest {
 
 		// Act + Assert
 		assertThatThrownBy(() -> JsonMapper.toJsonNode(invalidJson))
-			.isInstanceOf(UncheckedIOException.class);
+			.isInstanceOf(UnexpectedEndOfInputException.class);
 	}
 
 	@Test
@@ -62,7 +62,7 @@ class JsonMapperTest {
 			""");
 
 		// Act
-		String result = JsonMapper.toJsonString(node);
+		final String result = JsonMapper.toJsonString(node);
 
 		// Assert
 		assertThat(result)
@@ -74,7 +74,7 @@ class JsonMapperTest {
 	void toJsonStringShouldReturnNullWhenNodeIsNull() {
 
 		// Act
-		String result = JsonMapper.toJsonString(null);
+		final String result = JsonMapper.toJsonString(null);
 
 		// Assert
 		assertThat(result).isNull();
