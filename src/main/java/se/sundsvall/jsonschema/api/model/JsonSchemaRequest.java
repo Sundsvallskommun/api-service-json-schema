@@ -1,11 +1,11 @@
 package se.sundsvall.jsonschema.api.model;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import java.util.Objects;
 import se.sundsvall.jsonschema.api.validation.ValidJsonSchema;
+import tools.jackson.databind.JsonNode;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 

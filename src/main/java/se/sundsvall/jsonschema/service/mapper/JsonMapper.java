@@ -1,8 +1,8 @@
 package se.sundsvall.jsonschema.service.mapper;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Optional;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 
 import static org.jooq.lambda.Unchecked.function;
 

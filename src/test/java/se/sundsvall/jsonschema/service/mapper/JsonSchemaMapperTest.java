@@ -1,9 +1,9 @@
 package se.sundsvall.jsonschema.service.mapper;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import se.sundsvall.jsonschema.TestFactory;
+import tools.jackson.databind.ObjectMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

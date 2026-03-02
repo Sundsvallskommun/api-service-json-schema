@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.zalando.problem.Problem;
+import se.sundsvall.dept44.problem.Problem;
 import se.sundsvall.jsonschema.api.model.JsonSchema;
 import se.sundsvall.jsonschema.api.model.JsonSchemaRequest;
 import se.sundsvall.jsonschema.integration.db.JsonSchemaRepository;
@@ -13,8 +13,8 @@ import se.sundsvall.jsonschema.service.mapper.JsonSchemaMapper;
 
 import static java.util.Comparator.comparing;
 import static org.springframework.data.domain.Pageable.unpaged;
-import static org.zalando.problem.Status.CONFLICT;
-import static org.zalando.problem.Status.NOT_FOUND;
+import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static se.sundsvall.jsonschema.service.Constants.JSON_SCHEMA_ALREADY_EXISTS;
 import static se.sundsvall.jsonschema.service.Constants.JSON_SCHEMA_WITH_GREATER_VERSION_EXISTS;
 import static se.sundsvall.jsonschema.service.Constants.MESSAGE_JSON_SCHEMA_NOT_FOUND_BY_ID;
@@ -47,10 +47,10 @@ public class JsonSchemaStorageService {
 	/**
 	 * Get schema by municipality ID and schema ID, enriched with number of references.
 	 *
-	 * @param  municipalityId                       the municipality ID
-	 * @param  id                                   the schema ID
-	 * @return                                      a {@link JsonSchema}
-	 * @throws org.zalando.problem.ThrowableProblem if not found
+	 * @param  municipalityId                               the municipality ID
+	 * @param  id                                           the schema ID
+	 * @return                                              a {@link JsonSchema}
+	 * @throws se.sundsvall.dept44.problem.ThrowableProblem if not found
 	 */
 	@Transactional(readOnly = true)
 	public JsonSchema getSchema(String municipalityId, String id) {
@@ -62,10 +62,10 @@ public class JsonSchemaStorageService {
 	/**
 	 * Get latest schema by municipality ID and schema name.
 	 *
-	 * @param  municipalityId                       the municipality ID
-	 * @param  name                                 the schema name
-	 * @return                                      a {@link JsonSchema}
-	 * @throws org.zalando.problem.ThrowableProblem if not found
+	 * @param  municipalityId                               the municipality ID
+	 * @param  name                                         the schema name
+	 * @return                                              a {@link JsonSchema}
+	 * @throws se.sundsvall.dept44.problem.ThrowableProblem if not found
 	 */
 	@Transactional(readOnly = true)
 	public JsonSchema getLatestSchemaByName(final String municipalityId, final String name) {
@@ -78,10 +78,10 @@ public class JsonSchemaStorageService {
 	/**
 	 * Create new schema or a new version of an existing schema.
 	 *
-	 * @param  municipalityId                       the municipality ID
-	 * @param  request                              the schema request
-	 * @return                                      the created {@link JsonSchema}
-	 * @throws org.zalando.problem.ThrowableProblem if a conflicting schema already exists
+	 * @param  municipalityId                               the municipality ID
+	 * @param  request                                      the schema request
+	 * @return                                              the created {@link JsonSchema}
+	 * @throws se.sundsvall.dept44.problem.ThrowableProblem if a conflicting schema already exists
 	 */
 	@Transactional
 	public JsonSchema create(String municipalityId, JsonSchemaRequest request) {
@@ -97,9 +97,9 @@ public class JsonSchemaStorageService {
 	/**
 	 * Delete an existing schema.
 	 *
-	 * @param  municipalityId                       the municipality ID
-	 * @param  id                                   the schema ID
-	 * @throws org.zalando.problem.ThrowableProblem if not found or referenced
+	 * @param  municipalityId                               the municipality ID
+	 * @param  id                                           the schema ID
+	 * @throws se.sundsvall.dept44.problem.ThrowableProblem if not found or referenced
 	 */
 	@Transactional
 	public void delete(String municipalityId, String id) {
