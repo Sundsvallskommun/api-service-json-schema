@@ -1,36 +1,37 @@
 openapi: 3.1.0
 info:
   title: json-schema
-  contact: { }
+  contact: {}
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
   version: "1.0"
 servers:
-  - url: http://localhost:53634
-    description: Generated server url
+- url: http://localhost:53639
+  description: Generated server url
 paths:
   /{municipalityId}/schemas/{id}/ui-schema:
     get:
       tags:
-        - UI-schemas
+      - UI-schemas
       summary: Get the UI schema that belongs to the provided JSON schema
       operationId: getUiSchemaById
       parameters:
-        - name: municipalityId
-          in: path
-          description: Municipality ID
-          required: true
-          schema:
-            type: string
-          example: 2281
-        - name: id
-          in: path
-          description: Schema ID
-          required: true
-          schema:
-            type: string
-          example: 2281_person_1.0
+      - name: municipalityId
+        in: path
+        description: Municipality ID
+        required: true
+        schema:
+          type: string
+        example: 2281
+      - name: id
+        in: path
+        description: Schema ID
+        required: true
+        schema:
+          type: string
+          minLength: 1
+        example: 2281_person_1.0
       responses:
         "200":
           description: OK
@@ -50,8 +51,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                  - $ref: "#/components/schemas/Problem"
-                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -60,24 +61,25 @@ paths:
                 $ref: "#/components/schemas/Problem"
     put:
       tags:
-        - UI-schemas
+      - UI-schemas
       summary: Create or replace a UI schema for the provided JSON schema
       operationId: createOrReplaceUiSchema
       parameters:
-        - name: municipalityId
-          in: path
-          description: Municipality ID
-          required: true
-          schema:
-            type: string
-          example: 2281
-        - name: id
-          in: path
-          description: Schema ID
-          required: true
-          schema:
-            type: string
-          example: 2281_person_1.0
+      - name: municipalityId
+        in: path
+        description: Municipality ID
+        required: true
+        schema:
+          type: string
+        example: 2281
+      - name: id
+        in: path
+        description: Schema ID
+        required: true
+        schema:
+          type: string
+          minLength: 1
+        example: 2281_person_1.0
       requestBody:
         content:
           application/json:
@@ -93,8 +95,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                  - $ref: "#/components/schemas/Problem"
-                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -103,24 +105,25 @@ paths:
                 $ref: "#/components/schemas/Problem"
     delete:
       tags:
-        - UI-schemas
+      - UI-schemas
       summary: Delete the UI schema for the provided JSON schema
       operationId: deleteUiSchema
       parameters:
-        - name: municipalityId
-          in: path
-          description: Municipality ID
-          required: true
-          schema:
-            type: string
-          example: 2281
-        - name: id
-          in: path
-          description: Schema ID
-          required: true
-          schema:
-            type: string
-          example: 2281_person_1.0
+      - name: municipalityId
+        in: path
+        description: Municipality ID
+        required: true
+        schema:
+          type: string
+        example: 2281
+      - name: id
+        in: path
+        description: Schema ID
+        required: true
+        schema:
+          type: string
+          minLength: 1
+        example: 2281_person_1.0
       responses:
         "204":
           description: No content - Successful operation
@@ -136,8 +139,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                  - $ref: "#/components/schemas/Problem"
-                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -147,42 +150,42 @@ paths:
   /{municipalityId}/schemas:
     get:
       tags:
-        - JSON-schemas
+      - JSON-schemas
       summary: Get JSON schemas
       operationId: getSchemas
       parameters:
-        - name: municipalityId
-          in: path
-          description: Municipality ID
-          required: true
-          schema:
-            type: string
-          example: 2281
-        - name: page
-          in: query
-          description: Zero-based page index (0..N)
-          required: false
-          schema:
-            type: integer
-            default: 0
-            minimum: 0
-        - name: size
-          in: query
-          description: The size of the page to be returned
-          required: false
-          schema:
-            type: integer
-            default: 20
-            minimum: 1
-        - name: sort
-          in: query
-          description: "Sorting criteria in the format: property,(asc|desc). Default\
+      - name: municipalityId
+        in: path
+        description: Municipality ID
+        required: true
+        schema:
+          type: string
+        example: 2281
+      - name: page
+        in: query
+        description: Zero-based page index (0..N)
+        required: false
+        schema:
+          type: integer
+          default: 0
+          minimum: 0
+      - name: size
+        in: query
+        description: The size of the page to be returned
+        required: false
+        schema:
+          type: integer
+          default: 20
+          minimum: 1
+      - name: sort
+        in: query
+        description: "Sorting criteria in the format: property,(asc|desc). Default\
           \ sort order is ascending. Multiple sort criteria are supported."
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
       responses:
         "200":
           description: OK
@@ -196,8 +199,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                  - $ref: "#/components/schemas/Problem"
-                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -206,17 +209,17 @@ paths:
                 $ref: "#/components/schemas/Problem"
     post:
       tags:
-        - JSON-schemas
+      - JSON-schemas
       summary: Create a JSON schema
       operationId: createSchema
       parameters:
-        - name: municipalityId
-          in: path
-          description: Municipality ID
-          required: true
-          schema:
-            type: string
-          example: 2281
+      - name: municipalityId
+        in: path
+        description: Municipality ID
+        required: true
+        schema:
+          type: string
+        example: 2281
       requestBody:
         content:
           application/json:
@@ -238,8 +241,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                  - $ref: "#/components/schemas/Problem"
-                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -249,24 +252,25 @@ paths:
   /{municipalityId}/schemas/{id}/validation:
     post:
       tags:
-        - JSON-schema validation
+      - JSON-schema validation
       summary: Validate a JSON structure against the specified schema
       operationId: validateJson
       parameters:
-        - name: municipalityId
-          in: path
-          description: Municipality ID
-          required: true
-          schema:
-            type: string
-          example: 2281
-        - name: id
-          in: path
-          description: Schema ID
-          required: true
-          schema:
-            type: string
-          example: 2281_person_1.0
+      - name: municipalityId
+        in: path
+        description: Municipality ID
+        required: true
+        schema:
+          type: string
+        example: 2281
+      - name: id
+        in: path
+        description: Schema ID
+        required: true
+        schema:
+          type: string
+          minLength: 1
+        example: 2281_person_1.0
       requestBody:
         content:
           application/json:
@@ -288,8 +292,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                  - $ref: "#/components/schemas/Problem"
-                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -299,24 +303,25 @@ paths:
   /{municipalityId}/schemas/{name}/versions/latest:
     get:
       tags:
-        - JSON-schemas
+      - JSON-schemas
       summary: Get latest version of a schema identified by schema name
       operationId: getLatestSchemaByName
       parameters:
-        - name: municipalityId
-          in: path
-          description: Municipality ID
-          required: true
-          schema:
-            type: string
-          example: 2281
-        - name: name
-          in: path
-          description: Schema name
-          required: true
-          schema:
-            type: string
-          example: person
+      - name: municipalityId
+        in: path
+        description: Municipality ID
+        required: true
+        schema:
+          type: string
+        example: 2281
+      - name: name
+        in: path
+        description: Schema name
+        required: true
+        schema:
+          type: string
+          minLength: 1
+        example: person
       responses:
         "200":
           description: OK
@@ -336,8 +341,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                  - $ref: "#/components/schemas/Problem"
-                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -347,24 +352,25 @@ paths:
   /{municipalityId}/schemas/{id}:
     get:
       tags:
-        - JSON-schemas
+      - JSON-schemas
       summary: Get a JSON schema
       operationId: getSchemaById
       parameters:
-        - name: municipalityId
-          in: path
-          description: Municipality ID
-          required: true
-          schema:
-            type: string
-          example: 2281
-        - name: id
-          in: path
-          description: Schema ID
-          required: true
-          schema:
-            type: string
-          example: 2281_person_1.0
+      - name: municipalityId
+        in: path
+        description: Municipality ID
+        required: true
+        schema:
+          type: string
+        example: 2281
+      - name: id
+        in: path
+        description: Schema ID
+        required: true
+        schema:
+          type: string
+          minLength: 1
+        example: 2281_person_1.0
       responses:
         "200":
           description: OK
@@ -384,8 +390,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                  - $ref: "#/components/schemas/Problem"
-                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -394,24 +400,25 @@ paths:
                 $ref: "#/components/schemas/Problem"
     delete:
       tags:
-        - JSON-schemas
+      - JSON-schemas
       summary: Delete a JSON schema
       operationId: deleteSchema
       parameters:
-        - name: municipalityId
-          in: path
-          description: Municipality ID
-          required: true
-          schema:
-            type: string
-          example: 2281
-        - name: id
-          in: path
-          description: Schema ID
-          required: true
-          schema:
-            type: string
-          example: 2281_person_1.0
+      - name: municipalityId
+        in: path
+        description: Municipality ID
+        required: true
+        schema:
+          type: string
+        example: 2281
+      - name: id
+        in: path
+        description: Schema ID
+        required: true
+        schema:
+          type: string
+          minLength: 1
+        example: 2281_person_1.0
       responses:
         "204":
           description: No content - Successful operation
@@ -427,8 +434,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                  - $ref: "#/components/schemas/Problem"
-                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -438,7 +445,7 @@ paths:
   /api-docs:
     get:
       tags:
-        - API
+      - API
       summary: OpenAPI
       operationId: getApiDocs
       responses:
@@ -459,15 +466,15 @@ components:
         nodeType:
           type: string
           enum:
-            - ARRAY
-            - BINARY
-            - BOOLEAN
-            - MISSING
-            - "NULL"
-            - NUMBER
-            - OBJECT
-            - POJO
-            - STRING
+          - ARRAY
+          - BINARY
+          - BOOLEAN
+          - MISSING
+          - "NULL"
+          - NUMBER
+          - OBJECT
+          - POJO
+          - STRING
         string:
           type: boolean
         integralNumber:
@@ -477,8 +484,6 @@ components:
         missingNode:
           type: boolean
         pojo:
-          type: boolean
-        number:
           type: boolean
         short:
           type: boolean
@@ -499,9 +504,11 @@ components:
           type: boolean
         binary:
           type: boolean
-        container:
-          type: boolean
         floatingPointNumber:
+          type: boolean
+        number:
+          type: boolean
+        container:
           type: boolean
         empty:
           type: boolean
@@ -530,15 +537,15 @@ components:
               ui:widget: text
               ui:placeholder: Enter last name
             ui:order:
-              - firstName
-              - lastName
+            - firstName
+            - lastName
         description:
           type: string
           description: Description of the UI schema purpose
           examples:
-            - A UI-schema that defines the rendering of the person form
+          - A UI-schema that defines the rendering of the person form
       required:
-        - value
+      - value
     Problem:
       type: object
       properties:
@@ -570,10 +577,10 @@ components:
             $ref: "#/components/schemas/Violation"
         title:
           type: string
-        detail:
-          type: string
         causeAsProblem:
           $ref: "#/components/schemas/ThrowableProblem"
+        detail:
+          type: string
         instance:
           type: string
           format: uri
@@ -593,7 +600,7 @@ components:
         instance:
           type: string
           format: uri
-        causeAsProblem: { }
+        causeAsProblem: {}
     Violation:
       type: object
       properties:
@@ -609,12 +616,14 @@ components:
           type: string
           description: Schema name
           examples:
-            - person
+          - person
+          minLength: 1
         version:
           type: string
           description: "Schema version on the format [major version].[minor version]"
           examples:
-            - "1.0"
+          - "1.0"
+          minLength: 1
           pattern: ^(\d+\.)?(\d+)$
         value:
           $ref: "#/components/schemas/JsonNode"
@@ -635,11 +644,11 @@ components:
           type: string
           description: Description of the schema purpose
           examples:
-            - A JSON-schema that defines a person object
+          - A JSON-schema that defines a person object
       required:
-        - name
-        - value
-        - version
+      - name
+      - value
+      - version
     JsonSchema:
       type: object
       description: JsonSchema model
@@ -649,19 +658,19 @@ components:
           description: "Schema ID. The ID is composed by the municipalityId, schema\
             \ name and version. I.e.: [municipality_id]_[schema_name]_[schema_version]"
           examples:
-            - 2281_person_1.0
+          - 2281_person_1.0
           readOnly: true
         name:
           type: string
           description: Schema name
           examples:
-            - person
+          - person
           readOnly: true
         version:
           type: string
           description: "Schema version on the format [major version].[minor version]"
           examples:
-            - "1.0"
+          - "1.0"
           readOnly: true
         value:
           $ref: "#/components/schemas/JsonNode"
@@ -683,7 +692,7 @@ components:
           type: string
           description: Description of the schema purpose
           examples:
-            - A JSON-schema that defines a person object
+          - A JSON-schema that defines a person object
           readOnly: true
         created:
           type: string
@@ -714,15 +723,15 @@ components:
           format: int32
         pageable:
           $ref: "#/components/schemas/PageableObject"
+        numberOfElements:
+          type: integer
+          format: int32
         sort:
           $ref: "#/components/schemas/SortObject"
         first:
           type: boolean
         last:
           type: boolean
-        numberOfElements:
-          type: integer
-          format: int32
         size:
           type: integer
           format: int32
@@ -738,8 +747,6 @@ components:
     PageableObject:
       type: object
       properties:
-        unpaged:
-          type: boolean
         paged:
           type: boolean
         pageNumber:
@@ -748,6 +755,8 @@ components:
         pageSize:
           type: integer
           format: int32
+        unpaged:
+          type: boolean
         sort:
           $ref: "#/components/schemas/SortObject"
         offset:
@@ -756,9 +765,9 @@ components:
     SortObject:
       type: object
       properties:
-        unsorted:
-          type: boolean
         sorted:
+          type: boolean
+        unsorted:
           type: boolean
         empty:
           type: boolean
@@ -770,7 +779,7 @@ components:
           type: string
           description: UI Schema ID
           examples:
-            - f83529c1-2dff-4a5d-aab0-8d4ec082a995
+          - f83529c1-2dff-4a5d-aab0-8d4ec082a995
           readOnly: true
         value:
           $ref: "#/components/schemas/JsonNode"
@@ -783,14 +792,14 @@ components:
               ui:widget: text
               ui:placeholder: Enter last name
             ui:order:
-              - firstName
-              - lastName
+            - firstName
+            - lastName
           readOnly: true
         description:
           type: string
           description: Description of the UI schema purpose
           examples:
-            - An UI-schema that defines how the form in the web-app should be rendered
+          - An UI-schema that defines how the form in the web-app should be rendered
           readOnly: true
         created:
           type: string
@@ -798,4 +807,4 @@ components:
           description: Created timestamp
           readOnly: true
       readOnly: true
-  securitySchemes: { }
+  securitySchemes: {}
