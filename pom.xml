@@ -12,7 +12,7 @@
 	<version>1.0</version>
 	<name>api-service-json-schema</name>
 	<properties>
-		<json-schema-validator.version>3.0.3</json-schema-validator.version>
+		<json-schema-validator.version>3.0.4</json-schema-validator.version>
 		<jool.version>0.9.15</jool.version>
 		<maven-artifact.version>3.9.16</maven-artifact.version>
 	</properties>
