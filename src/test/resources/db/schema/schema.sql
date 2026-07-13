@@ -6,18 +6,18 @@
         validation_usage_count bigint not null,
         version varchar(32),
         name varchar(64),
-        description longtext,
         id varchar(255) not null,
-        value longtext,
+        description tinytext,
+        value tinytext,
         primary key (id)
     ) engine=InnoDB;
 
     create table ui_schema (
         created datetime(6),
-        description longtext,
         id varchar(255) not null,
         json_schema_id varchar(255) not null,
-        value longtext,
+        description tinytext,
+        value tinytext,
         primary key (id)
     ) engine=InnoDB;
 
