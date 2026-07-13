@@ -51,11 +51,11 @@ public class JsonSchemaEntity {
 	private String version;
 
 	@JdbcTypeCode(LONG32VARCHAR)
-	@Column(name = "value")
+	@Column(name = "value", columnDefinition = "longtext")
 	private String value;
 
 	@JdbcTypeCode(LONG32VARCHAR)
-	@Column(name = "description")
+	@Column(name = "description", columnDefinition = "longtext")
 	private String description;
 
 	@TimeZoneStorage(NORMALIZE)

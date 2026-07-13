@@ -7,8 +7,8 @@
         version varchar(32),
         name varchar(64),
         id varchar(255) not null,
-        description tinytext,
-        value tinytext,
+        description longtext,
+        value longtext,
         primary key (id)
     ) engine=InnoDB;
 
@@ -16,8 +16,8 @@
         created datetime(6),
         id varchar(255) not null,
         json_schema_id varchar(255) not null,
-        description tinytext,
-        value tinytext,
+        description longtext,
+        value longtext,
         primary key (id)
     ) engine=InnoDB;
 
