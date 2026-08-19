@@ -4,6 +4,7 @@ import com.networknt.schema.Error;
 import com.networknt.schema.ExecutionContext;
 import com.networknt.schema.Schema;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -99,7 +100,7 @@ public class JsonSchemaValidationService {
 
 	private void registerValidationAttempt(final JsonSchemaEntity entity) {
 		jsonSchemaRepository.save(entity
-			.withLastUsedForValidation(OffsetDateTime.now())
+			.withLastUsedForValidation(OffsetDateTime.now(ZoneId.systemDefault()))
 			.withValidationUsageCount(entity.getValidationUsageCount() + 1));
 	}
 
