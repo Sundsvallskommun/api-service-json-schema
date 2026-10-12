@@ -1,15 +1,15 @@
 package se.sundsvall.jsonschema.apptest;
 
-import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.jdbc.Sql;
 import se.sundsvall.dept44.test.AbstractAppTest;
 import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
 import se.sundsvall.jsonschema.Application;
+
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 /**
  * JsonSchemaValidationIT integration tests.
